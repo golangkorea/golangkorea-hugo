@@ -11,3 +11,6 @@ publishdir = "public"
 [params]
 
 searchEngineURL = "https://www.google.com/search"
+disqusShortname = "UA-82835198-1"
+rss = true
+
