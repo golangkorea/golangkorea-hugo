@@ -7,3 +7,7 @@ theme = "Hugo-Octopress"
 contentdir = "content"
 layoutdir = "layouts"
 publishdir = "public"
+
+[params]
+
+searchEngineURL = "https://www.google.com/search"
