@@ -1,0 +1,9 @@
+baseurl = "http://golangkorea.github.io/"
+languageCode = "en-us"
+title = "Golang Korean Community"
+builddrafts = true
+canonifyurls = true
+theme = "Hugo-Octopress"
+contentdir = "content"
+layoutdir = "layouts"
+publishdir = "public"
