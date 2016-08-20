@@ -1040,7 +1040,7 @@ article {
 }
 article header {
     position: relative;
-    padding-top: 3em;   /* mobile fix: 2em -> 3em */
+    padding-top: 4em;   /* mobile fix: 2em -> 4em */
     padding-bottom: 1em;
     margin-bottom: 1em;
 }
