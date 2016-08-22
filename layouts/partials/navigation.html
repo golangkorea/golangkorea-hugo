@@ -1,0 +1,50 @@
+<!-- reading menu items from config file -->
+
+<ul class="main-navigation">
+  <!-- links to root open in the same window - other links will be opened in a new window if navigationNewWindow is set to true in the config file -->
+  {{ range .Site.Menus.main }}
+    {{ if eq .URL "/" }}
+      <li><a href="{{ .URL | absURL }}" title="{{ .Name }}">{{ .Name }}</a></li>
+    {{ else }}
+      <li><a href="{{ .URL | absURL }}" title="{{ .Name }}" {{ if eq $.Site.Params.navigationNewWindow true }} target="_blank" {{ end }}>{{ .Name }}</a></li>
+    {{ end }}
+  {{ end }}
+</ul>
+
+<!-- http://fontawesome.io icon fa-lg adapts it to size (at least it is supposed to) -->
+<ul class="subscription">
+  {{ if or .Site.Params.rss .Site.Params.textrss }}
+    {{ if .Site.Params.rss }}
+        <a href="{{ "/index.xml" | absURL }}" target="_blank" type="application/rss+xml" title="RSS"><i class="fa fa-rss-square fa-lg"></i></a>
+    {{ else }}
+        <li><a href="/index.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    {{ end }}
+  {{ end }}
+
+</ul>
+
+{{ if isset .Site.Params "searchEngineURL" }}
+<form action="{{ .Site.Params.searchEngineURL }}" method="get" target="_blank">
+  <fieldset role="search">
+  	<input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    <input type="hidden" name="q" value="site:{{ "/" | absURL }}" />
+  </fieldset>
+</form>
+{{end}}
+
+<script>
+(function() {
+  var cx = '002661009167463862046:hk6lhiihuma';
+  var gcse = document.createElement('script');
+  gcse.type = 'text/javascript';
+  gcse.async = true;
+  gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+  var s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(gcse, s);
+})();
+</script>
+<form>
+  <fieldset role="search">
+  <gcse:search class="search"></gcse:search>  
+  </fieldset>
+</form>

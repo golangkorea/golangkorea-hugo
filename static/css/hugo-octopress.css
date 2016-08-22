@@ -1040,7 +1040,7 @@ article {
 }
 article header {
     position: relative;
-    padding-top: 4em;   /* mobile fix: 2em -> 4em */
+    padding-top: 2em;
     padding-bottom: 1em;
     margin-bottom: 1em;
 }
@@ -2284,4 +2284,34 @@ h6 {
     bottom: 1rem;
     left:   1rem;
   }
+}
+
+
+/**
+ * CSS overrides
+ */
+
+article header {
+    padding-top: 4em;   /* mobile fix 2em -> 4em */
+}
+
+@media only screen and (min-width: 992px) {
+    body>nav form {
+        width: 250px;   /* search fix */
+    }
+}
+
+.gsc-search-box td {
+    border-left: 0px;
+}
+
+form.gsc-search-box {
+    padding: 0px 0px 0px 0px !important;
+    margin-bottom: 0px !important;
+}
+
+.gsc-control-cse {
+    padding: 0px !important;
+    background: inherit !important;
+    border: 0px !important;
 }
