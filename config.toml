@@ -1,7 +1,7 @@
 baseurl = "https://golangkorea.github.io/"
 languageCode = "en-us"
 title = "Golang Korean Community"
-builddrafts = true
+builddrafts = false
 canonifyurls = true
 theme = "Hugo-Octopress"
 contentdir = "content"
@@ -14,3 +14,12 @@ searchEngineURL = "https://www.google.com/search"
 disqusShortname = "UA-82835198-1"
 rss = true
 
+
+sidebarHeader = "못 먹어도 Go인 세상"
+sidebarText = "새로운 도전과 개발의 재미를 Go를 통해 만끽해 보세요"
+
+github = "https://github.com/golangkorea/golangkorea-hugo/"
+facebook = "https://www.facebook.com/groups/golangko/"
+googleplus = "https://plus.google.com/communities/115721275599816202991"
+
+sidebarRecentLimit = "5"
