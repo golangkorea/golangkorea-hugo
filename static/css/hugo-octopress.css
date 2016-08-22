@@ -2302,7 +2302,7 @@ article header {
 }
 
 .gsc-search-box td {
-    border-left: 0px;
+    border-left: 0px !important;
 }
 
 form.gsc-search-box {
@@ -2314,4 +2314,8 @@ form.gsc-search-box {
     padding: 0px !important;
     background: inherit !important;
     border: 0px !important;
+}
+
+.gsc-results-wrapper-overlay table, th, td {
+    border-left: 0px !important;
 }
