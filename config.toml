@@ -25,3 +25,17 @@ facebook = "https://www.facebook.com/groups/golangko/"
 googleplus = "https://plus.google.com/communities/115721275599816202991"
 
 sidebarRecentLimit = "5"
+
+sidebarMenuEnabled = true
+sidebarMenuHeader = "Join Us"
+sidebarNewWindow  = true
+
+[[menu.sidebar]]
+  Name = "GitHub Organization"
+  URL = "https://github.com/golangkorea"
+  weight = 0
+
+[[menu.sidebar]]
+  Name = "Gitter Room"
+  URL = "https://gitter.im/golang-korean-community/golangkorea.github.io?utm_source=share-link&utm_medium=link&utm_campaign=share-link"
+  weight = 1
