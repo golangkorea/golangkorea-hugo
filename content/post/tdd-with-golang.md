@@ -5,6 +5,8 @@ title = "Golang 프로젝트에 TDD 도입하기"
 tags = ["Development", "UnitTest", "TDD"]
 categories = ["Development", "UnitTest","TDD"]
 series = ["Go Web Dev"]
+
+author = "Yun Sang Bae"
 +++
 여기에서 사용한 테스트 코드는 [Bitbucket](https://bitbucket.org/dream_yun/handlertest) 에서 다운로드 할 수 있다.
 ## TDD 
