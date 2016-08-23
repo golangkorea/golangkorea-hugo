@@ -2,7 +2,11 @@
 
 <footer>
   <p class="meta">
-    <span class="byline author vcard">Posted by <span class="fn">{{ with .Params.author }}{{ . }}{{ end }}&nbsp;{{ with .Params.authorurl }}<a href="{{.}}">&#128279;</a>{{ end }}</span></span>
+    <span class="byline author vcard">Posted by <span class="fn">
+    {{ range .Params.authors }}
+        <a href="{{ "/authors/" | relURL }}{{ . | urlize }}">{{ . }}</a>
+    {{ end }}
+    </span></span>
     <!-- can't put the .Date.Format inside the datetime attribute because of double quotes, so it's outside -->
     <time>{{ .Date.Format "Jan 2, 2006" }}</time>
     {{ if isset .Params "tags" }}
