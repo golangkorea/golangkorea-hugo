@@ -15,7 +15,7 @@
             - {{ range .Params.categories }}<a class="label" href="{{ "/categories/" | absURL }}{{ . | urlize | lower }}/">{{ . }}</a>{{ end }}
         {{ end }}
     </p>
-    <p>Posted by 
+    <p>{{ with .Params.authors }}Posted by {{ end }}
     {{ range .Params.authors }}
         <a href="{{ "/authors/" | relURL }}{{ . | urlize }}">{{ . }}</a>
     {{ end }}

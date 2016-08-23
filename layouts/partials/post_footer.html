@@ -2,7 +2,7 @@
 
 <footer>
   <p class="meta">
-    <span class="byline author vcard">Posted by <span class="fn">
+    <span class="byline author vcard">{{ with .Params.authors }}Posted by {{ end }}<span class="fn">
     {{ range .Params.authors }}
         <a href="{{ "/authors/" | relURL }}{{ . | urlize }}">{{ . }}</a>
     {{ end }}
