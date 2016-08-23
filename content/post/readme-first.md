@@ -7,6 +7,7 @@ tags = ["Community", "Blog", "Hugo"]
 categories = ["How-to"]
 
 author = "Jhonghee Park <jhonghee@gmail.com>"
+authorurl = "/author/jhongheepark/"
 
 +++
 
