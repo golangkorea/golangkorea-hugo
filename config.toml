@@ -43,4 +43,4 @@ sidebarNewWindow  = true
 [taxonomies]
 author = "authors"
 category = "categories"
-tags = "tags"
+tag = "tags"
