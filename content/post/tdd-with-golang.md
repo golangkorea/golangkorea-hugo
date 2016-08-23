@@ -1,6 +1,6 @@
 +++
 date = "2016-08-20T12:15:44+09:00"
-draft = true
+draft = false
 title = "Golang 프로젝트에 TDD 도입하기"
 tags = ["Development", "UnitTest", "TDD"]
 categories = ["Development", "UnitTest","TDD"]
