@@ -4,7 +4,7 @@ draft = true
 title = "vim-go를 이용한 go 개발 환경 구축"
 tags = ["Development", "vim"]
 categories = ["Development", "vim"]
-author = "Sangbae Yun yundream@gmail.com"
+authors = ["Sangbae Yun"]
 +++
 ## Vim
 **Vim**은 Emacs와 함께 (적어도 리눅스에서는) 가장 널리 사용하는 에디터일 것이다. 가볍고 빠르며, 어디에서나 실행되기 때문에 그 단순함에도 불구하고 여전히 사랑받고 있다. GUI 환경에서 사용하는 IDE에 익숙한 개발자라면 "요즘 같은 시대에 왠 구닥다리 터미널 기반 에디터냐"라고 생각할 지도 모르겠다. 아래 그래프를 보자. 

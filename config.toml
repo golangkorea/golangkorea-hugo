@@ -39,3 +39,8 @@ sidebarNewWindow  = true
   Name = "Gitter Room"
   URL = "https://gitter.im/golang-korean-community/golangkorea.github.io?utm_source=share-link&utm_medium=link&utm_campaign=share-link"
   weight = 1
+
+[taxonomies]
+author = "authors"
+category = "categories"
+tags = "tags"
