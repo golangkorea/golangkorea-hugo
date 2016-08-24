@@ -30,6 +30,8 @@ sidebarMenuEnabled = true
 sidebarMenuHeader = "Join Us"
 sidebarNewWindow  = true
 
+highlightTheme = "darcula"
+
 [[menu.sidebar]]
   Name = "GitHub Organization"
   URL = "https://github.com/golangkorea"
