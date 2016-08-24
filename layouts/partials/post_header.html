@@ -19,5 +19,12 @@
     {{ range .Params.authors }}
         <a href="{{ "/authors/" | relURL }}{{ . | urlize }}">{{ . }}</a>
     {{ end }}
+    </p>
+    <p>
+    <ul id="series">
+  {{ range .Params.series }}
+    <li>Series: <a href="{{ "/series/" | relURL }}{{ . | urlize }}">{{ . }}</a> </li>
+  {{ end }}
+</ul>
     </p>    
 </header>
