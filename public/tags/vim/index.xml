@@ -17,7 +17,7 @@
       <guid>https://golangkorea.github.io/post/vim-go/</guid>
       <description>
 
-&lt;h2 id=&#34;vim:d6ac5b2eecfc12afd25350cc0802f0f4&#34;&gt;Vim&lt;/h2&gt;
+&lt;h2 id=&#34;vim&#34;&gt;Vim&lt;/h2&gt;
 
 &lt;p&gt;&lt;strong&gt;Vim&lt;/strong&gt;은 Emacs와 함께 (적어도 리눅스에서는) 가장 널리 사용하는 에디터일 것이다. 가볍고 빠르며, 어디에서나 실행되기 때문에 그 단순함에도 불구하고 여전히 사랑받고 있다. GUI 환경에서 사용하는 IDE에 익숙한 개발자라면 &amp;ldquo;요즘 같은 시대에 왠 구닥다리 터미널 기반 에디터냐&amp;rdquo;라고 생각할 지도 모르겠다. 아래 그래프를 보자.&lt;/p&gt;
 
@@ -25,7 +25,7 @@
 
 &lt;p&gt;Go언어를 대상으로 조사한 결과인데, Vim이 거의 40% 정도를 차지하고 있다. Emacs까지 하면 터미널 기반 에디터를 사용하는 개발자가 절반이 넘는다. 물론 Go 언어가 시스템과 네트워크 분야의  백앤드 프로그램의 개발에 특화된 측면을 고려해야 겠지만 말이다.&lt;/p&gt;
 
-&lt;h2 id=&#34;vim-go:d6ac5b2eecfc12afd25350cc0802f0f4&#34;&gt;Vim-go&lt;/h2&gt;
+&lt;h2 id=&#34;vim-go&#34;&gt;Vim-go&lt;/h2&gt;
 
 &lt;p&gt;Vim은 다양한 플러그인을 제공한다. &lt;strong&gt;Vim-go&lt;/strong&gt;는 Go 개발환경을 지원하는 플러그인이다. 지원하는 기능은 아래와 같다.&lt;/p&gt;
 
@@ -44,7 +44,7 @@
 등 개발 환경을 만들기 위한 거의 모든 기능들을 제공한다. 여기에 파일 네비게이션 플러그인, 자동완성 플러그인들을 추가로 설치하면, IDE 부럽지 않은 개발 환경을 만들 수 있다.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&#34;vim-go-설치:d6ac5b2eecfc12afd25350cc0802f0f4&#34;&gt;Vim-go 설치&lt;/h2&gt;
+&lt;h2 id=&#34;vim-go-설치&#34;&gt;Vim-go 설치&lt;/h2&gt;
 
 &lt;p&gt;Vim의 플러그인들을 편리하게 관리하기 위해서 몇 가지 패키지 매니저들이 있다. 보통 Vundle 이나 &lt;strong&gt;pathogen&lt;/strong&gt;을 사용한다. 나는 pathogen을 사용하고 있다. 아래와 같이 설치하자.&lt;/p&gt;
 
@@ -100,7 +100,7 @@ vim-go: gotags not found. Installing github.com/jstemmer/gotags to folder /home/
 계속하려면 엔터 혹은 명령을 입력하십시오
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;vim-go-기능-빠르게-살펴보기:d6ac5b2eecfc12afd25350cc0802f0f4&#34;&gt;Vim-go 기능 빠르게 살펴보기&lt;/h2&gt;
+&lt;h2 id=&#34;vim-go-기능-빠르게-살펴보기&#34;&gt;Vim-go 기능 빠르게 살펴보기&lt;/h2&gt;
 
 &lt;p&gt;Go 코드의 실행&lt;/p&gt;
 
@@ -130,7 +130,7 @@ vim-go: gotags not found. Installing github.com/jstemmer/gotags to folder /home/
 
 &lt;p&gt;대략 이런 식이다. 나머지 명령들은 직접 실행해 보자.&lt;/p&gt;
 
-&lt;h2 id=&#34;자동완성:d6ac5b2eecfc12afd25350cc0802f0f4&#34;&gt;자동완성&lt;/h2&gt;
+&lt;h2 id=&#34;자동완성&#34;&gt;자동완성&lt;/h2&gt;
 
 &lt;p&gt;자동완성은 IDE의 가장 쓸만한 기능 중 하나일 것이다. vim의  &lt;strong&gt;YCM(YouCompleteMe)&lt;/strong&gt;를 이용해서 자동완성 기능을 추가 할 수 있다. 컴파일을 하기 때문에 python-dev와 cmake 패키지를 미리 설치해야 한다.&lt;/p&gt;
 
@@ -146,7 +146,7 @@ vim-go: gotags not found. Installing github.com/jstemmer/gotags to folder /home/
 
 &lt;p&gt;YCM은 C, C++, Python, Java 등에도 사용 할 수 있다.&lt;/p&gt;
 
-&lt;h2 id=&#34;tagbar-설치:d6ac5b2eecfc12afd25350cc0802f0f4&#34;&gt;TagBar 설치&lt;/h2&gt;
+&lt;h2 id=&#34;tagbar-설치&#34;&gt;TagBar 설치&lt;/h2&gt;
 
 &lt;p&gt;ctags는 코드에 포함된 패키지, struct, 메서드의 목록을 한눈에 보여주는 애플리케이션이다. ctags를 설치하자. tagbar는 ctags를 기반으로 작동하는 플러그인이다.&lt;/p&gt;
 
@@ -170,7 +170,7 @@ vim-go: gotags not found. Installing github.com/jstemmer/gotags to folder /home/
 map &amp;lt;F8&amp;gt; :TagbarToggle&amp;lt;CR&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;nerdtree-설치:d6ac5b2eecfc12afd25350cc0802f0f4&#34;&gt;NerdTree 설치&lt;/h2&gt;
+&lt;h2 id=&#34;nerdtree-설치&#34;&gt;NerdTree 설치&lt;/h2&gt;
 
 &lt;p&gt;NerdTree는 파일 네비게이션을 만들어주는 플러그인다.&lt;/p&gt;
 

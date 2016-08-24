@@ -19,7 +19,7 @@
 
 &lt;p&gt;여기에서 사용한 테스트 코드는 &lt;a href=&#34;https://bitbucket.org/dream_yun/handlertest&#34;&gt;Bitbucket&lt;/a&gt; 에서 다운로드 할 수 있다.&lt;/p&gt;
 
-&lt;h2 id=&#34;tdd:d70a83dd1877f2b6df6aaf116b63e31b&#34;&gt;TDD&lt;/h2&gt;
+&lt;h2 id=&#34;tdd&#34;&gt;TDD&lt;/h2&gt;
 
 &lt;p&gt;클라우드와 &lt;strong&gt;MSA&lt;/strong&gt;와 &lt;strong&gt;REST&lt;/strong&gt;의 등장으로 TDD가 재조명 받고 있다. TDD를 제대로 적용하려면 상당히 많은 시간과 노력이 필요하다. 특히 여기 저기 연동되는 라이브러리나 소프트웨어가 많은 경우 테스트가 굉장히 복잡해지는데, 복잡해지는 만큼 테스트의 신뢰성도 함께 떨어진다.&lt;/p&gt;
 
@@ -50,7 +50,7 @@
 &lt;li&gt;&lt;strong&gt;테스트 커버리지는&lt;/strong&gt; 유닛테스트가 얼마나 잘 이루어졌는지를 측정하기 위해서 사용한다. 테스트 커버리지를 계산하고 그 결과를 문서로 출력한다. 이 문서를 젠킨스와 통합해보자.&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h2 id=&#34;go-유닛-테스트-개요:d70a83dd1877f2b6df6aaf116b63e31b&#34;&gt;Go 유닛 테스트 개요&lt;/h2&gt;
+&lt;h2 id=&#34;go-유닛-테스트-개요&#34;&gt;Go 유닛 테스트 개요&lt;/h2&gt;
 
 &lt;p&gt;Go 는 테스트 프레임워크를 내장(build-in)하고 있다. &lt;strong&gt;testing&lt;/strong&gt;페키지를 이용해서 유닛 테스트 코드를 만들고 &lt;strong&gt;go test&lt;/strong&gt;명령으로 테스트를 수행하면 된다. 유닛 테스트를 위한 간단한 예제 코드를 만들었다. 코드의 이름은 math.go 다.&lt;/p&gt;
 
@@ -171,7 +171,7 @@ FAIL	_/home/yundream/workspace/golang/unittest	0.002s
 
 &lt;p&gt;테스트 실패를 확인 할 수 있다.&lt;/p&gt;
 
-&lt;h2 id=&#34;testing-패키지:d70a83dd1877f2b6df6aaf116b63e31b&#34;&gt;testing 패키지&lt;/h2&gt;
+&lt;h2 id=&#34;testing-패키지&#34;&gt;testing 패키지&lt;/h2&gt;
 
 &lt;p&gt;함수가 실행 된 결과가 예측한 결과와 맞아 떨어지는 지를 검사하는 방식으로 테스트를 진행 한다. &lt;strong&gt;t.Fatal()&lt;/strong&gt;, &lt;strong&gt;t.Fail()&lt;/strong&gt;등을 이용해서 테스트를 제어 할 수 있다.&lt;/p&gt;
 
@@ -186,7 +186,7 @@ FAIL	_/home/yundream/workspace/golang/unittest	0.002s
 &lt;li&gt;&lt;strong&gt;Failed()&lt;/strong&gt; 실패하더라도 레포트하지 않는다.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&#34;assertion:d70a83dd1877f2b6df6aaf116b63e31b&#34;&gt;Assertion&lt;/h2&gt;
+&lt;h2 id=&#34;assertion&#34;&gt;Assertion&lt;/h2&gt;
 
 &lt;p&gt;테스트 코드를 만들다 보면 if 문이 코드의 절반 이상을 차지하는 걸 보게될 것이다. 비교대상도 가지각색이라서 가독성이 떨어진다. assert 함수가 필요하다. 직접 만들어 보고 싶겠지만 그냥 잘 만들어져 있는 테스트 패키지 가져다가 쓰자. 내가 요즘 쓰고 있는 테스트 패키지는 &lt;strong&gt;github.com/stretchr/testify/assert&lt;/strong&gt;이다. 패키지를 설치 한 후 아래 코드를 테스트 했다.&lt;/p&gt;
 
@@ -221,7 +221,7 @@ FAIL	_/home/yundream/workspace/golang/mytest	0.003s
 
 &lt;p&gt;테스트 코드와 테스트 결과의 가독성 모두 좋아졌다. 이 패키지는 &lt;strong&gt;assert&lt;/strong&gt;외에도 &lt;strong&gt;mock&lt;/strong&gt;, &lt;strong&gt;http 테스트&lt;/strong&gt;, &lt;strong&gt;suite&lt;/strong&gt;등 테스트를 위한 다양한 툴들을 지원한다.&lt;/p&gt;
 
-&lt;h2 id=&#34;http-핸들러-테스트:d70a83dd1877f2b6df6aaf116b63e31b&#34;&gt;HTTP 핸들러 테스트&lt;/h2&gt;
+&lt;h2 id=&#34;http-핸들러-테스트&#34;&gt;HTTP 핸들러 테스트&lt;/h2&gt;
 
 &lt;p&gt;HTTP 핸들러의 경우 웹 서버를 띄워야 하기 때문에, 메서드보다 테스트가 까다롭다. 아래의 방식으로 테스트 할 수 있다.&lt;/p&gt;
 
@@ -349,7 +349,7 @@ ok  	bitbucket.org/dream_yun/handlertest/handler	0.003s
 
 &lt;p&gt;이렇게 테스트 시나리오에 따라서 테스트 코드를 추가하면 된다.&lt;/p&gt;
 
-&lt;h2 id=&#34;서비스간-연동-테스트:d70a83dd1877f2b6df6aaf116b63e31b&#34;&gt;서비스간 연동 테스트&lt;/h2&gt;
+&lt;h2 id=&#34;서비스간-연동-테스트&#34;&gt;서비스간 연동 테스트&lt;/h2&gt;
 
 &lt;p&gt;MSA 모델을 따르는 애플리케이션을 만들다 보면, 다른 (REST)애플리케이션과 통신 해야 할 수도 있다.&lt;/p&gt;
 
@@ -491,7 +491,7 @@ func (h Handler) Div(w http.ResponseWriter, r *http.Request) {
 
 &lt;p&gt;여기에서 중요한 점은 &lt;strong&gt;테스트를 쉽게 하기 위해서 메서드들을 수정&lt;/strong&gt;했다는 점이다. TDD에서는 코드에 맞는 테스트를 하는게 아니고, 테스트에 맞는 코드를 만든다.&lt;/p&gt;
 
-&lt;h2 id=&#34;목업-vs-직접-구성:d70a83dd1877f2b6df6aaf116b63e31b&#34;&gt;목업 vs 직접 구성&lt;/h2&gt;
+&lt;h2 id=&#34;목업-vs-직접-구성&#34;&gt;목업 vs 직접 구성&lt;/h2&gt;
 
 &lt;p&gt;예제로 삼았던 ping API 서버는 외부 소프트웨어의 도움 없이 작동한다. 하지만 현실에서 이런 코드를 찾기는 어렵다. 마이에스큐엘(Mysql), 몽고디비(Mongodb), 주키퍼(zookeeper), 레디스(Redis) 등 수많은 다른 애플리케이션들과 통신을 한다. 어떻게 테스트 해야 할까.&lt;/p&gt;
 
@@ -501,7 +501,7 @@ func (h Handler) Div(w http.ResponseWriter, r *http.Request) {
 
 &lt;p&gt;결론부터 말하자면 난 목업을 이용하지 않고 있다. 작동하는 소프트웨어들과 직접 연동해서 테스트 한다. 개발/테스트 환경 구축의 번거로움은.. 글쎄 나는 (데이터베이스를 설치하고 설정하는) 정도의 번거로움은 감수해야 하고, 감수한 만큼 개발자에게 이득이 있다고 생각하는 입장이다. 그리고 세상이 좋아졌다. VM, Container, Vagrant 등을 이용하면 개발환경을 손쉽게 구성하고 배포, 공유 할 수 있다.&lt;/p&gt;
 
-&lt;h2 id=&#34;테스트-커버리지:d70a83dd1877f2b6df6aaf116b63e31b&#34;&gt;테스트 커버리지&lt;/h2&gt;
+&lt;h2 id=&#34;테스트-커버리지&#34;&gt;테스트 커버리지&lt;/h2&gt;
 
 &lt;p&gt;테스트에 대한 품질은 테스트 커버리지로 측정 할 수 있다.&lt;/p&gt;
 
@@ -592,7 +592,7 @@ ok  	bitbucket.org/dream_yun/handlertest/handler	0.005s
 
 &lt;p&gt;&lt;strong&gt;strconv.Atoi()&lt;/strong&gt; 메서드에 대한 테스트가 빠져있음을 알 수 있다. 이에 대해서  &amp;ldquo;Div API는 클라이언트가 숫자(0-9)가 아닌 다른 값을 보낼 수도 있으므로, 에러 체크가 필요하다. 그리고 변수 a, b에 대한 타당성(숫자인지, int64 범위의 값인지 등)을 검사하는 코드도 추가해야 한다&amp;rdquo;라는 평가를 할 수 있을 것이다.&lt;/p&gt;
 
-&lt;h2 id=&#34;gocov:d70a83dd1877f2b6df6aaf116b63e31b&#34;&gt;gocov&lt;/h2&gt;
+&lt;h2 id=&#34;gocov&#34;&gt;gocov&lt;/h2&gt;
 
 &lt;p&gt;go에서 제공하는 기본 툴도 쓸만하긴 하지만, 레포팅 기능이 썩 맘에 들지 않는다. 그래서 &lt;strong&gt;gocov&lt;/strong&gt;라는 툴을 이용해서 레포트를 만들기로 했다.&lt;/p&gt;
 
@@ -619,7 +619,7 @@ ok  	bitbucket.org/dream_yun/handlertest/handler	0.005s	coverage: 91.3% of state
 
 &lt;p&gt;훨씬 보기 좋아졌다.&lt;/p&gt;
 
-&lt;h2 id=&#34;젠킨스와의-통합:d70a83dd1877f2b6df6aaf116b63e31b&#34;&gt;젠킨스와의 통합&lt;/h2&gt;
+&lt;h2 id=&#34;젠킨스와의-통합&#34;&gt;젠킨스와의 통합&lt;/h2&gt;
 
 &lt;p&gt;이미 젠킨스를 통해서 테스트를 자동화 하고 있다. 여기에 레포트만 추가하면 된다.&lt;/p&gt;
 
@@ -639,7 +639,7 @@ ok  	bitbucket.org/dream_yun/handlertest/handler	0.005s	coverage: 91.3% of state
 
 &lt;p&gt;&lt;img src=&#34;http://marcelog.github.io/articles/cobertura_example_covertool.png&#34; alt=&#34;coberatura 레포팅&#34; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;tdd-통합-프로세스:d70a83dd1877f2b6df6aaf116b63e31b&#34;&gt;TDD 통합 프로세스&lt;/h2&gt;
+&lt;h2 id=&#34;tdd-통합-프로세스&#34;&gt;TDD 통합 프로세스&lt;/h2&gt;
 
 &lt;p&gt;MSA 모델을 따르는 소프트웨어의 개발에서 배포 단계까지의 테스트 방식을 정리해 보자.&lt;/p&gt;
 
