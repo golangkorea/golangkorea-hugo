@@ -50,10 +50,10 @@
   <!-- Google Analytics -->
   {{ template "_internal/google_analytics_async.html" . }}
 
-  <link rel="stylesheet" href="/js/highlight/styles/{{ .Site.Params.highlightTheme }}.css">
-  <script src="/js/highlight/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
-
+  <!-- Start custom javascript and css -->
+  {{ partial "header.custom.css.html" . }}
+  {{ partial "header.custom.javascript.html" . }}
+  <!-- End custom javascript and css -->
 
 </head>
 <body{{ with .Site.Params.theme }} class="{{ . }}"{{ end }}>
