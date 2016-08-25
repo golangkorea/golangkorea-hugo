@@ -10,7 +10,7 @@ publishdir = "public"
 
 [params]
 
-customCSS = ["css/custom.css"]
+customCSS = ["css/custom.css", "css/custom-font.css"]
 
 # searchEngineURL = "https://www.google.com/search"
 disqusShortname = "UA-82835198-1"
