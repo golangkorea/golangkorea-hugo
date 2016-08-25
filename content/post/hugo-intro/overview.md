@@ -1,6 +1,6 @@
 +++
 date = "2016-08-23T22:35:57-04:00"
-draft = true
+draft = false
 title = "Hugo 입문 - 개요"
 
 tags = ["Blog", "Hugo"]
