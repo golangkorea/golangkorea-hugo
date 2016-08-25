@@ -37,10 +37,3 @@ form.gsc-search-box {
 header ul#series {
     padding-top: 20px;
 }
-
-/**
- * ASCII Diagram
- */
-.language-ascii-diagram {
-  font-family: monospace;
-}
