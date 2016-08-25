@@ -53,3 +53,4 @@ Hugo Static Site Generator v0.17-DEV BuildDate: 2016-08-21T19:44:40-04:00
 ```
 $ hugo new site golangkorea-hugo
 ```
+Hugo의 모든 명령은 `hugo`로 시작하고 보조 커맨드가 뒤를 따릅니다. 여기서 `new`는 보조 명령어로서 `site` 보조 명령어와 함께 프로젝트를 초기화합니다.
