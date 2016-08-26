@@ -17,7 +17,7 @@ toc = true
 
 ## Package Manager로 설치하기
 
-MacOS를 쓰시는 분들은 brew를 이용해 쉽게 설치하실 수 있습니다.
+MacOS를 쓰시는 분들은 Homebrew를 이용해 쉽게 설치하실 수 있습니다.
 
 ```
 brew update && brew install hugo
