@@ -77,7 +77,7 @@ Hugo는 커맨드라인 명령어 체계는 각종 보조 명령어와 POSIX를 
 ```
 $ hugo new site golangkorea-hugo
 ```
-Hugo의 모든 명령은 `hugo`로 시작하고 보조 명령어가 뒤를 따릅니다. 여기서 `new`는 보조 명령어로서 `site` 보조 명령어와 함께 프로젝트를 초기화합니다. 초기화된 프로젝트의 폴더 구조는 다음과 같습니다.
+Hugo의 모든 명령<a href="#footnote-1"><sup>1</sup></a>은 `hugo`로 시작하고 보조 명령어가 뒤를 따릅니다. 여기서 `new`는 보조 명령어로서 `site` 보조 명령어와 함께 프로젝트를 초기화합니다. 초기화된 프로젝트의 폴더 구조는 다음과 같습니다.
 ```
 $ cd golangkorea-hugo
 $ tree -a
@@ -94,7 +94,7 @@ $ tree -a
 ```
 초기화된 프로젝트에는 텅빈 폴더 6개와 `config.toml` 파일 하나가 만들어 집니다. 각 폴더의 용도를 간단히 나열하면 다음과 같습니다.
 
- * archetypes: `hugo new`명령으로 컨텐트 생성시 [Front Matter](https://gohugo.io/content/front-matter/)<sup>1</sup> 에 컨텐트 타입에 따른 기본 값들을 어떻게 정해줄 것인가를 결정하는 파일들을 저장합니다.
+ * archetypes: `hugo new`명령으로 컨텐트 생성시 [Front Matter](https://gohugo.io/content/front-matter/)<a href="#footnote-2"><sup>2</sup></a> 에 컨텐트 타입에 따른 기본 값들을 어떻게 정해줄 것인가를 결정하는 파일들을 저장합니다.
  * content: 컨텐츠가 저장됩니다.
  * data: 템플랫으로 불러쓸 수 있는 데이터 파일을 저장하는 공간입니다. 데이터의 타입은 toml, yaml, 과 json이 지원됩니다.
  * layouts: 테마를 커스터마이징할 때 기존의 테마내 탬플릿의 내용을 수정하거나 덧씌우기를 하는 템플릿을 저장하는 공간입니다.
@@ -162,12 +162,13 @@ Hugo로 만든 당신의 첫번째 포스트가 보일 겁니다.
 ![image](https://cloud.githubusercontent.com/assets/211484/17955233/9990f3c8-6a4e-11e6-8d3e-0c824453ba1f.png)
 
 
-
-
 <br/>
 
 <hr/>
-`1. 컨텐트 인스턴스의 메타데이터로 템플릿에서 호출해 쓸 수 있습니다.`
+<ol>
+  <li><a id="footnote-1"></a>[Hugo의 모든 명령](https://gohugo.io/commands/)</li>
+  <li><a id="footnote-2"></a>컨텐트 인스턴스의 메타데이터로 템플릿에서 호출해 쓸 수 있습니다.</li>
+</ol>
 <br/>
 <br/>
 <br/>

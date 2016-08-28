@@ -14,6 +14,6 @@ Hugo는 현존하는 가장 빠른 정적 사이트 제너레이터(Static Site 
 
 * [Hugo 시작하기](/post/hugo-intro/getting-started/)
 * [컨텐츠 제작 기초](/post/hugo-intro/content-basic/)
-* [사이트 테마 커스터마이징 하기](/post/hugo-intro/theme-customizing/)
+* [사이트 테마 개발하기](/post/hugo-intro/theme-customizing/)
 * [분류(Taxonomy)기능 사용하기](/post/hugo-intro/taxonomy-basic/)
 * [사이트에 블로그 올리는 방법](/post/hugo-intro/how-to-contribute-content/)
