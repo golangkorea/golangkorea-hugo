@@ -2,6 +2,3 @@
 	path = public
 	url = git@github.com:golangkorea/golangkorea.github.io.git
 	branch = master
-[submodule "golangkorea.github.io"]
-	path = golangkorea.github.io
-	url = git@github.com:golangkorea/golangkorea.github.io.git
