@@ -1,6 +1,6 @@
 +++
 date = "2016-08-23T23:25:04-04:00"
-draft = true
+draft = false
 title = "시리즈 #2 - 컨텐츠 제작 기초"
 description = "Hugo 입문 두번째 시리즈로 컨텐츠 제작과 관련해 꼭 알아야 할 개념들을 소개합니다"
 
