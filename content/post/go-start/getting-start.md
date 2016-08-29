@@ -8,7 +8,7 @@ series=["Go 시작하기"]
 authors=["Sangbae Yun"]
 +++
 ## Go 언어에 대해서
-구글이 2009년에 만든 비교적 새로운 프로그래밍 언어다. 2009년이면 거의 7년 이상된 구닥다리 언어아닌가? 라고 생각 할 수 있겠으나, Ruby(1996년) 나 python(1991년) 과 비교해보면 느낌이 올 것이다. V8 자바스크립트 엔진 개발에 참여했던 Robert Griesemer, 켄 톰슨과 UTF-8을 만든 **Rob Pike**, 초창기 유닉스 운영체제를 설계했으며 B언어(C언어의 전신)를 개발한 **Ken Thompson**등 쟁쟁한 개발자들이 만든 언어다. 구글이 개발 했다는 프리미엄과 함께 **도커(Docker)**의 개발 언어라는게 알려지면서 유명세를 타게 됐다.
+구글이 2009년에 만든 비교적 새로운 프로그래밍 언어다. 2009년이면 거의 7년 이상된 구닥다리 언어아닌가? 라고 생각 할 수 있겠으나, Ruby(1996년) 나 python(1991년) 과 비교해보면 느낌이 올 것이다. V8 자바스크립트 엔진 개발에 참여했던 Robert Griesemer, UTF-8을 만든 **Rob Pike**, 초창기 유닉스 운영체제를 설계했으며 B언어(C언어의 전신)를 개발한 **Ken Thompson**등 쟁쟁한 개발자들이 만든 언어다. 구글이 개발 했다는 프리미엄과 함께 **도커(Docker)**의 개발 언어라는게 알려지면서 유명세를 타게 됐다.
 
 Python이나 Java와 같은 범용 프로그래밍 언어로 시스템 프로그래밍과 네트워크 프로그램의 개발을 목표로 만들어진 언어다. 비교적 최근에 만들어진 언어답게 C++, Java, Python 언어들의 장점을 상당 부분 수용했다. 이렇게 보면 최신 프로그래밍 언어들의 트랜드를 따를 것 같지만 코드는 **C 언어**와 매우 비슷한 느낌을 준다.
 
@@ -86,4 +86,64 @@ go get github.com/mattn/go-sqlite3
 패키지의 경로가 github 경로인 것을 확인 할 수 있다. 물론 인터넷에 연결하지 않고도 프로젝트를 수행 할 수는 있지만 제대로 go 프로그래밍을 하려면 인터넷과 github 계정이 필요하다.
 
 아래에서 다룰 Hello World 프로젝트도 github 기반으로 진행 할 것이다. github 계정이 없다면 지금 계정을 만들자. 내가 사용하고 있는 github 계정은 **yundream** 이다.
+
 ### Hello World
+Hello World 프로젝트를 시작하기 위해서 github 계정에 helloworld 프로젝트를 만들었다. 프로젝트를 만들 때 **Initialize this repository with a README** 옵션을 체크하자. 이제 go get 명령을 이용해서 패키지를 다운로드 한다.
+```
+$ go get github.com/yundream/helloworld
+package github.com/yundream/helloworld: no buildable Go source files in /home/yundream/golang/src/github.com/yundream/helloworld
+```
+지금은 README.md 파일만 있으므로 빌드 할 수 있는 go 파일이 없다는 경고메시지가 뜨지만 무시하자. **GOPATH** 환경에 등록된 /home/yundream/golang 디렉토리 밑에 패키지를 다운로드 해서 설치하는 것을 확인 할 수 있을 것이다. 디렉토리로 이동해서 helloworld.go 파일을 만들어보자.  
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    fmt.Println("Hello World")
+}
+
+```
+터미널에 "Hello World"를 출력하는 간단한 프로그램이다. go run 명령으로 실행해보자. 
+```
+$ go run main.go 
+Hello World
+```
+go run은 임시디렉토리에서 코드를 컴파일 하고 실행하는 일을 한다. go가 컴파일 언어임에도 불구하고 유저 입장에서는 인터프리터 언어처럼 사용 할 수 있다. 물론 python 같은 언어에 비해서는 즉시성이 떨어지기는 하지만 왠만한 프로젝트에서는 굳이 컴파일 과정을 거치지 않고도 바로 바로 실행 할 수 있다.
+
+go build 명령으로 소스코드를 컴파일 할 수 있다.
+```sh
+$ go build
+$ ls
+README.md  helloworld  main.go
+$ ./helloworld 
+Hello World
+```
+이제 소스코드를 살펴보자. C 언어와 매우 비슷하다는 느낌을 받을 것이다.
+```go
+package main
+```
+패키지를 선언한다. 모든 go 언어는 패키지 선언으로 시작해야 한다. 이 패키지이름을 이용해서 코드를 조직화하고 재사용 할 수 있다. C언어와 유사하게 go 언어도 실행 프로그램과 라이브러리를 위한 두 개의 코드 타입을 가지고 있다. 실행 프로그램이란 쉘 에서 명령을 내려서 직접 실행 할 수 있는 (우리가 일반적으로 알고 있는)프로그램이고, 라이브러리는 다른 프로그램에서 이용 할 수 있게 패키징된 코드의 모음이다. 실행 프로그램을 만들기 위한 go 코드는 반드시 **package main**을 선언해야 한다.
+
+```go
+import (
+  "fmt"
+)
+```
+
+외부 패키지를 import 하기 위해서 사용한다. java의 import와 매우 유사하다. 위에서 go 코드는 실행 프로그램과 라이브러리 타입이 있다고 했던 것을 기억할 것이다. import는 라이브러리 타입의 go 코드를 재사용 하기 위해서 사용한다. 여기에서는 화면과 파일 출력에 관련된 여러 유용한 기능을 담고 있는 **fmt** 패키지를 import했다.
+
+```go
+func main() {
+    fmt.Println("Hello World")
+}
+```
+go 언어의 기본 구성요소는 함수이며, func 키워드로 정의해서 사용 할 수 있다. 이 함수의 이름은 main 이며, 0개의 매개변수(parameter)과 0개의 반환 값을 가지고 있다. main은 프로그램의 시작 점이 되는 특수한 함수다. 실행 가능한 타입의 go 코드는 반드시 하나의 main 함수를 가지고 있어야 한다.
+
+```go
+fmt.Println("Hello World")
+```
+**fmt**는 패키지 이름으로 해석하자면 fmt 패키지가 가지고 있는 **Println** 함수를 사용해서 "Hello World"를 출력하라는 의미가 된다.
+
