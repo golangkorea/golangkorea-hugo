@@ -19,7 +19,7 @@ authors = ["Jhonghee Park"]
 
 GosudaWeb은 [Github Page](https://pages.github.com/)로 제작되고 모든 소스와 제작과정이 공개로 이루어 집니다: [https://github.com/golangkorea](https://github.com/golangkorea).
 
-사이트에 포스트하기를 원하시는 분들은 [사이트에 블로그 올리는 방법](http://localhost:1313/post/hugo-intro/how-to-contribute-content/)을 참조하시길 바랍니다.
+사이트에 포스트하기를 원하시는 분들은 [사이트에 블로그 올리는 방법](/post/hugo-intro/how-to-contribute-content/)을 참조하시길 바랍니다.
 
 Hugo를 이용해 사이트 개발에 참여하거나 golangkorea Organization에 오픈소스 프로젝트를 시작하시고 싶으신 분들은 멤버 신청을 하실 수 있습니다. 멤버 신청은 [golanginkorea@gmail.com](mailto:golanginkorea@gmail.com) 이나 [Golang Korean Community / Lobby](https://gitter.im/golang-korean-community/Lobby?utm_source=share-link&utm_medium=link&utm_campaign=share-link)로 해 주시면 됩니다. 일단 멤버로 등록되면 [golangkorea-website team](https://github.com/orgs/golangkorea/teams/golangkorea-website)을 통해 개발에 참여하실 수 있습니다.
 
