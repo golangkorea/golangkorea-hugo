@@ -106,10 +106,14 @@ git checkout master
 git rebase upstream/master
 ```
 
+Merge를 하는 경우에는 `rebase`를 `merge`로 바꿔주시면 됩니다. [깃헙의 공식 도움말](https://help.github.com/articles/syncing-a-fork/)을 참조하십시요
+
 일단 싱크되면 본인의 forked repo에 다시 푸쉬하십시요.
 ```
 git push -f origin master
 ```
+
+
 
 이제 새로운 포스트를 작성하십시요.
 
