@@ -4,7 +4,7 @@ draft = false
 title = "ReadMe First"
 
 tags = ["Community", "Blog", "Hugo"]
-categories = ["How-to"]
+categories = ["How to"]
 authors = ["Jhonghee Park"]
 
 +++
@@ -20,6 +20,3 @@ authors = ["Jhonghee Park"]
 Golang Korean 커뮤니티 웹사이트(이하 GoCoWeb)은 [Github Page](https://pages.github.com/)로 제작되고 모든 소스와 제작과정이 공개로 이루어 집니다: [https://github.com/golangkorea](https://github.com/golangkorea). Go언어로 개발 경험이나 best practice를 공유하고 싶으신 분이면 누구나 환영합니다. 멤버 신청은 [golanginkorea@gmail.com](mailto:golanginkorea@gmail.com) 이나 [Golang Korean Community / Lobby](https://gitter.im/golang-korean-community/Lobby?utm_source=share-link&utm_medium=link&utm_campaign=share-link)로 해 주시면 됩니다. 일단 멤버로 등록되면 [golangkorea-website team](https://github.com/orgs/golangkorea/teams/golangkorea-website)을 통해 콘텐츠를 공유하실 수 있습니다.
 
 [golangkorea.github.io](https://golangkorea.github.io) 개발, 유지 보수 및 지원에 대한 토론은 [Gitter Room](https://gitter.im/golang-korean-community/golangkorea.github.io?utm_source=share-link&utm_medium=link&utm_campaign=share-link)을 통해 하고 있으니 많은 동참 바라겠습니다.
-
-
-

@@ -4,7 +4,7 @@ draft = true
 title = "Hugo 고급반 - 개요"
 
 tags = ["Blog", "Hugo"]
-categories = ["How-to"]
+categories = ["How to"]
 series = ["Hugo 고급반"]
 authors = ["Jhonghee Park"]
 
