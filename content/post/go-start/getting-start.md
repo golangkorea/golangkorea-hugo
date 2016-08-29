@@ -1,6 +1,6 @@
 +++
 date = "2016-08-26T15:10:07+08:30"
-draft = false
+draft = true 
 title = "Go언어 시작하기"
 tags = ["beginning", "install"]
 categories=["How-to"]
