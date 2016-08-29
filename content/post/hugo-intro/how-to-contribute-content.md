@@ -88,7 +88,7 @@ Pull Request에 대한 자세한 내용은 [GitHub의 도움말](https://help.gi
 ```
 # Add the remote, call it "upstream":
 
-git remote add upstream https://github.com/golangkorea/golangkorea.git
+git remote add upstream https://github.com/golangkorea/golangkorea-hugo.git
 
 # Fetch all the branches of that remote into remote-tracking branches,
 # such as upstream/master:
