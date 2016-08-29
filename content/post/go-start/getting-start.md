@@ -1,5 +1,5 @@
 +++
-date = "2016-08-26T15:10:07+08:30"
+date = "2016-08-28T15:10:07+08:30"
 draft = true 
 title = "Go언어 시작하기"
 tags = ["beginning", "install"]
@@ -74,16 +74,20 @@ go get github.com/mattn/go-sqlite3
 │       └── github.com
 │           └── mattn
 │               └── go-sqlite3.a
-└── src
-    └── github.com
-        └── mattn
-            └── go-sqlite3
-                ├── backup.go
-                ├── backup_test.go
-                ├── callback.go
-                ├── callback_test.go
+├── src 
+|   └── github.com
+|       └── mattn
+|           └── go-sqlite3
+|               ├── backup.go
+|               ├── backup_test.go
+|               ├── callback.go
+|               ├── callback_test.go
+└── bin 
 ```
 패키지의 경로가 github 경로인 것을 확인 할 수 있다. 물론 인터넷에 연결하지 않고도 프로젝트를 수행 할 수는 있지만 제대로 go 프로그래밍을 하려면 인터넷과 github 계정이 필요하다.
+  * src : 패키지의 소스코드가 위치한다.
+  * pkg : 패키지의 소스코드를 빌드해서 만들어진 라이브러리 파일(.a - ar archive 파일)이 위치한다. go-sqlite3.a 파일이 보일 것이다. 
+  * bin : 패키지가 main 함수를 포함할 경우 실행 파일이 만들어 지는데, 이들 실행파일이 복사된다. go-sqlite3는 실행파일이 없으므로 bin에 파일이 복사되지 않는다.
 
 아래에서 다룰 Hello World 프로젝트도 github 기반으로 진행 할 것이다. github 계정이 없다면 지금 계정을 만들자. 내가 사용하고 있는 github 계정은 **yundream** 이다.
 
@@ -111,9 +115,9 @@ func main() {
 $ go run main.go 
 Hello World
 ```
-go run은 임시디렉토리에서 코드를 컴파일 하고 실행하는 일을 한다. go가 컴파일 언어임에도 불구하고 유저 입장에서는 인터프리터 언어처럼 사용 할 수 있다. 물론 python 같은 언어에 비해서는 즉시성이 떨어지기는 하지만 왠만한 프로젝트에서는 굳이 컴파일 과정을 거치지 않고도 바로 바로 실행 할 수 있다.
+go run은 임시디렉토리에서 코드를 컴파일 하고 실행하는 일을 한다. go가 컴파일 언어임에도 불구하고 (컴파일 시간이 매우빠르다)유저 입장에서는 인터프리터 언어처럼 사용 할 수 있다. python 같은 언어에 비해서는 즉시성이 떨어지기는 하지만 왠만한 프로젝트에서는 굳이 컴파일 과정을 거치지 않고도 바로 바로 실행 할 수 있다.
 
-go build 명령으로 소스코드를 컴파일 할 수 있다.
+**go build** 명령으로 소스코드를 컴파일 할 수 있다.
 ```sh
 $ go build
 $ ls
@@ -146,4 +150,70 @@ go 언어의 기본 구성요소는 함수이며, func 키워드로 정의해서
 fmt.Println("Hello World")
 ```
 **fmt**는 패키지 이름으로 해석하자면 fmt 패키지가 가지고 있는 **Println** 함수를 사용해서 "Hello World"를 출력하라는 의미가 된다.
+
+빌드 성공까지 끝냈다면 main.go를 github 저장소에 push하자. 그리고 go get 으로 다시 패키지를 다운로드 해보자. go get으로 패키지를 설치 하면 소스코드들은 $GOPATH/src 밑에 설치된다. 만약 패키지가 실행 가능한 코드 즉 main 함수를 포함하고 있다면 빌드를 수행하고 그 결과를 $GOPATH:/bin 에 복사한다. 
+```sh
+# $GOPATH/bin/helloworld
+Hello World
+```
+go 프로젝트를 진행하다 보면, go get을 이용해서 go 기반의 소프트웨어들을 설치하게 될 것이다. 환경변수 PATH에 **$GOPATH/bin** 도 추가하자.
+
+만약 패키지를 지우고 싶다면 $GOPATH/src로 이동해서 패키지 디렉토리를(이 경우 $GOPATH/src/github.com/yundream/helloworld) 지워주기만 하면 된다.
+
+### 첫 번째 패키지를 만들어보자.
+이제 라이브러리 타입의 패키지를 만들어 보자. 패키지의 이름은 **stringutil**로 문자열 조작과 관련된 함수들을 만들 것이다. 
+```go
+package stringutil
+
+func Reverse(s string) string {
+	r := []rune(s)
+	for i, j := 0, len(r)-1; i < len(r)/2; i, j = i+1, j-1 {
+		r[i], r[j] = r[j], r[i]
+	}
+	return string(r)
+}
+```
+Reverse 함수 하나만을 포함하고 있다. 매개변수로 받은 문자를 뒤집어서 반환하는 일을 한다. 
+
+github 계정에 stringutil 저장소를 만들고 stringutil.go 파일을 push 한후, go get 으로 패키지를 다운로드하자. 
+```sh
+# go get github.com/yundream/stringutil
+```
+go get으로 치된 패키지를 확인해보자.
+```
+# go list ... | grep yundream
+github.com/yundream/helloworld
+github.com/yundream/stringutil
+```
+stringutil는 라이브러리 타입의 패키지로 빌드한 결과는 pkg/ 디렉토리 밑에 .a 파일로 저장된다.
+```sh
+# file $GOPATH/pkg/linux_amd64/github.com/yundream/stringutil.a
+/home/yundream/golang/pkg/linux_amd64/github.com/yundream/stringutil.a: current ar archive
+```
+
+이제 helloworld 패키지에서 stringutil 패키지를 임포트해서 함수를 사용 할 수 있다. 
+```go  
+import (
+    "fmt"
+    "github.com/yundream/stringutil"
+)
+
+func main() {
+    fmt.Println("Hello World !!")
+    val := stringutil.Reverse("ABCDEF")
+    fmt.Println(val)
+}
+```
+실행해 보면 stringutil.Reverse 함수가 작동하는 걸 확인할 수 있다.
+```sh
+# go run main.go 
+Hello World !!
+FEDCBA
+```
+
+### Single 파일 배포
+Go 언어에서 라이브러리 타입의 패키지들은 빌드가 되면 모두 **.a(정적 라이브러리)** 형태로 만들어진다. **공유 라이브러리(Shared Library)**를 지원하지 않는다. 때문에 공유 라이브러리에 대한 의존성 걱정 없이 **하나의 실행 파일로 배포**할 수 있다.
+
+배포과정이 엄청나게 단순하다. 대신 파일의 크기가 커지고, 특정 패키지에 버그나 보안홀이 발견될 경우 모든 패키지를 다시 빌드해야 하는 문제가 있기는 하지만 원 파일 배포의 장점이 더 크다고 할 수 있다.
+
 
