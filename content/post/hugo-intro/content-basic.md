@@ -5,7 +5,7 @@ title = "시리즈 #2 - 컨텐츠 제작 기초"
 description = "Hugo 입문 두번째 시리즈로 컨텐츠 제작과 관련해 꼭 알아야 할 개념들을 소개합니다"
 
 tags = ["Blog", "Hugo"]
-categories = ["How-to"]
+categories = ["How to"]
 series = ["Hugo 입문하기"]
 authors = ["Jhonghee Park"]
 
@@ -19,7 +19,7 @@ toc = true
 
 # 컨텐츠의 조직적인 관리 (Organization)
 
-사이트가 많은 양의 컨텐츠를 보유하게 되면서 조직적인 관리가 필요할 때 Hugo가 어떻게 도와주는지 알아 봅시다. [시리즈 1](/post/hugo-intro/getting-started/)에서 보았 듯이 Hugo의 `configuration`<a href="#footnote-1"><sup>1</sup></a>에 특별한 세팅이 없는 한 모든 컨텐츠는 `content` 폴더 안에 위치하게 됩니다. Hugo를 통해 만들어질 사이트의 URL은 `content`내의 폴더 구조와 매우 밀접한 관계가 있습니다. 우선 `content` 바로 아래 위치하는 폴더는 `section`이라고 부르는데 매우 중요한 역활을 합니다. 다음의 예는 `section`이 사이트 URL과 어떤 상관이 있는지 암시합니다. 만들어진 사이트의 URL경로는 거울을 보듯이 컨텐츠 소스의 경로을 반영합니다.
+사이트가 많은 양의 컨텐츠를 보유하게 되면서 조직적인 관리가 필요할 때 Hugo가 어떻게 도와주는지 알아 봅시다. [시리즈 1](/post/hugo-intro/getting-started/)에서 보았 듯이 Hugo의 `configuration`<sup>1</sup>에 특별한 세팅이 없는 한 모든 컨텐츠는 `content` 폴더 안에 위치하게 됩니다. Hugo를 통해 만들어질 사이트의 URL은 `content`내의 폴더 구조와 매우 밀접한 관계가 있습니다. 우선 `content` 바로 아래 위치하는 폴더는 `section`이라고 부르는데 매우 중요한 역활을 합니다. 다음의 예는 `section`이 사이트 URL과 어떤 상관이 있는지 암시합니다. 만들어진 사이트의 URL경로는 거울을 보듯이 컨텐츠 소스의 경로을 반영합니다.
 ``` ascii
 .
 |- content
@@ -105,7 +105,7 @@ authors = ["Jhonghee Park"]
 toc = true
 +++
 ```
-`Front Matter`로 정의될 수 있는 변수에 특별한 제약사항은 없습니다. 어떤 변수라도 템플렛안에서 `.Params.varname`형식으로 접근할 수 있습니다. 템플릿 안에서 변수이름은 항상 소문자로 표현됩니다. 예를 들어 `camelCase = true`라고 정의된 변수는 템플릿안에서는 `.Params.camelcase`<a href="#footnote-2"><sup>2</sup></a>로 값을 출력할 수 있습니다. 다음은 컨텐트 제작에 필수적인 변수들입니다.
+`Front Matter`로 정의될 수 있는 변수에 특별한 제약사항은 없습니다. 어떤 변수라도 템플렛안에서 `.Params.varname`형식으로 접근할 수 있습니다. 템플릿 안에서 변수이름은 항상 소문자로 표현됩니다. 예를 들어 `camelCase = true`라고 정의된 변수는 템플릿안에서는 `.Params.camelcase`<sup>2</sup>로 값을 출력할 수 있습니다. 다음은 컨텐트 제작에 필수적인 변수들입니다.
 
 * **title** 컨텐트의 제목
 * **description** 컨텐트에 대한 설명
@@ -175,8 +175,8 @@ genre = ""
 <hr/>
 <br/>
   <ol>
-    <li><a id="footnote-1"></a>Hugo의 configuration은 특별한 조치가 없는 경우 프로젝트 폴더내 config.toml에 정의됩니다. TOML외 YAML과 JSON 포맷이 지원됩니다.</li>
-    <li><a id="footnote-2"></a>Hugo는 여러 템플릿 엔진을 지원합니다. 이 글에서는 Go언어의 자체적 `text/template`을 사용하는 것을 전제합니다.</li>
+    <li>Hugo의 configuration은 특별한 조치가 없는 경우 프로젝트 폴더내 config.toml에 정의됩니다. TOML외 YAML과 JSON 포맷이 지원됩니다.</li>
+    <li>Hugo는 여러 템플릿 엔진을 지원합니다. 이 글에서는 Go언어의 자체적 `text/template`을 사용하는 것을 전제합니다.</li>
   </ol>
 <br/>
 <br/>
