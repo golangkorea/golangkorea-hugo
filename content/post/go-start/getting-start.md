@@ -7,6 +7,7 @@ categories=["How-to"]
 series=["Go 시작하기"]
 authors=["Sangbae Yun"]
 +++
+![Go 로고](http://digveloper.ppillip.com/wp-content/uploads/2013/04/appenginegophercolor.jpg)
 ## Go 언어에 대해서
 구글이 2009년에 만든 비교적 새로운 프로그래밍 언어다. 2009년이면 거의 7년 이상된 구닥다리 언어잖아? 라고 생각 할 수 있겠으나, Ruby(1996년) 나 python(1991년) 과 비교해보면 느낌이 다를 것이다. V8 자바스크립트 엔진 개발에 참여했던 **Robert Griesemer**, UTF-8을 만든 **Rob Pike**, 초창기 유닉스 운영체제를 설계했으며 B언어(C언어의 전신)를 개발한 **Ken Thompson**등 쟁쟁한 개발자들이 만든 언어다. 구글이 개발 했다는 프리미엄과 함께 **도커(Docker)**의 개발 언어라는게 알려지면서 유명세를 타게 됐다.
 
