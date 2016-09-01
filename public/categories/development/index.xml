@@ -311,7 +311,7 @@ func Test_StrRept(t *testing.T) {
 
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;# go test
 PASS
-ok  	_/home/yundream/workspace/golang/unitTest	0.001s
+ok      _/home/yundream/workspace/golang/unitTest   0.001s
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&lt;strong&gt;-v&lt;/strong&gt; 옵션을 주면 자세한 테스트 정보를 확인 할 수 있다. 로그(t.Log) 정보도 함께 출력한다.&lt;/p&gt;
@@ -321,11 +321,11 @@ ok  	_/home/yundream/workspace/golang/unitTest	0.001s
 --- PASS: Test_Sum (0.00s)
 === RUN   Test_Div
 --- PASS: Test_Div (0.00s)
-	math_test.go:21: 0/2 = 0
+    math_test.go:21: 0/2 = 0
 === RUN   Test_StrRept
 --- PASS: Test_StrRept (0.00s)
 PASS
-ok  	_/home/yundream/workspace/golang/unittest	0.002s
+ok      _/home/yundream/workspace/golang/unittest   0.002s
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&lt;strong&gt;Test_StrRept&lt;/strong&gt;테스트를 아래와 같이 수정 한 다음에 테스트해보자.&lt;/p&gt;
@@ -345,13 +345,13 @@ ok  	_/home/yundream/workspace/golang/unittest	0.002s
 --- PASS: Test_Sum (0.00s)
 === RUN   Test_Div
 --- PASS: Test_Div (0.00s)
-	math_test.go:21: 0/2 = 0
+    math_test.go:21: 0/2 = 0
 === RUN   Test_StrRept
 --- FAIL: Test_StrRept (0.00s)
-	math_test.go:27: Repeat fail
+    math_test.go:27: Repeat fail
 FAIL
 exit status 1
-FAIL	_/home/yundream/workspace/golang/unittest	0.002s
+FAIL    _/home/yundream/workspace/golang/unittest   0.002s
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;테스트 실패를 확인 할 수 있다.&lt;/p&gt;
@@ -395,13 +395,13 @@ func TestSomething(t *testing.T) {
 # go test
 --- FAIL: TestSomething (0.00s)
         Error Trace:    yours_test.go:11
-	Error:		Not equal: 123 (expected)
-			        != 125 (actual)
-	Messages:	they should be equal
-		
+    Error:      Not equal: 123 (expected)
+                    != 125 (actual)
+    Messages:   they should be equal
+        
 FAIL
 exit status 1
-FAIL	_/home/yundream/workspace/golang/mytest	0.003s
+FAIL    _/home/yundream/workspace/golang/mytest 0.003s
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;테스트 코드와 테스트 결과의 가독성 모두 좋아졌다. 이 패키지는 &lt;strong&gt;assert&lt;/strong&gt;외에도 &lt;strong&gt;mock&lt;/strong&gt;, &lt;strong&gt;http 테스트&lt;/strong&gt;, &lt;strong&gt;suite&lt;/strong&gt;등 테스트를 위한 다양한 툴들을 지원한다.&lt;/p&gt;
@@ -520,7 +520,7 @@ func DoGet(url string) (*Response, error) {
 === RUN   Test_Ping
 --- PASS: Test_Ping (0.00s)
 PASS
-ok  	bitbucket.org/dream_yun/handlertest/handler	0.003s
+ok      bitbucket.org/dream_yun/handlertest/handler 0.003s
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;존재하지 않는 페이지를 요청 할 경우 &lt;strong&gt;404 Page Not Found&lt;/strong&gt;를 반환해야 할테다. 이를 테스트하기 위한 코드를 만들었다.&lt;/p&gt;
@@ -693,7 +693,7 @@ func (h Handler) Div(w http.ResponseWriter, r *http.Request) {
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;# go test -cover
 PASS
 coverage: 100.0% of statements
-ok  	bitbucket.org/dream_yun/handlertest/handler	0.004s
+ok      bitbucket.org/dream_yun/handlertest/handler 0.004s
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;모든 코드를 완전히 테스트 하고 있다. 이 예제로는 테스트 커버리지를 확인하기가 애매모호해서, API를 추가했다.&lt;/p&gt;
@@ -725,7 +725,7 @@ func (h Handler) Div(w http.ResponseWriter, r *http.Request) {
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;# go test -cover
 PASS
 coverage: 21.7% of statements
-ok  	bitbucket.org/dream_yun/handlertest/handler	0.004s
+ok      bitbucket.org/dream_yun/handlertest/handler 0.004s
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Div 메서드에 대한 테스트 코드를 만들어서 커버리지를 올리기로 했다.&lt;/p&gt;
@@ -753,7 +753,7 @@ ok  	bitbucket.org/dream_yun/handlertest/handler	0.004s
 # go test -cover
 PASS
 coverage: 91.3% of statements
-ok  	bitbucket.org/dream_yun/handlertest/handler	0.005s
+ok      bitbucket.org/dream_yun/handlertest/handler 0.005s
 }}}
 &lt;/code&gt;&lt;/pre&gt;
 
@@ -788,7 +788,7 @@ ok  	bitbucket.org/dream_yun/handlertest/handler	0.005s
 &lt;p&gt;&lt;strong&gt;gocov test&lt;/strong&gt;를 이용해서 커버리지 데이터파일을 만든다.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;# gocov test ./ &amp;gt; handler.json
-ok  	bitbucket.org/dream_yun/handlertest/handler	0.005s	coverage: 91.3% of statements
+ok      bitbucket.org/dream_yun/handlertest/handler 0.005s  coverage: 91.3% of statements
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;handler.json을 html 파일로 변환한다.&lt;/p&gt;

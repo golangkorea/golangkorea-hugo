@@ -636,6 +636,188 @@ genre = &amp;quot;&amp;quot;
     </item>
     
     <item>
+      <title>시리즈 #1 - Hugo 시작하기</title>
+      <link>https://golangkorea.github.io/post/hugo-intro/getting-started/</link>
+      <pubDate>Tue, 23 Aug 2016 23:24:55 -0400</pubDate>
+      
+      <guid>https://golangkorea.github.io/post/hugo-intro/getting-started/</guid>
+      <description>
+
+&lt;h1 id=&#34;hugo-시작하기&#34;&gt;Hugo 시작하기&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://gohugo.io&#34;&gt;Hugo&lt;/a&gt;는 Go로 제작되고 하나의 실행파일로 배포됩니다. 다양한 설치 방법이 있지만 우선 Package Manager를 쓰시는 분들을 중심으로 살펴보겠습니다.&lt;/p&gt;
+
+&lt;h2 id=&#34;package-manager로-설치하기&#34;&gt;Package Manager로 설치하기&lt;/h2&gt;
+
+&lt;p&gt;MacOS를 쓰시는 분들은 Homebrew를 이용해 쉽게 설치하실 수 있습니다.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;brew update &amp;amp;&amp;amp; brew install hugo
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Windows에서 Chocolatey를 쓰시는 분들도 비슷한 방법으로 설치가 가능합니다.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;C:\&amp;gt; choco install hugo
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Linux에서는 조금 복잡해 집니다. 우분트를 쓰시는 분들은 우선 &lt;a href=&#34;https://github.com/spf13/hugo/releases&#34;&gt;Hugo 릴리즈 페이지&lt;/a&gt;로 가서 최신 deb 버전을 다운로드한 후에 다음 명령을 실행 시키면 됩니다.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo dpkg -i hugo*.deb
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;소스로-직접-빌드해-쓰는-방법&#34;&gt;소스로 직접 빌드해 쓰는 방법&lt;/h2&gt;
+
+&lt;p&gt;이미 Go로 개발 환경을 갖추고 계신 분들은 직접 소스를 빌드해 쓰시는 방법이 가장 편합니다. 간단히 &lt;code&gt;go get&lt;/code&gt;툴을 이용해 설치하실 수 있습니다.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;go get -v github.com/spf13/hugo
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Hugo가 설치되었는지를 &lt;code&gt;version&lt;/code&gt; 보조 명령어를 사용해 확인하십시요.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ hugo version
+Hugo Static Site Generator v0.17-DEV BuildDate: 2016-08-21T19:44:40-04:00
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;프로젝트-폴더-만들기&#34;&gt;프로젝트 폴더 만들기&lt;/h1&gt;
+
+&lt;p&gt;정적 사이트 제너레이터를 처음 접하시는 분들을 위해 Hugo를 간단하게 설명하자면, Hugo는 소스 폴더 아래 존재하는 파일과 컨텐츠 템플릿을 입력으로 사용해서 웹사이트 전체를 출력하는 시스템입니다. 보통 소스는 &lt;a href=&#34;https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet&#34;&gt;Markdown&lt;/a&gt;을 이용한 컨텐츠이거나 템플릿 언어로 작성된 HTML에 자바스크립과 CSS스타일로 구성되어 웹 개발자에게 매우 친숙한 환경이라 할 수 있습니다.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ascii&#34;&gt;  +------------------+
+  |    Content       +--------+
+  |    (Markdown)    |        |
+  +------------------+        |           +------------+
+  +------------------+     +--v---+       |Full Website|
+  |Template          |     |      |       +-------+----+
+  |(text/template)   |     | Hugo |       |       |    |
+  |(Ace)             +-----&amp;gt;      +-------&amp;gt;       |    |
+  |(Amber)           |     |      |       |       |    |
+  +------------------+     +--^--^+       |       |    |
+  +------------------+        |  |        |       |    |
+  |Configuraton      |        |  |        +-------+----+
+  |(toml, yaml, json)+--------+  |
+  +------------------+           |
+  +------------------+           |
+  | Static           |           |
+  | (image)          |           |
+  | (javascript)     +-----------+
+  | (css)            |
+  +------------------+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Hugo는 커맨드라인 명령어 체계는 각종 보조 명령어와 POSIX를 준수하는 플래그로 구성되어 빌드와 유틸리티 기능을 제공합니다. 우선 Hugo가 제공하는 Scaffolding 명령어를 가지고 프로젝트 폴더를 만들어 보도록 합니다.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ hugo new site golangkorea-hugo
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Hugo의 모든 명령&lt;a href=&#34;#footnote-1&#34;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/a&gt;은 &lt;code&gt;hugo&lt;/code&gt;로 시작하고 보조 명령어가 뒤를 따릅니다. 여기서 &lt;code&gt;new&lt;/code&gt;는 보조 명령어로서 &lt;code&gt;site&lt;/code&gt; 보조 명령어와 함께 프로젝트를 초기화합니다. 초기화된 프로젝트의 폴더 구조는 다음과 같습니다.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cd golangkorea-hugo
+$ tree -a
+.
+├── archetypes
+├── config.toml
+├── content
+├── data
+├── layouts
+├── static
+└── themes
+
+6 directories, 1 file
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;초기화된 프로젝트에는 텅빈 폴더 6개와 &lt;code&gt;config.toml&lt;/code&gt; 파일 하나가 만들어 집니다. 각 폴더의 용도를 간단히 나열하면 다음과 같습니다.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;archetypes: &lt;code&gt;hugo new&lt;/code&gt;명령으로 컨텐트 생성시 &lt;a href=&#34;https://gohugo.io/content/front-matter/&#34;&gt;Front Matter&lt;/a&gt;&lt;a href=&#34;#footnote-2&#34;&gt;&lt;sup&gt;2&lt;/sup&gt;&lt;/a&gt; 에 컨텐트 타입에 따른 기본 값들을 어떻게 정해줄 것인가를 결정하는 파일들을 저장합니다.&lt;/li&gt;
+&lt;li&gt;content: 컨텐츠가 저장됩니다.&lt;/li&gt;
+&lt;li&gt;data: 템플랫으로 불러쓸 수 있는 데이터 파일을 저장하는 공간입니다. 데이터의 타입은 toml, yaml, 과 json이 지원됩니다.&lt;/li&gt;
+&lt;li&gt;layouts: 테마를 커스터마이징할 때 기존의 테마내 탬플릿의 내용을 수정하거나 덧씌우기를 하는 템플릿을 저장하는 공간입니다.&lt;/li&gt;
+&lt;li&gt;static: 이미지, 자바스크립, CSS등을 저장하는 공간&lt;/li&gt;
+&lt;li&gt;themes: 사이트의 테마를 저장하는 공간.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;config.toml의 내용을 보면 다음과 같습니다.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;baseurl = &amp;quot;http://replace-this-with-your-hugo-site.com/&amp;quot;
+languageCode = &amp;quot;en-us&amp;quot;
+title = &amp;quot;My New Hugo Site&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;baseurl&lt;/code&gt;은 말 그대로 사이트내 모든 리소스의 URL의 베이스를 형성합니다. 예를 들어 &lt;code&gt;content/post/my-first-blog.md&lt;/code&gt;라는 컨텐트가 있으면 Full URL은 &lt;code&gt;http://replace-this-with-your-hugo-site.com/post/my-first-blog&lt;/code&gt;이 됩니다.&lt;/p&gt;
+
+&lt;h1 id=&#34;첫번째-컨텐트-만들기&#34;&gt;첫번째 컨텐트 만들기&lt;/h1&gt;
+
+&lt;p&gt;그럼, 다음 Scaffolding 명령을 써서 첫번째 블로그 포스트를 만들어 보도록 합니다.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ hugo new post/my-first-blog.md
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;content/post/my-first-blog.md&lt;/code&gt;가 만들어 지면 아래와 같이 편집을 하고 저장하십시요.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;+++
+date = &amp;quot;2016-08-24T21:51:10-04:00&amp;quot;
+draft = true
+title = &amp;quot;my first blog&amp;quot;
+
++++
+
+# Hello, Hugo! &amp;lt;- 편집 부분
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;hugo server&lt;/code&gt;명령을 써서 Hugo가 제공하는 웹서버를 구동한 다음 &lt;code&gt;http://localhost:1313&lt;/code&gt;을 브라우저로 열어 보십시요. 텅빈 페이지로 나타날 겁니다. 왜 그럴까요? 답 부터 말씀드리면 Hugo의 입장에서는 무엇으로 페이지를 렌더링할 지 아무런 정보가 없는 경우인 것입니다. &lt;code&gt;layouts&lt;/code&gt; 폴더안에 &lt;code&gt;index.html&lt;/code&gt;이라는 파일을 만들고 다음과 같이 편집해 저장하신 다음 다시 &lt;code&gt;http://localhost:1313&lt;/code&gt;을 열어 보십시요.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;h1&amp;gt;Hello, Hugo!&amp;lt;/h1&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Hello, Hugo!&lt;/strong&gt;라고 크게 나타나는 것을 보게 될 것입니다.&lt;/p&gt;
+
+&lt;p&gt;이제 &lt;code&gt;http://localhost:1313/post/my-first-blog&lt;/code&gt;를 열어 보십시요. 심지어 &lt;code&gt;404 page not found&lt;/code&gt;라고 나옵니다. 텅빈 페이지가 아니고 왜 404일까요? 이유는 포스트의 Front Matter에 &lt;code&gt;draft = true&lt;/code&gt;라고 명시되어 있어서 Hugo의 입장에서는 렌더링을 할 이유가 없는 것이죠. &lt;code&gt;Ctrl-C&lt;/code&gt;로 Hugo 웹서버를 중단시킨 다음 &lt;code&gt;hugo server -D=true&lt;/code&gt;명령을 써서 다시 웹서버를 가동시키시고 &lt;code&gt;http://localhost:1313/post/my-first-blog&lt;/code&gt;를 열어 보십시요. 이번에는 404가 아니고 텅빈 페이지가 보일 겁니다. Hugo를 의인화해서 다시 설명을 드리면, &lt;code&gt;-D=true&lt;/code&gt; 플래그를 보고 드래프트 포스트도 렌더링을 해야 하는데 어떻게 해야 할 지 몰라 백지를 낸 상황인 겁니다. 이건 어떻게 고쳐야 할까요?&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;layouts/post/single.html&lt;/code&gt;라는 파일을 만드시고 다음의 내용을 저장하신 다음, &lt;code&gt;http://localhost:1313/post/my-first-blog&lt;/code&gt;을 열어 보세요.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;p&amp;gt;Before content&amp;lt;/p&amp;gt;
+{{ .Content }}
+&amp;lt;p&amp;gt;After content&amp;lt;/p&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;첫번째 포스트가 이제 보이십니까?&lt;/p&gt;
+
+&lt;h1 id=&#34;이렇게-힘들게-만들어야-하나&#34;&gt;이렇게 힘들게 만들어야 하나?&lt;/h1&gt;
+
+&lt;p&gt;이런 질문이 당연히 생기실 겁니다. 사이트의 구조와 컨텐츠의 템플릿을 하나씩 만들어 나가야 한다면 사이트 발생기라고 부를 이유가 없겠죠. 누군가 그런 힘든 노동을 통해 &lt;code&gt;layouts&lt;/code&gt;의 구조와 템플랫을 모두 작성했다면 공유할 수 있는 메카니즘이 필요합니다. 그런 공유의 매카니즘을 &lt;code&gt;테마(theme)&lt;/code&gt;이라고 부릅니다.&lt;/p&gt;
+
+&lt;p&gt;이제 &lt;code&gt;layouts/index.html&lt;/code&gt;과 &lt;code&gt;layouts/post/single.html&lt;/code&gt;을 제거하시고 테마를 사용하는 방법을 배워 봅시다. 다음과 같이 &lt;code&gt;hugo-octopress&lt;/code&gt; 테마를 설치하십시요.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ rm layouts/index.html
+$ rm layouts/post/single.html
+$ cd themes
+$ git clone https://github.com/parsiya/Hugo-Octopress.git
+$ cd ..
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;테마가 설치된 후에는 Hugo의 웹서버를 다음과 같이 시작해 보십시요.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ hugo server -D=true -t=hugo-octopress
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Hugo로 만든 당신의 첫번째 포스트가 보일 겁니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://cloud.githubusercontent.com/assets/211484/17955233/9990f3c8-6a4e-11e6-8d3e-0c824453ba1f.png&#34; alt=&#34;image&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;br/&gt;&lt;/p&gt;
+
+&lt;hr/&gt;
+
+&lt;p&gt;&lt;ol&gt;
+  &lt;li&gt;&lt;a id=&#34;footnote-1&#34;&gt;&lt;/a&gt;&lt;a href=&#34;https://gohugo.io/commands/&#34;&gt;Hugo의 모든 명령&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a id=&#34;footnote-2&#34;&gt;&lt;/a&gt;컨텐트 인스턴스의 메타데이터로 템플릿에서 호출해 쓸 수 있습니다.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Hugo 입문 - 개요</title>
       <link>https://golangkorea.github.io/post/hugo-intro/overview/</link>
       <pubDate>Tue, 23 Aug 2016 22:35:57 -0400</pubDate>
