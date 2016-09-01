@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
+
+  
+  
+  <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+  <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+  
+
+  
+  <title>시리즈 #1 - Hugo 시작하기</title>
+
+  
+  
+  <link rel="stylesheet" href="https://golangkorea.github.io/css/hugo-octopress.css">
+
+  
+  
+    <link rel="stylesheet" href="https://golangkorea.github.io/css/custom.css">
+  
+    <link rel="stylesheet" href="https://golangkorea.github.io/css/custom-font.css">
+  
+
+  
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+  
+  <link href="https://golangkorea.github.io/favicon.png" rel="icon">
+
+  
+  
+  
+
+  
+
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <meta name="author" content="">
+
+  
+  <meta name="generator" content="Hugo 0.16" />
+
+  
+  
+
+  
+  <link rel="stylesheet" href="https://golangkorea.github.io/js/highlight/styles/darcula.css">
+<link rel="stylesheet" href="https://golangkorea.github.io/js/jqcloud/jqcloud.min.css">
+<link rel="stylesheet" href="//fonts.googleapis.com/earlyaccess/nanumgothic.css">
+<link rel="stylesheet" href="//fonts.googleapis.com/earlyaccess/nanumgothiccoding.css">
+
+  <script   src="https://code.jquery.com/jquery-1.12.4.min.js"   integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="   crossorigin="anonymous"></script>
+<script src="https://golangkorea.github.io/js/highlight/highlight.pack.js"></script>
+<script src="https://golangkorea.github.io/js/jqcloud/jqcloud.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+  
+
+</head>
+<body>
+
+
+<header role="banner"><hgroup>
+  
+  <h1><a href="https://golangkorea.github.io/">Golang Korean Community</a></h1>
+    <h2>Go에 관련된 수다를 추구하는 개발자들의 세상</h2>
+</hgroup></header>
+
+
+<nav role="navigation">
+
+<ul class="main-navigation">
+  
+  
+</ul>
+
+
+<ul class="subscription">
+  
+    
+        <a href="https://golangkorea.github.io/index.xml" target="_blank" type="application/rss+xml" title="RSS"><i class="fa fa-rss-square fa-lg"></i></a>
+    
+  
+
+</ul>
+
+
+
+<script>
+(function() {
+  var cx = '002661009167463862046:hk6lhiihuma';
+  var gcse = document.createElement('script');
+  gcse.type = 'text/javascript';
+  gcse.async = true;
+  gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+  var s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(gcse, s);
+})();
+</script>
+<form>
+  <fieldset role="search">
+  <gcse:search class="search"></gcse:search>  
+  </fieldset>
+</form>
+</nav>
+
+
+<div id="main">
+  <div id="content">
+    <div>
+      <article class="hentry" role="article">
+
+        
+        
+
+<header>
+    <h1 class="entry-title">
+         시리즈 #1 - Hugo 시작하기 
+    </h1>
+    <p class="meta">Aug 23, 2016
+         - 4 minute read 
+         - <a href="https://golangkorea.github.io/post/hugo-intro/getting-started/#disqus_thread">Comments</a>
+
+        
+        
+        
+            - <a class="label" href="https://golangkorea.github.io/categories/how-to/">How to</a>
+        
+    </p>
+    <p>Posted by 
+    
+        <a href="https://golangkorea.github.io/authors/jhonghee-park">Jhonghee Park</a>
+    
+    </p>
+    <p>
+    <ul id="series">
+  
+    <li>Series: <a href="https://golangkorea.github.io/series/hugo-introduction">Hugo Introduction</a> </li>
+  
+</ul>
+    </p>    
+</header>
+
+
+        <div class="entry-content">
+          
+          
+          
+            <nav id="TableOfContents">
+<ul>
+<li><a href="#hugo-시작하기">Hugo 시작하기</a>
+<ul>
+<li><a href="#package-manager로-설치하기">Package Manager로 설치하기</a></li>
+<li><a href="#소스로-직접-빌드해-쓰는-방법">소스로 직접 빌드해 쓰는 방법</a></li>
+</ul></li>
+<li><a href="#프로젝트-폴더-만들기">프로젝트 폴더 만들기</a></li>
+<li><a href="#첫번째-컨텐트-만들기">첫번째 컨텐트 만들기</a></li>
+<li><a href="#이렇게-힘들게-만들어야-하나">이렇게 힘들게 만들어야 하나?</a></li>
+</ul>
+</nav>
+          
+          
+
+<h1 id="hugo-시작하기">Hugo 시작하기</h1>
+
+<p><a href="https://gohugo.io">Hugo</a>는 Go로 제작되고 하나의 실행파일로 배포됩니다. 다양한 설치 방법이 있지만 우선 Package Manager를 쓰시는 분들을 중심으로 살펴보겠습니다.</p>
+
+<h2 id="package-manager로-설치하기">Package Manager로 설치하기</h2>
+
+<p>MacOS를 쓰시는 분들은 Homebrew를 이용해 쉽게 설치하실 수 있습니다.</p>
+
+<pre><code>brew update &amp;&amp; brew install hugo
+</code></pre>
+
+<p>Windows에서 Chocolatey를 쓰시는 분들도 비슷한 방법으로 설치가 가능합니다.</p>
+
+<pre><code>C:\&gt; choco install hugo
+</code></pre>
+
+<p>Linux에서는 조금 복잡해 집니다. 우분트를 쓰시는 분들은 우선 <a href="https://github.com/spf13/hugo/releases">Hugo 릴리즈 페이지</a>로 가서 최신 deb 버전을 다운로드한 후에 다음 명령을 실행 시키면 됩니다.</p>
+
+<pre><code>sudo dpkg -i hugo*.deb
+</code></pre>
+
+<h2 id="소스로-직접-빌드해-쓰는-방법">소스로 직접 빌드해 쓰는 방법</h2>
+
+<p>이미 Go로 개발 환경을 갖추고 계신 분들은 직접 소스를 빌드해 쓰시는 방법이 가장 편합니다. 간단히 <code>go get</code>툴을 이용해 설치하실 수 있습니다.</p>
+
+<pre><code>go get -v github.com/spf13/hugo
+</code></pre>
+
+<p>Hugo가 설치되었는지를 <code>version</code> 보조 명령어를 사용해 확인하십시요.</p>
+
+<pre><code>$ hugo version
+Hugo Static Site Generator v0.17-DEV BuildDate: 2016-08-21T19:44:40-04:00
+</code></pre>
+
+<h1 id="프로젝트-폴더-만들기">프로젝트 폴더 만들기</h1>
+
+<p>정적 사이트 제너레이터를 처음 접하시는 분들을 위해 Hugo를 간단하게 설명하자면, Hugo는 소스 폴더 아래 존재하는 파일과 컨텐츠 템플릿을 입력으로 사용해서 웹사이트 전체를 출력하는 시스템입니다. 보통 소스는 <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">Markdown</a>을 이용한 컨텐츠이거나 템플릿 언어로 작성된 HTML에 자바스크립과 CSS스타일로 구성되어 웹 개발자에게 매우 친숙한 환경이라 할 수 있습니다.</p>
+
+<pre><code class="language-ascii">  +------------------+
+  |    Content       +--------+
+  |    (Markdown)    |        |
+  +------------------+        |           +------------+
+  +------------------+     +--v---+       |Full Website|
+  |Template          |     |      |       +-------+----+
+  |(text/template)   |     | Hugo |       |       |    |
+  |(Ace)             +-----&gt;      +-------&gt;       |    |
+  |(Amber)           |     |      |       |       |    |
+  +------------------+     +--^--^+       |       |    |
+  +------------------+        |  |        |       |    |
+  |Configuraton      |        |  |        +-------+----+
+  |(toml, yaml, json)+--------+  |
+  +------------------+           |
+  +------------------+           |
+  | Static           |           |
+  | (image)          |           |
+  | (javascript)     +-----------+
+  | (css)            |
+  +------------------+
+</code></pre>
+
+<p>Hugo는 커맨드라인 명령어 체계는 각종 보조 명령어와 POSIX를 준수하는 플래그로 구성되어 빌드와 유틸리티 기능을 제공합니다. 우선 Hugo가 제공하는 Scaffolding 명령어를 가지고 프로젝트 폴더를 만들어 보도록 합니다.</p>
+
+<pre><code>$ hugo new site golangkorea-hugo
+</code></pre>
+
+<p>Hugo의 모든 명령<a href="#footnote-1"><sup>1</sup></a>은 <code>hugo</code>로 시작하고 보조 명령어가 뒤를 따릅니다. 여기서 <code>new</code>는 보조 명령어로서 <code>site</code> 보조 명령어와 함께 프로젝트를 초기화합니다. 초기화된 프로젝트의 폴더 구조는 다음과 같습니다.</p>
+
+<pre><code>$ cd golangkorea-hugo
+$ tree -a
+.
+├── archetypes
+├── config.toml
+├── content
+├── data
+├── layouts
+├── static
+└── themes
+
+6 directories, 1 file
+</code></pre>
+
+<p>초기화된 프로젝트에는 텅빈 폴더 6개와 <code>config.toml</code> 파일 하나가 만들어 집니다. 각 폴더의 용도를 간단히 나열하면 다음과 같습니다.</p>
+
+<ul>
+<li>archetypes: <code>hugo new</code>명령으로 컨텐트 생성시 <a href="https://gohugo.io/content/front-matter/">Front Matter</a><a href="#footnote-2"><sup>2</sup></a> 에 컨텐트 타입에 따른 기본 값들을 어떻게 정해줄 것인가를 결정하는 파일들을 저장합니다.</li>
+<li>content: 컨텐츠가 저장됩니다.</li>
+<li>data: 템플랫으로 불러쓸 수 있는 데이터 파일을 저장하는 공간입니다. 데이터의 타입은 toml, yaml, 과 json이 지원됩니다.</li>
+<li>layouts: 테마를 커스터마이징할 때 기존의 테마내 탬플릿의 내용을 수정하거나 덧씌우기를 하는 템플릿을 저장하는 공간입니다.</li>
+<li>static: 이미지, 자바스크립, CSS등을 저장하는 공간</li>
+<li>themes: 사이트의 테마를 저장하는 공간.</li>
+</ul>
+
+<p>config.toml의 내용을 보면 다음과 같습니다.</p>
+
+<pre><code>baseurl = &quot;http://replace-this-with-your-hugo-site.com/&quot;
+languageCode = &quot;en-us&quot;
+title = &quot;My New Hugo Site&quot;
+</code></pre>
+
+<p><code>baseurl</code>은 말 그대로 사이트내 모든 리소스의 URL의 베이스를 형성합니다. 예를 들어 <code>content/post/my-first-blog.md</code>라는 컨텐트가 있으면 Full URL은 <code>http://replace-this-with-your-hugo-site.com/post/my-first-blog</code>이 됩니다.</p>
+
+<h1 id="첫번째-컨텐트-만들기">첫번째 컨텐트 만들기</h1>
+
+<p>그럼, 다음 Scaffolding 명령을 써서 첫번째 블로그 포스트를 만들어 보도록 합니다.</p>
+
+<pre><code>$ hugo new post/my-first-blog.md
+</code></pre>
+
+<p><code>content/post/my-first-blog.md</code>가 만들어 지면 아래와 같이 편집을 하고 저장하십시요.</p>
+
+<pre><code>+++
+date = &quot;2016-08-24T21:51:10-04:00&quot;
+draft = true
+title = &quot;my first blog&quot;
+
++++
+
+# Hello, Hugo! &lt;- 편집 부분
+</code></pre>
+
+<p><code>hugo server</code>명령을 써서 Hugo가 제공하는 웹서버를 구동한 다음 <code>http://localhost:1313</code>을 브라우저로 열어 보십시요. 텅빈 페이지로 나타날 겁니다. 왜 그럴까요? 답 부터 말씀드리면 Hugo의 입장에서는 무엇으로 페이지를 렌더링할 지 아무런 정보가 없는 경우인 것입니다. <code>layouts</code> 폴더안에 <code>index.html</code>이라는 파일을 만들고 다음과 같이 편집해 저장하신 다음 다시 <code>http://localhost:1313</code>을 열어 보십시요.</p>
+
+<pre><code>&lt;h1&gt;Hello, Hugo!&lt;/h1&gt;
+</code></pre>
+
+<p><strong>Hello, Hugo!</strong>라고 크게 나타나는 것을 보게 될 것입니다.</p>
+
+<p>이제 <code>http://localhost:1313/post/my-first-blog</code>를 열어 보십시요. 심지어 <code>404 page not found</code>라고 나옵니다. 텅빈 페이지가 아니고 왜 404일까요? 이유는 포스트의 Front Matter에 <code>draft = true</code>라고 명시되어 있어서 Hugo의 입장에서는 렌더링을 할 이유가 없는 것이죠. <code>Ctrl-C</code>로 Hugo 웹서버를 중단시킨 다음 <code>hugo server -D=true</code>명령을 써서 다시 웹서버를 가동시키시고 <code>http://localhost:1313/post/my-first-blog</code>를 열어 보십시요. 이번에는 404가 아니고 텅빈 페이지가 보일 겁니다. Hugo를 의인화해서 다시 설명을 드리면, <code>-D=true</code> 플래그를 보고 드래프트 포스트도 렌더링을 해야 하는데 어떻게 해야 할 지 몰라 백지를 낸 상황인 겁니다. 이건 어떻게 고쳐야 할까요?</p>
+
+<p><code>layouts/post/single.html</code>라는 파일을 만드시고 다음의 내용을 저장하신 다음, <code>http://localhost:1313/post/my-first-blog</code>을 열어 보세요.</p>
+
+<pre><code>&lt;p&gt;Before content&lt;/p&gt;
+{{ .Content }}
+&lt;p&gt;After content&lt;/p&gt;
+</code></pre>
+
+<p>첫번째 포스트가 이제 보이십니까?</p>
+
+<h1 id="이렇게-힘들게-만들어야-하나">이렇게 힘들게 만들어야 하나?</h1>
+
+<p>이런 질문이 당연히 생기실 겁니다. 사이트의 구조와 컨텐츠의 템플릿을 하나씩 만들어 나가야 한다면 사이트 발생기라고 부를 이유가 없겠죠. 누군가 그런 힘든 노동을 통해 <code>layouts</code>의 구조와 템플랫을 모두 작성했다면 공유할 수 있는 메카니즘이 필요합니다. 그런 공유의 매카니즘을 <code>테마(theme)</code>이라고 부릅니다.</p>
+
+<p>이제 <code>layouts/index.html</code>과 <code>layouts/post/single.html</code>을 제거하시고 테마를 사용하는 방법을 배워 봅시다. 다음과 같이 <code>hugo-octopress</code> 테마를 설치하십시요.</p>
+
+<pre><code>$ rm layouts/index.html
+$ rm layouts/post/single.html
+$ cd themes
+$ git clone https://github.com/parsiya/Hugo-Octopress.git
+$ cd ..
+</code></pre>
+
+<p>테마가 설치된 후에는 Hugo의 웹서버를 다음과 같이 시작해 보십시요.</p>
+
+<pre><code>$ hugo server -D=true -t=hugo-octopress
+</code></pre>
+
+<p>Hugo로 만든 당신의 첫번째 포스트가 보일 겁니다.</p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/211484/17955233/9990f3c8-6a4e-11e6-8d3e-0c824453ba1f.png" alt="image" /></p>
+
+<p><br/></p>
+
+<hr/>
+
+<p><ol>
+  <li><a id="footnote-1"></a><a href="https://gohugo.io/commands/">Hugo의 모든 명령</a></li>
+  <li><a id="footnote-2"></a>컨텐트 인스턴스의 메타데이터로 템플릿에서 호출해 쓸 수 있습니다.</li>
+</ol>
+<br/>
+<br/>
+<br/></p>
+
+        </div>
+        
+
+<footer>
+  <p class="meta">
+    <span class="byline author vcard">Posted by <span class="fn">
+    
+        <a href="https://golangkorea.github.io/authors/jhonghee-park">Jhonghee Park</a>
+    
+    </span></span>
+    
+    <time>Aug 23, 2016</time>
+    
+      <span class="categories">
+        Tags:
+        
+          <a class="category" href="https://golangkorea.github.io/tags/blog">Blog</a>  <a class="category" href="https://golangkorea.github.io/tags/hugo">Hugo</a>  
+    
+    </span>
+    
+    <span class="edit-in-github">
+      <a class="label" href="https://github.com/golangkorea/golangkorea-hugo/blob/master/content/post/hugo-intro/getting-started.md">Edit in GitHub</a>
+    </span>
+    
+  </p>
+
+  
+  
+
+  
+
+  <p class="meta">
+    
+        <a class="basic-alignment left" href="https://golangkorea.github.io/post/hugo-intro/overview/" title="Hugo 입문 - 개요">Hugo 입문 - 개요</a>
+    
+
+    
+      <a class="basic-alignment right" href="https://golangkorea.github.io/post/hugo-intro/content-basic/" title="시리즈 #2 - 컨텐츠 제작 기초">시리즈 #2 - 컨텐츠 제작 기초</a>
+    
+  </p>
+  
+    
+      <div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    
+    
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = 'UA-82835198-1';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    
+  
+</footer>
+
+      </article>
+    </div>
+    
+
+
+<aside class="sidebar thirds">
+  <section class="first odd">
+
+    
+      <h1>못 먹어도 Go인 세상</h1>
+    
+
+    <p>
+      
+        새로운 도전과 개발의 재미를 Go를 통해 만끽해 보세요. We love to talk, learn and share our experience. Come join us. Let&rsquo;s have some fun!
+      
+    </p>
+  </section>
+
+
+
+  
+  <ul class="sidebar-nav">
+    <li class="sidebar-nav-item">
+      <a target="_blank" href="https://github.com/golangkorea/golangkorea-hugo/" title="https://github.com/golangkorea/golangkorea-hugo/"><i class="fa fa-github fa-3x"></i></a>
+      
+      
+       
+      
+      
+      <a target="_blank" href="https://plus.google.com/communities/115721275599816202991" title="https://plus.google.com/communities/115721275599816202991"><i class="fa fa-google-plus fa-3x"></i></a>
+      <a target="_blank" href="https://www.facebook.com/groups/golangko/" title="https://www.facebook.com/groups/golangko/"><i class="fa fa-facebook fa-3x"></i></a>
+      
+
+    
+    
+    </li>
+  </ul>
+
+  
+
+  
+    
+      <section class="odd">
+        
+          <h1>Join Us</h1>
+        
+        
+          <li>
+            <a href="https://github.com/golangkorea" title="GitHub Organization"  target="_blank" >GitHub Organization</a>
+          </li>
+        
+          <li>
+            <a href="https://gitter.im/golang-korean-community/golangkorea.github.io?utm_source=share-link&amp;utm_medium=link&amp;utm_campaign=share-link" title="Gitter Room"  target="_blank" >Gitter Room</a>
+          </li>
+        
+      </section>
+    
+  
+
+  
+  
+  
+    
+      <section class="even">
+        <h1>Recent Posts</h1>
+        <ul id="recent_posts">
+          
+            <li class="post">
+              <a href="https://golangkorea.github.io/post/go-start/getting-start/">Go언어 시작하기</a>
+            </li>
+          
+            <li class="post">
+              <a href="https://golangkorea.github.io/author/kucuny/">Kookheon Kwon</a>
+            </li>
+          
+            <li class="post">
+              <a href="https://golangkorea.github.io/post/hugo-intro/how-to-contribute-content/">시리즈 #5 - 사이트에 블로그 올리는 방법</a>
+            </li>
+          
+            <li class="post">
+              <a href="https://golangkorea.github.io/post/hugo-intro/taxonomy-basic/">시리즈 #4 - 분류(Taxonomy)기능 사용하기</a>
+            </li>
+          
+            <li class="post">
+              <a href="https://golangkorea.github.io/post/hugo-intro/theme-customizing/">시리즈 #3 - 사이트 테마 개발하기</a>
+            </li>
+          
+        </ul>
+      </section>
+    
+  
+
+  <section class="odd">
+      <h1>Tags</h1>
+      <ul id="tags">
+          <div id="tags-cloud"></div>
+      </ul>
+  </section>
+
+</aside>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+  var words = [
+    
+      { text: "beginning", weight:  1 , link: "/tags/beginning" },
+    
+      { text: "blog", weight:  7 , link: "/tags/blog" },
+    
+      { text: "community", weight:  1 , link: "/tags/community" },
+    
+      { text: "development", weight:  2 , link: "/tags/development" },
+    
+      { text: "hugo", weight:  7 , link: "/tags/hugo" },
+    
+      { text: "install", weight:  1 , link: "/tags/install" },
+    
+      { text: "tdd", weight:  1 , link: "/tags/tdd" },
+    
+      { text: "unittest", weight:  1 , link: "/tags/unittest" },
+    
+      { text: "vim", weight:  1 , link: "/tags/vim" },
+    
+  ];
+  $('#tags-cloud').jQCloud(words, {
+      width: 280,
+      height: 300
+    });
+});
+
+</script>
+
+  </div>
+</div>
+
+<footer role="contentinfo">
+  <p>Copyright &copy; 2016  - <a href="https://golangkorea.github.io/license/">License</a> -
+  <span class="credit">Powered by <a target="_blank" href="https://gohugo.io">Hugo</a> and <a target="_blank" href="https://github.com/parsiya/hugo-octopress/">Hugo-Octopress</a> theme.
+</p>
+
+</footer>
+
+
+</body>
+</html>
+

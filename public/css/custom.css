@@ -1,0 +1,65 @@
+/**
+ * CSS overrides
+ */
+
+article header {
+    padding-top: 4em;   /* mobile fix 2em -> 4em */
+}
+
+@media only screen and (min-width: 992px) {
+    body>nav form {
+        width: 250px;   /* search fix */
+    }
+}
+
+.gsc-search-box td {
+    border-left: 0px !important;
+}
+
+form.gsc-search-box {
+    padding: 0px 0px 0px 0px !important;
+    margin-bottom: 0px !important;
+}
+
+.gsc-control-cse {
+    padding: 0px !important;
+    background: inherit !important;
+    border: 0px !important;
+}
+
+.gsc-results-wrapper-overlay table, th, td {
+    border-left: 0px !important;
+}
+
+/**
+ * Series
+ */
+header ul#series {
+    padding-top: 20px;
+}
+
+/**
+ * ascii
+ */
+.language-ascii {
+  font-family: monospace;
+}
+
+/**
+ * jQcloud
+ */
+
+ .jqcloud {
+     margin: 0 auto;
+ }
+
+
+/**
+ * edit-in-github
+ */
+ .separator,
+ article>footer .edit-in-github:before {
+     content: "\2022 ";
+     padding: 0 .4em 0 .2em;
+     display: inline-block
+ }
