@@ -78,7 +78,7 @@
   <section class="odd">
       <h1>Tags</h1>
       <ul id="tags">
-          <div id="words"></div>
+          <div id="tags-cloud"></div>
       </ul>
   </section>
 
@@ -92,7 +92,7 @@ $(document).ready(function() {
       { text: {{ $key }}, weight: {{ len $value }}, link: "/tags/{{ $key | urlize }}" },
     {{ end }}
   ];
-  $('#words').jQCloud(words, {
+  $('#tags-cloud').jQCloud(words, {
       width: 280,
       height: 180
     });
