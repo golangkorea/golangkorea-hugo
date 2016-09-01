@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
+
+  
+  
+  <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+  <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+  
+
+  
+  <title>vim-go를 이용한 go 개발 환경 구축</title>
+
+  
+  
+  <link rel="stylesheet" href="https://golangkorea.github.io/css/hugo-octopress.css">
+
+  
+  
+    <link rel="stylesheet" href="https://golangkorea.github.io/css/custom.css">
+  
+    <link rel="stylesheet" href="https://golangkorea.github.io/css/custom-font.css">
+  
+
+  
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+  
+  <link href="https://golangkorea.github.io/favicon.png" rel="icon">
+
+  
+  
+  
+
+  
+
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <meta name="author" content="">
+
+  
+  <meta name="generator" content="Hugo 0.17-DEV" />
+
+  
+  
+
+  
+  <link rel="stylesheet" href="https://golangkorea.github.io/js/highlight/styles/darcula.css">
+<link rel="stylesheet" href="https://golangkorea.github.io/js/jqcloud/jqcloud.min.css">
+<link rel="stylesheet" href="//fonts.googleapis.com/earlyaccess/nanumgothic.css">
+<link rel="stylesheet" href="//fonts.googleapis.com/earlyaccess/nanumgothiccoding.css">
+
+  <script   src="https://code.jquery.com/jquery-1.12.4.min.js"   integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="   crossorigin="anonymous"></script>
+<script src="https://golangkorea.github.io/js/highlight/highlight.pack.js"></script>
+<script src="https://golangkorea.github.io/js/jqcloud/jqcloud.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+  
+
+</head>
+<body>
+
+
+<header role="banner"><hgroup>
+  
+  <h1><a href="https://golangkorea.github.io/">Golang Korean Community</a></h1>
+    <h2>Go에 관련된 수다를 추구하는 개발자들의 세상</h2>
+</hgroup></header>
+
+
+<nav role="navigation">
+
+<ul class="main-navigation">
+  
+  
+</ul>
+
+
+<ul class="subscription">
+  
+    
+        <a href="https://golangkorea.github.io/index.xml" target="_blank" type="application/rss+xml" title="RSS"><i class="fa fa-rss-square fa-lg"></i></a>
+    
+  
+
+</ul>
+
+
+
+<script>
+(function() {
+  var cx = '002661009167463862046:hk6lhiihuma';
+  var gcse = document.createElement('script');
+  gcse.type = 'text/javascript';
+  gcse.async = true;
+  gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+  var s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(gcse, s);
+})();
+</script>
+<form>
+  <fieldset role="search">
+  <gcse:search class="search"></gcse:search>  
+  </fieldset>
+</form>
+</nav>
+
+
+<div id="main">
+  <div id="content">
+    <div>
+      <article class="hentry" role="article">
+
+        
+        
+
+<header>
+    <h1 class="entry-title">
+         vim-go를 이용한 go 개발 환경 구축 
+    </h1>
+    <p class="meta">Aug 22, 2016
+         - 3 minute read 
+         - <a href="https://golangkorea.github.io/post/vim-go/#disqus_thread">Comments</a>
+
+        
+        
+        
+            - <a class="label" href="https://golangkorea.github.io/categories/development/">Development</a><a class="label" href="https://golangkorea.github.io/categories/vim/">vim</a>
+        
+    </p>
+    <p>Posted by 
+    
+        <a href="https://golangkorea.github.io/authors/sangbae-yun">Sangbae Yun</a>
+    
+    </p>
+    <p>
+    <ul id="series">
+  
+</ul>
+    </p>    
+</header>
+
+
+        <div class="entry-content">
+          
+          
+          
+          
+
+<h2 id="vim">Vim</h2>
+
+<p><strong>Vim</strong>은 Emacs와 함께 (적어도 리눅스에서는) 가장 널리 사용하는 에디터일 것이다. 가볍고 빠르며, 어디에서나 실행되기 때문에 그 단순함에도 불구하고 여전히 사랑받고 있다. GUI 환경에서 사용하는 IDE에 익숙한 개발자라면 &ldquo;요즘 같은 시대에 왠 구닥다리 터미널 기반 에디터냐&rdquo;라고 생각할 지도 모르겠다. 아래 그래프를 보자.</p>
+
+<p><img src="https://i.redditmedia.com/Zemj1bdTRcBwW8bF_UFEVSNZ9S1VrS4tsD4HC1b9jeI.jpg?w=844&amp;s=1fbbaa5fe7f8ba1ba0942191327ffd70" alt="Go 에디터 사용율" /></p>
+
+<p>Go언어를 대상으로 조사한 결과인데, Vim이 거의 40% 정도를 차지하고 있다. Emacs까지 하면 터미널 기반 에디터를 사용하는 개발자가 절반이 넘는다. 물론 Go 언어가 시스템과 네트워크 분야의  백앤드 프로그램의 개발에 특화된 측면을 고려해야 겠지만 말이다.</p>
+
+<h2 id="vim-go">Vim-go</h2>
+
+<p>Vim은 다양한 플러그인을 제공한다. <strong>Vim-go</strong>는 Go 개발환경을 지원하는 플러그인이다. 지원하는 기능은 아래와 같다.</p>
+
+<ul>
+<li>함수, 오퍼레이터, 메서드들에 대한 Syntax highlighting</li>
+<li><strong>gocode</strong>를 이용한 자동완성</li>
+<li><strong>:GoDef</strong>를 이용해서 메서드, 변수들의 선언 위치를 네비게이션 할 수 있다.</li>
+<li><strong>:GoImport</strong>를 이용한 패키지 임포트</li>
+<li><strong>:GoTest</strong>와 <strong>:GoTestFunc</strong>를 이용한 유닛 테스트</li>
+<li>테스트 커버리지를 위한 <strong>:GoCoverage</strong></li>
+<li><strong>:GoBuild</strong>, <strong>:GoInstall</strong>을 이용한 패키지 컴파일과 설치</li>
+<li><strong>:GoRun</strong>을 이용한 빠른 실행</li>
+<li>소스 분석을 위한 <strong>:GoImplements</strong>, <strong>:GoCallee</strong>, <strong>:GoReferrer</strong></li>
+<li>Lint툴 <strong>:GoLint</strong></li>
+<li><strong>:GoPlay</strong>로 코드를 <a href="https://play.golang.org">play.golang.org</a> 로 공유
+등 개발 환경을 만들기 위한 거의 모든 기능들을 제공한다. 여기에 파일 네비게이션 플러그인, 자동완성 플러그인들을 추가로 설치하면, IDE 부럽지 않은 개발 환경을 만들 수 있다.</li>
+</ul>
+
+<h2 id="vim-go-설치">Vim-go 설치</h2>
+
+<p>Vim의 플러그인들을 편리하게 관리하기 위해서 몇 가지 패키지 매니저들이 있다. 보통 Vundle 이나 <strong>pathogen</strong>을 사용한다. 나는 pathogen을 사용하고 있다. 아래와 같이 설치하자.</p>
+
+<pre><code class="language-sh"># mkdir -p ~/.vim/autoload ~ 
+/.vim/bundle
+# cd ~/.vim/autoload
+# curl -LSso pathogen.vim https://tpo.pe/pathogen.vim
+</code></pre>
+
+<p>.vimrc 파일을 수정한다.</p>
+
+<pre><code class="language-sh">cat ~/.vimrc
+execute pathogen#infect()
+syntax on
+filetype plugin indent on
+</code></pre>
+
+<p>이제 vim-go를 설치하자.</p>
+
+<pre><code class="language-sh"># cd ~/.vim/bundle
+# git clone https://github.com/fatih/vim-go.git
+</code></pre>
+
+<p>Go 개발을 위한 환경 설정은 다음과 같다.</p>
+
+<pre><code class="language-sh"># export GOPATH=$HOME/golang 
+# export PATH=$PATH:$GOPATH/bin
+# mkdir $HOME/golang
+# echo $GOPATH
+/home/yundream/golang
+# echo $PATH
+/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/yundream/golang/bin....
+</code></pre>
+
+<p>vim-go 프로젝트는 구글의 mercurial에서 관리하고 있다. mercurial도 설치해야 vim-go를 빌드 할 수 있다.</p>
+
+<pre><code># apt-get install mercurial
+</code></pre>
+
+<p>vim을 실행 한후 명령모드에서 <strong>:GoInstallBinaries</strong>를 수행하면, 자동으로 vim-go를 빌드해서 설치해준다.</p>
+
+<pre><code># vim
+~
+~
+:GoInstallBinaries
+vim-go: gocode not found. Installing github.com/nsf/gocode to folder /home/yundream/.vim-go/
+vim-go: goimports not found. Installing code.google.com/p/go.tools/cmd/goimports to folder /home/yundream/.vim-go/
+vim-go: godef not found. Installing code.google.com/p/rog-go/exp/cmd/godef to folder /home/yundream/.vim-go/
+vim-go: oracle not found. Installing code.google.com/p/go.tools/cmd/oracle to folder /home/yundream/.vim-go/
+vim-go: golint not found. Installing github.com/golang/lint/golint to folder /home/yundream/.vim-go/
+vim-go: errcheck not found. Installing github.com/kisielk/errcheck to folder /home/yundream/.vim-go/
+vim-go: gotags not found. Installing github.com/jstemmer/gotags to folder /home/yundream/.vim-go/
+계속하려면 엔터 혹은 명령을 입력하십시오
+</code></pre>
+
+<h2 id="vim-go-기능-빠르게-살펴보기">Vim-go 기능 빠르게 살펴보기</h2>
+
+<p>Go 코드의 실행</p>
+
+<pre><code>:GoRun
+</code></pre>
+
+<p>빌드</p>
+
+<pre><code>:make
+:GoBuild
+</code></pre>
+
+<p>에러체크</p>
+
+<pre><code>:GoErrCheck
+</code></pre>
+
+<p>패키지 임포트</p>
+
+<pre><code>:GoImport fmt
+</code></pre>
+
+<p>심볼에 대한 정의로 이동. 해동 심볼에서 :GoDef</p>
+
+<pre><code>:GoDef
+</code></pre>
+
+<p>대략 이런 식이다. 나머지 명령들은 직접 실행해 보자.</p>
+
+<h2 id="자동완성">자동완성</h2>
+
+<p>자동완성은 IDE의 가장 쓸만한 기능 중 하나일 것이다. vim의  <strong>YCM(YouCompleteMe)</strong>를 이용해서 자동완성 기능을 추가 할 수 있다. 컴파일을 하기 때문에 python-dev와 cmake 패키지를 미리 설치해야 한다.</p>
+
+<pre><code class="language-sh"># cd ~/.vim/bundle
+# git clone https://github.com/Valloric/YouCompleteMe.git
+# cd YouCompleteMe
+# ./install.sh
+</code></pre>
+
+<p>이제 자동완성 기능을 사용 할 수 있다. 아래 화면을 보자.</p>
+
+<p><img src="https://lh5.googleusercontent.com/-n9eUbylZw50/U_C_wglq1aI/AAAAAAAAEQI/IsIWi6MYrdc/s640/golang-2.png" alt="YCM 자동완성" /></p>
+
+<p>YCM은 C, C++, Python, Java 등에도 사용 할 수 있다.</p>
+
+<h2 id="tagbar-설치">TagBar 설치</h2>
+
+<p>ctags는 코드에 포함된 패키지, struct, 메서드의 목록을 한눈에 보여주는 애플리케이션이다. ctags를 설치하자. tagbar는 ctags를 기반으로 작동하는 플러그인이다.</p>
+
+<pre><code class="language-sh"># apt-get install ctags
+</code></pre>
+
+<p>tagbar 플러그인을 설치한다.</p>
+
+<pre><code class="language-sh"># cd ~/.vim/bundle
+# git clone https://github.com/majutsushi/tagbar.git
+</code></pre>
+
+<p>이제 <strong>:TagbarToggle</strong> 명령으로 tagbar 네비게이션 창을 열고 닫을 수 있다.</p>
+
+<p><img src="https://lh5.googleusercontent.com/-xO-ZcWBjqfQ/U_NybrcP-FI/AAAAAAAAEQ8/VjcKCUsrIE0/s640/golang-3.png" alt="TagBar 적용" /></p>
+
+<p>명령어를 입력하기 귀찮다면, 단축 키를 만들자.</p>
+
+<pre><code class="language-sh"># cat .vimrc
+......
+map &lt;F8&gt; :TagbarToggle&lt;CR&gt;
+</code></pre>
+
+<h2 id="nerdtree-설치">NerdTree 설치</h2>
+
+<p>NerdTree는 파일 네비게이션을 만들어주는 플러그인다.</p>
+
+<pre><code class="language-sh"># cd ~/.vim/bundle
+# git clone https://github.com/scrooloose/nerdtree.git 
+</code></pre>
+
+<p>NerdTree와 TagBar를 적용한 화면이다.</p>
+
+<p><img src="https://lh6.googleusercontent.com/-yfhTJc0-xMc/U_N0PxZXmEI/AAAAAAAAERE/2n5LUOmtQGw/s640/golang-4.png" alt="NerdTree와 TagBar 적용" /></p>
+
+<p>명령을 일일이 입력하기가 귀찮아서 단축키를 등록했다.</p>
+
+<pre><code class="language-sh"># cat ~/.vimrc
+set ts=4
+ 
+map &lt;F8&gt; :NERDTreeToggle&lt;CR&gt;
+map &lt;F2&gt; :GoDef&lt;CR&gt;
+map &lt;F4&gt; :TagbarToggle&lt;CR&gt;
+</code></pre>
+
+        </div>
+        
+
+<footer>
+  <p class="meta">
+    <span class="byline author vcard">Posted by <span class="fn">
+    
+        <a href="https://golangkorea.github.io/authors/sangbae-yun">Sangbae Yun</a>
+    
+    </span></span>
+    
+    <time>Aug 22, 2016</time>
+    
+      <span class="categories">
+        Tags:
+        
+          <a class="category" href="https://golangkorea.github.io/tags/development">Development</a>  <a class="category" href="https://golangkorea.github.io/tags/vim">vim</a>  
+    
+    </span>
+  </p>
+
+  
+  
+
+  
+
+  <p class="meta">
+    
+        <a class="basic-alignment left" href="https://golangkorea.github.io/post/readme-first/" title="ReadMe First">ReadMe First</a>
+    
+
+    
+      <a class="basic-alignment right" href="https://golangkorea.github.io/post/hugo-intro/overview/" title="Hugo 입문 - 개요">Hugo 입문 - 개요</a>
+    
+  </p>
+  
+    
+      <div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    
+    
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = 'UA-82835198-1';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    
+  
+</footer>
+
+      </article>
+    </div>
+    
+
+
+<aside class="sidebar thirds">
+  <section class="first odd">
+
+    
+      <h1>못 먹어도 Go인 세상</h1>
+    
+
+    <p>
+      
+        새로운 도전과 개발의 재미를 Go를 통해 만끽해 보세요. We love to talk, learn and share our experience. Come join us. Let&rsquo;s have some fun!
+      
+    </p>
+  </section>
+
+
+
+  
+  <ul class="sidebar-nav">
+    <li class="sidebar-nav-item">
+      <a target="_blank" href="https://github.com/golangkorea/golangkorea-hugo/" title="https://github.com/golangkorea/golangkorea-hugo/"><i class="fa fa-github fa-3x"></i></a>
+      
+      
+       
+      
+      
+      <a target="_blank" href="https://plus.google.com/communities/115721275599816202991" title="https://plus.google.com/communities/115721275599816202991"><i class="fa fa-google-plus fa-3x"></i></a>
+      <a target="_blank" href="https://www.facebook.com/groups/golangko/" title="https://www.facebook.com/groups/golangko/"><i class="fa fa-facebook fa-3x"></i></a>
+      
+
+    
+    
+    </li>
+  </ul>
+
+  
+
+  
+    
+      <section class="odd">
+        
+          <h1>Join Us</h1>
+        
+        
+          <li>
+            <a href="https://github.com/golangkorea" title="GitHub Organization"  target="_blank" >GitHub Organization</a>
+          </li>
+        
+          <li>
+            <a href="https://gitter.im/golang-korean-community/golangkorea.github.io?utm_source=share-link&amp;utm_medium=link&amp;utm_campaign=share-link" title="Gitter Room"  target="_blank" >Gitter Room</a>
+          </li>
+        
+      </section>
+    
+  
+
+  
+  
+  
+    
+      <section class="even">
+        <h1>Recent Posts</h1>
+        <ul id="recent_posts">
+          
+            <li class="post">
+              <a href="https://golangkorea.github.io/post/go-start/getting-start/">Go언어 시작하기</a>
+            </li>
+          
+            <li class="post">
+              <a href="https://golangkorea.github.io/author/kucuny/">Kookheon Kwon</a>
+            </li>
+          
+            <li class="post">
+              <a href="https://golangkorea.github.io/post/hugo-intro/how-to-contribute-content/">시리즈 #5 - 사이트에 블로그 올리는 방법</a>
+            </li>
+          
+            <li class="post">
+              <a href="https://golangkorea.github.io/post/hugo-intro/taxonomy-basic/">시리즈 #4 - 분류(Taxonomy)기능 사용하기</a>
+            </li>
+          
+            <li class="post">
+              <a href="https://golangkorea.github.io/post/hugo-intro/theme-customizing/">시리즈 #3 - 사이트 테마 개발하기</a>
+            </li>
+          
+        </ul>
+      </section>
+    
+  
+
+  <section class="odd">
+      <h1>Tags</h1>
+      <ul id="tags">
+          <div id="tags-cloud"></div>
+      </ul>
+  </section>
+
+</aside>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+  var words = [
+    
+      { text: "beginning", weight:  1 , link: "/tags/beginning" },
+    
+      { text: "blog", weight:  7 , link: "/tags/blog" },
+    
+      { text: "community", weight:  1 , link: "/tags/community" },
+    
+      { text: "development", weight:  2 , link: "/tags/development" },
+    
+      { text: "hugo", weight:  7 , link: "/tags/hugo" },
+    
+      { text: "install", weight:  1 , link: "/tags/install" },
+    
+      { text: "tdd", weight:  1 , link: "/tags/tdd" },
+    
+      { text: "unittest", weight:  1 , link: "/tags/unittest" },
+    
+      { text: "vim", weight:  1 , link: "/tags/vim" },
+    
+  ];
+  $('#tags-cloud').jQCloud(words, {
+      width: 280,
+      height: 300
+    });
+});
+
+</script>
+
+  </div>
+</div>
+
+<footer role="contentinfo">
+  <p>Copyright &copy; 2016  - <a href="https://golangkorea.github.io/license/">License</a> -
+  <span class="credit">Powered by <a target="_blank" href="https://gohugo.io">Hugo</a> and <a target="_blank" href="https://github.com/parsiya/hugo-octopress/">Hugo-Octopress</a> theme.
+</p>
+
+</footer>
+
+
+</body>
+</html>
+
