@@ -1,0 +1,41 @@
+
+<!-- category page -->
+
+{{ partial "header.html" . }}
+
+<div id="main">
+  <div id="content">
+    <div>
+      <section>
+        <div>
+          <h1 id="title">{{ .Title }}</h1>
+
+          <div id="words"></div>
+
+        </div>
+      </section>
+    </div>
+
+    {{ partial "sidebar.html" . }}
+  </div>
+</div>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+  var words = [
+    {{ $data := .Data }}
+    {{ range $key, $value := .Data.Terms }}
+      { text: {{ $key }}, weight: {{ len $value }}, link: "/{{ $data.Plural }}/{{ $key | urlize }}" },
+    {{ end }}
+  ];
+  $('#words').jQCloud(words, {
+      width: 500,
+      height: 350
+    });
+});
+
+</script>
+
+
+{{ partial "footer.html" . }}
