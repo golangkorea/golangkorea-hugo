@@ -5,7 +5,7 @@ title = "시리즈 #3 - 사이트 테마 개발하기"
 
 tags = ["Blog", "Hugo"]
 categories = ["How to"]
-series = ["Hugo 입문하기"]
+series = ["Hugo Introduction"]
 authors = ["Jhonghee Park"]
 
 toc = true

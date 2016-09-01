@@ -5,7 +5,7 @@ title = "시리즈 #5 - 사이트에 블로그 올리는 방법"
 
 tags = ["Blog", "Hugo"]
 categories = ["How to"]
-series = ["Hugo 입문하기"]
+series = ["Hugo Introduction"]
 authors = ["Jhonghee Park"]
 
 +++

@@ -5,7 +5,7 @@ title = "Hugo 입문 - 개요"
 
 tags = ["Blog", "Hugo"]
 categories = ["How to"]
-series = ["Hugo 입문하기"]
+series = ["Hugo Introduction"]
 authors = ["Jhonghee Park"]
 
 +++
