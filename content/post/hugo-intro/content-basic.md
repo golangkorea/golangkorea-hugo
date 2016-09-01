@@ -99,7 +99,7 @@ description = "Hugo 입문 두번째 시리즈로 컨텐츠 제작과 관련해 
 
 tags = ["Blog", "Hugo"]
 categories = ["How-to"]
-series = ["Hugo 입문하기"]
+series = ["Hugo Introduction"]
 authors = ["Jhonghee Park"]
 
 toc = true
