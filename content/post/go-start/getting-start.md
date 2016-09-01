@@ -183,7 +183,7 @@ github 계정에 stringutil 저장소를 만들고 stringutil.go 파일을 push 
 ```sh
 # go get github.com/yundream/stringutil
 ```
-go get으로 치된 패키지를 확인해보자.
+go get으로 설치된 패키지를 확인해보자.
 ```
 # go list ... | grep yundream
 github.com/yundream/helloworld
