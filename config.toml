@@ -9,6 +9,8 @@ layoutdir = "layouts"
 publishdir = "public"
 
 [params]
+defaultKeywords = 'Go,Golang,GolangKorea,Gopher'
+defaultDescription = 'Golang 한국 사용자 모임입니다.'
 
 editInGithubUrlBase = "https://github.com/golangkorea/golangkorea-hugo/blob/master/content/"
 
