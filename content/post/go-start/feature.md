@@ -1,10 +1,11 @@
 +++
-authors = ["Sangbae Yun"]
-categories = ["How-to"]
 date = "2016-09-12T13:10:03+09:00"
 draft = false
-tags = ["beginning"]
 title = "Go의 주요 특징들"
+authors = ["Sangbae Yun"]
+categories = ["How-to"]
+tags = ["beginning"]
+series=["Go 시작하기"]
 toc = false
 +++
 
@@ -99,6 +100,15 @@ func main() {
 [Playground](https://play.golang.org/p/Slj3hhovW4)
 
 뭔가 굉장히 낯설어 보인다. 일단 캡슐화는 지원한다. 보통 **private, public** 키워드를 이용하는데, Go언어는 그런 거 없다. 대신 대/소 문자로 구분을 한다. 대문자로 시작하면 public, 소문자로 시작하면 private가 되는 식이다.  private 변수나 메서드는 패키지 내에서만 사용 할 수 있다.
+
+메서드가 구조체와 분리되기 때문에, 이 메서드가 어느 구조체에 연결된 것인지를 구분해야 한다. **수신자(receiver - func 키워드와 함수명 사이에 위치한다)**를 이용해서, 연결된 구조체를 확인 할 수 있다. 메서드는 **.** 연산자를 이용해서 호출 할 수 있다.
+
+Go는 생성자가 없다. 예제에서 처럼, 구조체를 생성 할 때 초기값을 할당 하거나 혹은 구조체 객체의 포인터를 반환하는 **New** 함수를 만들어서 사용한다. 
+```go
+func New(minAge int, name string, int age) *Person {
+    return &Person{minAge: minAge, name: name, age: age}
+}
+```
 
 ## 에러 처리
 Go는 예외(execption)이 없다. C언어와 같이 반환 값이 에러인지 아닌지를 비교하는 방법으로 에러를 처리한다. 대신 에러만을 전문적으로 처리하는 **error** 타입을 내장하고 있다. Go 프로그램은 error 값을 검사하는 것으로 에러 상태를 확인 할 수 있다.  
