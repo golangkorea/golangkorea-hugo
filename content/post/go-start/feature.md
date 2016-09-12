@@ -398,7 +398,6 @@ I'm circle
 Area : 452.3893421169302
 ===========
 ```
-아무런 메서드를 가지지 않는 빈 인터페이스(empty interface)를 만들 수 있다. 빈 인터페이스는   
 ### 웹 프로그래밍
 Go는 특히 MSA모델의 웹 애플리케이션 개발을 잘 지원한다. 기본으로 지원하는 **net/http**와 [gorilla](http://www.gorillatoolkit.org/)만으로도 훌륭하게 작동하는 웹 애플리케이션 서버를 개발 할 수 있다. 다른 프레임워크 사용 할 필요 없다. (그리고 성능도 매우 뛰어나다)[http://www.joinc.co.kr/w/man/12/golang/HTTPPerf].
 
