@@ -1,9 +1,9 @@
 +++
 authors = ["Sangbae Yun"]
 categories = ["How-to"]
-date = "2016-09-03T13:10:03+09:00"
+date = "2016-09-12T13:10:03+09:00"
 draft = false
-tags = ["geginning"]
+tags = ["beginning"]
 title = "Go의 주요 특징들"
 toc = false
 +++
