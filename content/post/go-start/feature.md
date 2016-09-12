@@ -2,7 +2,7 @@
 authors = ["Sangbae Yun"]
 categories = ["How-to"]
 date = "2016-09-03T13:10:03+09:00"
-draft = true 
+draft = false
 tags = ["geginning"]
 title = "Go의 주요 특징들"
 toc = false
@@ -96,10 +96,9 @@ func main() {
     yundream.MyAge()
 }
 ```
-뭔가 굉장히 낯설다.
+[Playground](https://play.golang.org/p/Slj3hhovW4)
 
-일단 캡슐화는 지원한다. 보통 **private, public** 키워드를 이용하는데, Go언어는 그런 거 없다. 대신 대/소 문자로 구분을 한다. 대문자로 시작하면 public, 소문자로 시작하면 private가 되는 식이다.  private 변수나 메서드는 패키지 내에서만 사용 할 수 있다.
-
+뭔가 굉장히 낯설어 보인다. 일단 캡슐화는 지원한다. 보통 **private, public** 키워드를 이용하는데, Go언어는 그런 거 없다. 대신 대/소 문자로 구분을 한다. 대문자로 시작하면 public, 소문자로 시작하면 private가 되는 식이다.  private 변수나 메서드는 패키지 내에서만 사용 할 수 있다.
 
 ## 에러 처리
 Go는 예외(execption)이 없다. C언어와 같이 반환 값이 에러인지 아닌지를 비교하는 방법으로 에러를 처리한다. 대신 에러만을 전문적으로 처리하는 **error** 타입을 내장하고 있다. Go 프로그램은 error 값을 검사하는 것으로 에러 상태를 확인 할 수 있다.  
@@ -150,6 +149,7 @@ func main() {
     fmt.Printf("당신의 레벨은 %d 입니다.\n", level)
 }
 ```
+[Playground](https://play.golang.org/p/zKZHQ7Obm1)
 
 실제 코드에서는 아래와 같이 에러 케이스를 정의해서 사용한다. 위 코드를 약간 수정했다.
 ```go
@@ -204,6 +204,8 @@ func main() {
 	Check(-1)
 }
 ```
+[Playground](https://play.golang.org/p/oMfSuAqw74)
+
 프로그램의 실행 결과다. 버그를 가지고 있음을 알 수 있다.
 ```
 1 is positive
@@ -285,12 +287,12 @@ func main() {
     fmt.Scanln(&input)
 }
 ```
+
 go 키워드 뒤에 동시 실행할 함수를 두면, 해당 함수를 실행하는 고루틴이 만들어진다. 고루틴은 main 함수는 서로 독립적으로 진행이 된다. main 함수가 고루틴 보다 먼저 종료 할 수 있기 때문에 **Scanln** 함수를 이용해서 기다리게 했다.
 
 10개의 고루틴을 만들어보자. 그냥 go를 열번 호출하면 된다.
 ```go
-yundream@home:~/workspace/golang$ !go
-go run goroutine.go 
+# go run goroutine.go 
 4 : 0
 6 : 0
 4 : 1
@@ -336,7 +338,7 @@ func main() {
 **<-** 연산자를 이용해서 채널에 데이터를 쓰거나 읽을 수 있다. **c <- "ping"**는 채널에 "ping"을 쓰겠다는 의미고, **msg := <-c**는 채널에서 읽은 데이터를 msg에 저장하겠다는 의미다.
 
 ## 인터페이스
-인터페이스는 **메서드**들의 모음으로 간단히 정의 할 수 있다. 메서드들의 형태만 정의하고, 구현은 외부에 맡기는 방식으로 유연한 코드를 만들 수 있다. 
+인터페이스는 **메서드**들의 모음으로 간단히 정의 할 수 있다. 또한 그 자체로 하나의 타입이기도 하다. 메서드들의 형태만 정의하고, 구현은 외부에 맡기는 방식으로 유연한 코드를 만들 수 있다.
 
 ```go
 import (
@@ -396,7 +398,7 @@ I'm circle
 Area : 452.3893421169302
 ===========
 ```
-
+아무런 메서드를 가지지 않는 빈 인터페이스(empty interface)를 만들 수 있다. 빈 인터페이스는   
 ### 웹 프로그래밍
 Go는 특히 MSA모델의 웹 애플리케이션 개발을 잘 지원한다. 기본으로 지원하는 **net/http**와 [gorilla](http://www.gorillatoolkit.org/)만으로도 훌륭하게 작동하는 웹 애플리케이션 서버를 개발 할 수 있다. 다른 프레임워크 사용 할 필요 없다. (그리고 성능도 매우 뛰어나다)[http://www.joinc.co.kr/w/man/12/golang/HTTPPerf].
 
@@ -434,4 +436,58 @@ func main() {
 ### 유닛테스트
 Go언어는 분산환경에 최적화된 측면이 있다. 분산환경에서는 테스트해야 할 기능이 명확하기 때문에 유닛테스트의 효과를 크게 누릴 수 있다. 특히 Go 언어는 **Simple is best** 철학을 지향하기 때문에, 유닛테스트의 활용이 중요하다. Go가 유닛테스트를 기본으로 제공하는 것도 이런 이유 때문일 것이다. 
 
-유닛 테스트를 위해서 **MyMath**라는 간단한 패키지를 만들었다.
+유닛 테스트를 위해서 **mymath**라는 간단한 패키지를 만들었다. 이 코드는 [github](https://github.com/yundream/mymath)에서 다운로드 할 수 있다.
+```go
+package mymath
+
+import (
+    "errors"
+)
+
+var (
+    StatusDivideZero = errors.New("Divide zero")
+)
+
+func Div(a float64, b float64) (float64, error) {
+    if b == 0 {
+        return 0, StatusDivideZero
+    }
+    return a / b, nil
+}
+```
+아래는 테스트 코드다.
+```go
+package mymath
+
+import (
+    "testing"
+)
+
+func Test_Div(t *testing.T) {
+    _, err := Div(1, 0)
+    if err != StatusDivideZero {
+        t.Error("Divide zero")
+    }
+    v, err := Div(10, 5)
+    if v != 2 {
+        t.Fatal("10/5 = 2 but ", v)
+    }
+}
+```
+**go test** 명령을 실행하면, 현재 패키지 디렉토리에 있는 파일에서 테스트 코드를 찾아서 실행 한다. 함수의 이름이 **Test** 로 시작하고 *testing.T 를 매개변수로 사용하면 테스트 함수인 것으로 간주한다.
+```go
+# go test
+PASS
+ok  	github.com/yundream/mymath	0.001s
+```
+**-cover** 옵션을 이용하면 테스트 커버리지 레포팅도 할 수 있다.
+```go
+# go test -cover
+PASS
+coverage: 100.0% of statements
+ok  	github.com/yundream/mymath	0.001s
+```
+Go는 함수 단위의 유닛 테스트 도구 뿐만 아니라 웹 애플리케이션 서버 단위의 테스트 툴도 제공한다. 직접 웹 서버를 실행해서 핸들러들을 테스트하고 커버리지를 측정하는 식으로 작동한다. 웹 애플리케이션 서버 개발 편에서 자세히 다뤄볼 계획이다.
+
+### 마치며 
+여기에서는 Go 언어의 주요 특징들만 간단하게 살펴봤다. 자세한 내용들은 주제별로 따로 다루도록 하겠다.
