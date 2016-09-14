@@ -86,7 +86,7 @@ Go 레포의 `/src` 폴더를 보게 되면, 많은 폴더를 발견하게 된�
 
   1. 어떤 공통의 데이터 구조를 초기화 한다.
 
-  2. 주어진 모든 Go 파일을 차례로 읽어서 각 파일에 yyparse 메서드를 호출한다. 이때 실제로 파싱이 작동한다. Go 컴파일러는 `Bison`을 파서 발생기(parser generator)로 사용한다. 언어의 문법은 `go.y` 완전히 서술되어 있다. (자세한 내용은 나중에 더 제공될 예정이다) 결과로, 이 단계는 완전한 파스트리(parse tree)를 생성하는데, 이때 트리의 각 노드는 컴파일된 프로그램의 요소들을 대표한다.
+  2. 주어진 모든 Go 파일을 차례로 읽어서 각 파일에 yyparse 메서드를 호출한다. 이때 실제로 파싱이 작동한다. Go 컴파일러는 `Bison`을 파서 발생기(parser generator)로 사용한다. 언어의 문법은 [go.y](https://github.com/golang/go/blob/release-branch.go1.4/src/cmd/gc/go.y) 완전히 서술되어 있다. (자세한 내용은 나중에 더 제공될 예정이다) 결과로, 이 단계는 완전한 파스트리(parse tree)를 생성하는데, 이때 트리의 각 노드는 컴파일된 프로그램의 요소들을 대표한다.
 
   3. 생성된 트리를 재귀적으로(Recursively) 방문하면서 약간의 수정을 가한다, 예를 들어, 암시적으로 타입이 주어진 노드에 타입 정보를 정의하거나, 타입 케스팅과 같은 언어요소들을 런타임 패키지내 어떤 함수을 호출하는 식으로 다시 재구성하기도 한다 그외 다른 일들도 실행한다.
 
@@ -96,7 +96,7 @@ Go 레포의 `/src` 폴더를 보게 되면, 많은 폴더를 발견하게 된�
 
 # Go 문법 들여다 보기
 
-이제 두번째 단계를 좀 더 가까이 살펴보자. `go.y` 파일은 언어 문법(grammar)을 가지고 있어 Go 컴파일러를 조사하고 언어의 구문론(syntax)을 이해하는 데 좋은 출발점이다. 파일의 주요한 부분은 선언문들로 구성되며, 다음과 유사하다.
+이제 두번째 단계를 좀 더 가까이 살펴보자. [go.y](https://github.com/golang/go/blob/release-branch.go1.4/src/cmd/gc/go.y) 파일은 언어 문법(grammar)을 가지고 있어 Go 컴파일러를 조사하고 언어의 구문론(syntax)을 이해하는 데 좋은 출발점이다. 파일의 주요한 부분은 선언문들로 구성되며, 다음과 유사하다.
 
 ```
 xfndcl:
@@ -122,10 +122,9 @@ somefunction(x int, y int) int
 
 *xfndcl* 노드는 상수인 *LFUNC* 에 저장된 키워드 *func* 를 뒤 따르는 *fndcl* 와 *fnbodynodes* 로 구성되어 있다.
 
-Bison(혹은 Yacc) 문법의 중요한 기능중에 하나는 무작위의 C 코드를 각 노드 정의옆에 갖다 붙일 수 있다는 것이다. 소스 코드안에 이런 노드의 정의가 매치될 때 마다 C 코드는 실행된다. 여기서, (실행)결과로 노드는 $$ 사용해 표시하고 
-An important feature of Bison (or Yacc) grammar is that it allows for placing arbitrary C code next to each node definition. The code is executed every time a match for this node definition is found in the source code. Here, you can refer to the result node as $$ and to the child nodes as $1, $2, …
+Bison(혹은 Yacc) 문법의 중요한 기능중에 하나는 무작위의 C 코드를 각 노드 정의옆에 갖다 붙일 수 있다는 것이다. 소스 코드안에 이런 노드의 정의가 매치될 때 마다 C 코드는 실행된다. 여기서, (실행된)결과의 노드는 $$ 사용해 표시하고 $1, $2 등등으로 자식 노드를 나타낸다.
 
-It is easier to understand this through an example. Note that the following code is a shortcut version of the actual code.
+예제를 통해 보면 다 쉽게 이해할 수 있다. 다음은 실제코드를 간소한 예다.
 
 ```
 fndcl:
@@ -143,10 +142,9 @@ fndcl:
 | '(' oarg_type_list_ocomma ')' sym '(' oarg_type_list_ocomma ')' fnres
 ```
 
-First, a new node is created, which contains type information for the function declaration. The $3 argument list and the $5 result list are referenced from this node. Then, the $$ result node is created. It stores the function name and the type node. As you can see, there can be no direct correspondence between definitions in the go.y file and the node structure.
+우선, 새로운 노드가 만들어 지고 함수 선언을 위한 타입 정보를 갖는다. $3는 인수 리스트로 $5는 결과 리스트로 이 노드에서 레퍼런스된다. 그런 다음, $$ 결과 노드가 만들어 져서, 함수 이름과, 타입 노드를 저장한다. 보다시피 [go.y](https://github.com/golang/go/blob/release-branch.go1.4/src/cmd/gc/go.y)내 정의된 것들과 노드 구조사이에 직접적인 연결이 있을 수 없다.
 
-
-# Understanding nodes
+# 노드 이해하기
 
 Now it is time to take a look at what a node actually is. First of all, a node is a struct (you can find a definition here). This struct contains a large number of properties, since it needs to support different kinds of nodes and different nodes have different attributes. Below is a description of several fields that I think are important to understand.
 
