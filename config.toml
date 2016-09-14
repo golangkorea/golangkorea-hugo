@@ -10,6 +10,8 @@ publishdir = "public"
 
 [params]
 
+editInGithubUrlBase = "https://github.com/golangkorea/golangkorea-hugo/blob/master/content/"
+
 subtitle = "Go에 관련된 수다를 추구하는 개발자들의 세상"
 customCSS = ["css/custom.css", "css/custom-font.css"]
 

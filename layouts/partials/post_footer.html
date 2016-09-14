@@ -16,6 +16,11 @@
           {{ range .Params.tags }}<a class="category" href="{{ "/tags/" | absURL }}{{ . | urlize | lower }}">{{ . }}</a>  {{ end }}
     {{ end }}
     </span>
+    {{ if .IsPage }}
+    <span class="edit-in-github">
+      <a class="label" href="{{ .Site.Params.editInGithubUrlBase }}{{ replace .File.Path "\\" "/" }}">Edit in GitHub</a>
+    </span>
+    {{ end }}
   </p>
 
   <!-- For sharing stuff -->

@@ -5,7 +5,7 @@ title = "시리즈 #4 - 분류(Taxonomy)기능 사용하기"
 
 tags = ["Blog", "Hugo"]
 categories = ["How to"]
-series = ["Hugo 입문하기"]
+series = ["Hugo Introduction"]
 authors = ["Jhonghee Park"]
 
 toc = true
@@ -25,7 +25,7 @@ title = "시리즈 #4 - 분류(Taxonomy)기능 사용하기"
 
 tags = ["Blog", "Hugo"]
 categories = ["How-to"]
-series = ["Hugo 입문하기"]
+series = ["Hugo Introduction"]
 authors = ["Jhonghee Park"]
 
 toc = true

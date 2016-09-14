@@ -44,3 +44,22 @@ header ul#series {
 .language-ascii {
   font-family: monospace;
 }
+
+/**
+ * jQcloud
+ */
+
+ .jqcloud {
+     margin: 0 auto;
+ }
+
+
+/**
+ * edit-in-github
+ */
+ .separator,
+ article>footer .edit-in-github:before {
+     content: "\2022 ";
+     padding: 0 .4em 0 .2em;
+     display: inline-block
+ }
