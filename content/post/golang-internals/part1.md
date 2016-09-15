@@ -46,35 +46,35 @@ Go 레포의 `/src` 폴더를 보게 되면, 많은 폴더를 발견하게 된�
 <th style="width: 530px;" width="70%"><center>설명</center></th>
 </tr>
 <tr>
-<td><a href="https://github.com/golang/go/tree/release-branch.go1.4/src/cmd" target="_blank">/src/cmd/</a></td>
+<td><a href="https://github.com/golang/go/tree/release-branch.go1.4/src/cmd" target="golangsrc">/src/cmd/</a></td>
 <td>코멘드 라인 툴들을 보관한다.</td>
 </tr>
 <tr>
-<td><a href="https://github.com/golang/go/tree/release-branch.go1.4/src/cmd/go" target="_blank">/src/cmd/go/</a></td>
+<td><a href="https://github.com/golang/go/tree/release-branch.go1.4/src/cmd/go" target="golangsrc">/src/cmd/go/</a></td>
 <td>Go 툴의 소스 파일이 있는데, 이 툴들은 Go 소스코드를 다운받거나, 빌드하고, 설치하는데 사용된다. 툴이 실행되면서 전체 소스를 수집하고, Go 링커와 컴파일러 코멘드 라인 툴들을 호출한다.</td>
 </tr>
 <tr>
-<td><a href="https://github.com/golang/go/tree/release-branch.go1.4/src/cmd/dist" target="_blank">/src/cmd/dist/ </a></td>
+<td><a href="https://github.com/golang/go/tree/release-branch.go1.4/src/cmd/dist" target="golangsrc">/src/cmd/dist/ </a></td>
 <td>다른 코멘트 라인 툴과 표준 라이브러리의 모든 패키지를 빌드하는 툴을 보관한다. 모든 특정한 툴이나 패키지에서 어떤 라이브러리가 사용되었는지를 알아 보려면 이 소스를 분석하고 싶을 것이다.</td>
 </tr>
 <tr>
-<td><a href="https://github.com/golang/go/tree/release-branch.go1.4/src/cmd/gc" target="_blank">/src/cmd/gc/</a></td>
+<td><a href="https://github.com/golang/go/tree/release-branch.go1.4/src/cmd/gc" target="golangsrc">/src/cmd/gc/</a></td>
 <td>Go 컴파일러내 (프로세서) 아키텍쳐에 의존하지 않는 부분이다.</td>
 </tr>
 <tr>
-<td><a href="https://github.com/golang/go/tree/release-branch.go1.4/src/cmd/ld" target="_blank">/src/cmd/ld/</a></td>
+<td><a href="https://github.com/golang/go/tree/release-branch.go1.4/src/cmd/ld" target="golangsrc">/src/cmd/ld/</a></td>
 <td>Go 링커내 (프로세서) 아키텍쳐에 의존하지 않는 부분이다. 아키텍쳐에 의존적인 부분들은 "l"로 끝나는 이름의 폴더에 위치하며 컴파일러와 같은 이름짓기 관행을 따른다.</td>
 </tr>
 <tr>
-<td><a href="https://github.com/golang/go/tree/release-branch.go1.4/src/cmd/5a" target="_blank">/src/cmd/5a/</a>, 6a, 8a, and 9a</td>
-<td>여러 아키텍쳐에 맞춘 Go 어셈블러 컴파일러들을 발견할 수 있다. Go 어셈블러는 일종의 어셈블리 언어로 하층 기계어와는 딱 맞아 떨어지는 것은 아니다. 대신 각 아키텍쳐마다 독특한 컴파일러들이 있어 Go의 어셈블러를 기계의 어셈블러도 번역한다. 더 자세한 내용은 다음 링크를 참조하라. <a href="https://golang.org/doc/asm" target="_blank">여기</a>.</td>
+<td><a href="https://github.com/golang/go/tree/release-branch.go1.4/src/cmd/5a" target="golangsrc">/src/cmd/5a/</a>, 6a, 8a, and 9a</td>
+<td>여러 아키텍쳐에 맞춘 Go 어셈블러 컴파일러들을 발견할 수 있다. Go 어셈블러는 일종의 어셈블리 언어로 하층 기계어와는 딱 맞아 떨어지는 것은 아니다. 대신 각 아키텍쳐마다 독특한 컴파일러들이 있어 Go의 어셈블러를 기계의 어셈블러도 번역한다. 더 자세한 내용은 다음 링크를 참조하라. <a href="https://golang.org/doc/asm" target="golangsrc">여기</a>.</td>
 </tr>
 <tr>
-<td><a href="https://github.com/golang/go/tree/release-branch.go1.4/src/lib9" target="_blank">/src/lib9/</a>, <a href="https://github.com/golang/go/tree/release-branch.go1.4/src/libbio" target="_blank">/src/libbio</a>, <a href="https://github.com/golang/go/tree/release-branch.go1.4/src/liblink" target="_blank">/src/liblink</a></td>
+<td><a href="https://github.com/golang/go/tree/release-branch.go1.4/src/lib9" target="golangsrc">/src/lib9/</a>, <a href="https://github.com/golang/go/tree/release-branch.go1.4/src/libbio" target="golangsrc">/src/libbio</a>, <a href="https://github.com/golang/go/tree/release-branch.go1.4/src/liblink" target="golangsrc">/src/liblink</a></td>
 <td>컴파일러, 링커, 그리고 런타임 패키지에 사용된 각종 라이브러리들.</td>
 </tr>
 <tr>
-<td><a href="https://github.com/golang/go/tree/release-branch.go1.4/src/runtime" target="_blank">/src/runtime/</a></td>
+<td><a href="https://github.com/golang/go/tree/release-branch.go1.4/src/runtime" target="golangsrc">/src/runtime/</a></td>
 <td>가장 중요한 Go 패키지로 모든 프로그램에 간접적으로 포함된다. 메모리 관리, 가비지 콜렉션, Go 루틴 생산등, 런타임 기능 전체를 포함하고 있다.</td>
 </tr>
 </tbody>
@@ -146,11 +146,27 @@ fndcl:
 
 # 노드 이해하기
 
-Now it is time to take a look at what a node actually is. First of all, a node is a struct (you can find a definition here). This struct contains a large number of properties, since it needs to support different kinds of nodes and different nodes have different attributes. Below is a description of several fields that I think are important to understand.
+이제 노드가 실제로 무엇인지 알아 볼 시간이다. 첫번째로, 노드는 struct이고, [여기](https://github.com/golang/go/blob/release-branch.go1.4/src/cmd/gc/go.h#L245)에 정의되어 있다. 이 struct는 굉장히 많은 특성들을 갖고 있는데 그 이유는 다른 종류의 노드를 지원해야 하고 노드종류마다 다른 속성들을 가지고 있기 때문이다.
 
-Node struct field
-Description
-op	Node operation. Each node has this field. It distinguishes different kinds of nodes from each other. In our previous example, those were OTFUNC (operation type function) and ODCLFUNC (operation declaration function).
-type	This is a reference to another struct with type information for nodes that have type information (there are no types for some nodes, e.g., control flow statements, such as if, switch, or for).
-val	This field contains the actual values for nodes that represent literals.
+<table class="myTable">
+<tbody>
+<tr>
+<th><center>노드 struct 필드</center></th>
+<th style="width: 530px;" width="70%"><center>설명</center></th>
+</tr>
+<tr>
+<td><a href="https://github.com/golang/go/blob/release-branch.go1.4/src/cmd/gc/go.h#L259" target="golangsrc">op</a></td>
+<td>Node operation. Each node has this field. It distinguishes different kinds of nodes from each other. In our previous example, those were <em>OTFUNC</em> (operation type function) and <em>ODCLFUNC</em> (operation declaration function).</td>
+</tr>
+<tr>
+<td><a href="https://github.com/golang/go/blob/release-branch.go1.4/src/cmd/gc/go.h#L295" target="golangsrc">type</a></td>
+<td>This is a reference to another struct with type information for nodes that have type information (there are no types for some nodes, e.g., control flow statements, such as <em>if</em>, <em>switch</em>, or <em>for</em>).</td>
+</tr>
+<tr>
+<td><a href="https://github.com/golang/go/blob/release-branch.go1.4/src/cmd/gc/go.h#L309" target="golangsrc">val</a></td>
+<td>이 필드는 리터럴 노드의 실제 값을 갖는다.</td>
+</tr>
+</tbody>
+</table>
+
 Now that you understand the basic structure of the node tree, you can put your knowledge into practice. In the next post, we will investigate what exactly the Go compiler generates, using a simple Go application as an example.
