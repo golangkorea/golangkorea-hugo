@@ -156,11 +156,11 @@ fndcl:
 </tr>
 <tr>
 <td><a href="https://github.com/golang/go/blob/release-branch.go1.4/src/cmd/gc/go.h#L259" target="golangsrc">op</a></td>
-<td>Node operation. Each node has this field. It distinguishes different kinds of nodes from each other. In our previous example, those were <em>OTFUNC</em> (operation type function) and <em>ODCLFUNC</em> (operation declaration function).</td>
+<td>이 필드는 각 노드마다 존재하며 노드의 연산이 무엇이지를 나타낸다. 이 필드를 통해 노드의 종류를 분간할 수 있다. 이전 예제에서 본 <em>OTFUNC</em> (연산 타입 함수) 과 <em>ODCLFUNC</em> (연산 선언 함수)같은 것 들이다.</td>
 </tr>
 <tr>
 <td><a href="https://github.com/golang/go/blob/release-branch.go1.4/src/cmd/gc/go.h#L295" target="golangsrc">type</a></td>
-<td>This is a reference to another struct with type information for nodes that have type information (there are no types for some nodes, e.g., control flow statements, such as <em>if</em>, <em>switch</em>, or <em>for</em>).</td>
+<td>노드가 타입정보를 보유할 때 (때로 타입이 없는 노드도 있다. 예를 들면, <em>if</em>, <em>switch</em>, 혹은 <em>for</em>와 같은 제어 흐름문들), 이 필드는 타입정보를 가지고 있는 또 다른 struct를 가리키는 레퍼런스이다.</td>
 </tr>
 <tr>
 <td><a href="https://github.com/golang/go/blob/release-branch.go1.4/src/cmd/gc/go.h#L309" target="golangsrc">val</a></td>
@@ -169,4 +169,4 @@ fndcl:
 </tbody>
 </table>
 
-Now that you understand the basic structure of the node tree, you can put your knowledge into practice. In the next post, we will investigate what exactly the Go compiler generates, using a simple Go application as an example.
+독자는 이제 노드 트리의 기본적 구조를 이해했으므로, 그 지식을 실전에 투여할 수 있다. 다음 포스트에서는, Go 컴파일러가 과연 무엇을 생산하는지를 간단한 Go 애플리케이션을 통해 살펴보겠다.
