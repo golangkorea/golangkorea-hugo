@@ -96,18 +96,18 @@ PRINT-list
 .   NAME-main.i u(1) a(1) g(2) l(16) x(0+0) class(PAUTO) f(1) ld(1) tc(1) used(1) main.I
 ```
 
-In the explanation below, I will use an abridged version, from which I removed all the unnecessary details.
+아래 설명할 때는 불필요한 부분을 모두 제거한 요약한 버전을 사용하겠다.
 
-The first node is rather simple:
+첫번째 노드는 꽤 단순하다.
 
 >```
 DCL l(15)
 .   NAME-main.t l(15) PTR64-*main.T
 ```
 
-The first node is a declaration node. *l(15)* tells us that this node is defined in line 15. The declaration node references the name node that represents the *main.t* variable. This variable is defined in the main package and is actually a 64-bit pointer to the *main.T* type. You can look at line 15 and easily understand what declaration is represented there.
+첫번째 노드는 선언 노드이다. *l(15)* 는 노드가 줄 15에 정의되어 있음을 알려준다. 선언 노드는 *main.t* 변수를 나타내는 이름 노드(name node)에 레퍼런스를 갖는다. 변수가 정의된 곳은 main 패키지이고 실제로 *main.T* 타입를 가리키는 64비트 포인터이다. 15째 줄을 보면 어떤 선언이 되어 있는지 쉽게 이해할 수 있다.
 
-The next one is a bit trickier.
+다음 것은 약간 까다롭다.
 
 >```
 AS l(15)
