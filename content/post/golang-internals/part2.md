@@ -11,27 +11,25 @@ authors = ["Jhonghee Park"]
 toc = true
 +++
 
-Do you know what exactly happens in the Go runtime, when you use a variable via interface reference? This is not a trivial question, because in Go a type that implements an interface does not contain any references to this interface whatsoever. Still, we can try answering it, using our knowledge of the Go compiler, which was discussed in the previous blog post.
+독자는 인터페이스 레퍼런스를 통해 변수를 사용할 경우 Go 런타임내에서 어떤 일이 있는지 정확하게 알고 있는가? 이 질문에 쉽게 답할 수 없는 이유는 어떤 인터페이스를 구현하는 타입이 이 인터페이스를 지목하는 어떤 레퍼런스도 갖고 있지 않기 때문이다. 여전히 시도는 해 볼 수 있는데 [이전 블로그 포스트](/post/golang-internals/part1/)에서 논했던 Go 컴파일러의 지식을 이용하는 것이다.
 
-So, let’s take a deep dive into the Go compiler: create a basic Go program and see the internal workings of the Go typecasting. Using it as an example, I’ll explain how a node tree is generated and utilized. So, you can further apply this knowledge to other Go compiler’s features.
+그러면, Go 컴파일러속으로 잠수해 들어가자: 간단한 Go 프로그램을 제작하고 Go 타입캐스팅(typecasting)이 내부적으로 어떻게 동작하는 지 살펴보겠다. 이 것을 예로 들면서, 어떻게 노드 트리가 생성되고 사용되는지 설명하겠다. 그러므로 독자도 이 지식을 다른 Go 컴파일러 기능에 적용할 수 있다.
 
+# 시작하기 전에
 
-# Before you start
-
-To perform the experiment, we will need to work directly with the Go compiler (not the Go tool). You can access it by using the command:
+실험을 하기 전에, (Go 툴을 쓰는 것이 아니라) Go 컴파일러를 직접 사용할 필요가 있다. 다음 명령을 사용해 이 기능에 접근할 수 있다:
 
 >```
 go tool 6g test.go
 ```
 
-It will compile the *test.go* source file and create an object file. Here, *6g* is the name of the compiler on my machine that has an AMD64 architecture. Note that you should use different compilers for different architectures.
+이 명령으로 *test.go* 소스파일은 컴파일되고 오브젝트 파일(object file)이 만들어 진다. 여기서 *6g* 는 AMD64 아키텍쳐인 저자의 머신을 위한 컴파일러의 이름이다. 다른 아키텍쳐에서는 상응하는 컴파일러를 사용해야 함을 주목하라.
 
-When we work directly with the compiler, we can use some handy command line arguments (more details [here](https://golang.org/cmd/gc/#hdr-Command_Line)). For the purposes of this experiment, we’ll need the -W flag that will print the layout of the node tree.
+컴파일러를 직접 사용할 때 유용한 커맨드 라인 인수들을 사용할 수 있는데, 자세한 내용은 [여기](https://golang.org/cmd/gc/#hdr-Command_Line)를 참고하라. 이 실험을 위해서, 노드 트리의 레이아웃을 출력해 주는 *-W* 플래그를 사용하겠다.
 
+# 간단한 Go 프로그램 만들기
 
-# Creating a simple Go program
-
-First of all, we are going to create a sample Go program. My version is below:
+우선 간단한 Go 프로그램을 만들자. 저자의 버전은 다음과 같다:
 
 >```go
   1  package main
@@ -54,20 +52,19 @@ First of all, we are going to create a sample Go program. My version is below:
  18  }
 ```
 
-Really simple, isn’t it? The only thing that might seem unnecessary is the 17th line, where we print the *i* variable. Nevertheless, without it, *i* will remain unused and the program will not be compiled. The next step is to compile our program using the -W switch:
+정말 간단하지 않은가? 불필요하게 생각되는 단 하나는 17째 줄인데, *i* 변수를 출력하는 부분이다. 그럼에도 불구하고 이 줄이 없다면, *i* 사용하지 않은 변수로 간주되어 프로그램은 컴파일 되지 않을 것이다. 다음 단계는 이 프로그램을 *-W* 를 사용해 컴파일 하는 것이다:
 
 >```
 go tool 6g -W test.go
 ```
 
-After doing this, you will see output that contains node trees for each method defined in the program. In our case, these are the main and *init* methods. The *init* method is here because it is implicitly defined for all programs, but we actually do not care about it right now.
+이 명령을 실행한 후에, 프로그램내 정의된 각 메서드에 해당하는 노드 트리를 포함한 출력을 보게 될 것이다. 이 경우, *main* 과 *init* 메서드가 있다. *init* 메서드가 언급된 이유는 모든 프로그램에 암시적으로 정의되어 있기 때문인데, 실제로 여기에서는 다루지 않겠다.
 
-For each method, the compiler prints two versions of the node tree. The first one is the original node tree that we get after parsing the source file. The second one is the version that we get after type checking and applying all the necessary modifications.
+각 메서드마다, 컴파일러는 두개의 노드트리 버전을 출력한다. 첫번째는 소스파일을 파싱하고 얻는 노드 트리의 원본이고 두번째는 타입체킹후 모든 필요한 수정을 거친 버전이다.
 
+# main 메서드의 노드 트리에 대한 이해
 
-# Understanding the node tree of the main method
-
-Let’s take a closer look at the original version of the node tree from the main method and try to understand what exactly is going on.
+우선 main 메서드에서 나온 노드 트리의 원본을 자세히 들여다 보고 정확하게 무슨 일이 일어나고 있는지를 이해하기 위한 시도를 해보자.
 
 >```
 DCL l(15)
