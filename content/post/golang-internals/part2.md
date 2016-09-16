@@ -117,9 +117,9 @@ AS l(15)
 .   .   .   TYPE l(15) type=PTR64-*main.T PTR64-*main.T
 ```
 
-The root node is the assignment node. Its first child is the name node that represents the main.t variable. The second child is a node that we assign to *main.t*—a pointer literal node (&). It has a child struct literal, which, in its turn, points to the type node that represents the actual type (*main.T*).
+최상위 노드(root node)는 대입(assignment) 노드이다. 첫번째 자식노드는 이름 노드(name node)로 *main.t* 변수를 대표한다. 두번째 자식노드는 *main.t* 에 대입되는, 포인터 리터럴 노드이다: &를 생각하라. 이 노드는 struct 리터럴 노드를 자식으로 갖고 있고, 그 노드는 또 실제 타입인 (*main.T*)를 대표하는 타입 노드를 포인터로 가리킨다.
 
-The next node is another declaration. This time, it is a declaration of the main.i variable that belongs to the main.I type.
+다음 노드는 또 다른 선언이다. 이번에는 *main.I* 타입에 속하는 *main.i* 변수의 선언이다.
 
 >```
 DCL l(16)
