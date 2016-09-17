@@ -170,3 +170,7 @@ fndcl:
 </table>
 
 독자는 이제 노드 트리의 기본적 구조를 이해했으므로, 그 지식을 실전에 투여할 수 있다. 다음 포스트에서는, Go 컴파일러가 과연 무엇을 생산하는지를 간단한 Go 애플리케이션을 통해 살펴보겠다.
+
+* 원문: [Golang Internals, Part 1: Main Concepts and Project Structure](http://blog.altoros.com/golang-part-1-main-concepts-and-project-structure.html)
+* 저자: Siarhei Matsiukevich
+* 번역자: Jhonghee Park

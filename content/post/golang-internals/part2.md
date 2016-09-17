@@ -262,22 +262,20 @@ type itab struct {
 unsafe.Sizeof(itab{})+uintptr(len(inter.mhdr)-1)*ptrSize
 ```
 
-
-Next, you can see two nested loops. First, we iterate through all interface methods. For each method in the interface, we try to find a corresponding method in a particular type (the methods are stored in the *mhdr* collection). The process of checking whether two methods are equal is quite self-explanatory.
+다음으로 두개의 중첩된 루프를 볼 수 있다. 첫째로 인터페이스의 모든 메서드를 차례로 처리한다. 인터페이스의 각 메서드에 대해서 특정한 타입내에 상응하는 메서드를 찾으려 한다. (메서드는 *mhdr* 컬렉션에 저장되어 있다.) 두 메서드가 서로 같은지를 비교하는 과정은 굳이 설명할 필요가 없겠다.
 
 >```
 if t.mtyp == itype && t.name == iname && t.pkgpath == ipkgpath
 ```
 
-If we find a match, we store a pointer to the method in the *fun* property of the result:
-
+만약 매치를 찾으면, 결과값의 *fun* 에 메서드를 가리키는 포인터를 저장한다:
 >```
 *(*unsafe.Pointer)(add(unsafe.Pointer(&m.fun[0]), uintptr(k)*ptrSize)) = t.ifn
 ```
 
-A small note on performance: since methods are sorted alphabetically for interface and pre-set type definitions, this nested loop can repeat *O(n + m)* times instead of *O(n * m)* times, where n and m correspond to the number of methods.
+성능에 대해 짧게 언급하면: 인터페이스와 사전에 설정된 타입 정의에 대해 메서드는 알파벳 순서로 정렬되어 있어서, 이 중첩 루프는 *O(n * m)* 대신 *O(n + m)* 으로 반복한다. n 과 m 은 상응하는 메서드 숫자들
 
-Finally, do you remember the last part of the assignment?
+마지막으로, 할당의 마지막 부분을 기억하는가?
 
 >```
 AS l(16)
@@ -287,9 +285,9 @@ AS l(16)
 .   .   NAME-main.autotmp_0000 l(16) PTR64-*main.T
 ```
 
-Here, we assign the *EFACE* node to the main.i variable. This node (*EFACE*) contains references to the *main.autotmp_0003* variable—a pointer to the itab struct that was returned by the *runtime.typ2Itab* method—and to the *autotmp_0000* variable that contains the same value as the *main.t* variable. This is all we need to call methods by interface references.
+여기에서 *EFACE* 노드를 *main.i* 변수에 할당한다. *EFACE* 노드는 *main.autotmp_0003* 와 *main.autotmp_0000* 변수들에 대한 레퍼런스를 가지고 있는데 - *main.autotmp_0003* 는 *runtime.typ2Itab* 에 의해 반환된 itab struct를 가리키는 포인터이고, *main.autotmp_0000* 변수는 *main.t* 와 같은 값을 가지고 있다. 인터페이스 레퍼런스를 통해 메서드를 호출하는데 필요한 것은 이게 전부이다.
 
-So, the *main.i* variable contains an instance of the *iface* struct defined in the runtime package:
+그래서, *main.i* 변수는 런타임 [runtime](https://godoc.org/runtime) 패키지내 정의된 [iface](https://golang.org/src/runtime/iface.go) struct의 인스턴스를 가지고 있다.
 
 >```
 type iface struct {
@@ -298,6 +296,10 @@ type iface struct {
 }
 ```
 
-# What’s next?
+# 다음에 살펴볼 내용은?
 
-I understand that I’ve only covered a very small part of the Go compiler and the Go runtime so far. There are still plenty of interesting things to talk about, such as object files, the linker, relocations, etc.—they will be overviewed in the upcoming blog posts.
+저자가 지금까지 Go 컴파일러와 런타임에 대해 아주 작은 부분만 설명했다는 점을 이해한다. 얘기해 볼만한 흥미로운 주제들이 여전히 많이 남아있다. 예를 들면, 오브젝트 파일, 링커, 재배치(relocations), 등에 대해서는 다음 블로그 포스트에서 살펴보기로 하겠다.
+
+* 원문: [Golang Internals, Part 2: Diving Into the Go Compiler](http://blog.altoros.com/golang-internals-part-2-diving-into-the-go-compiler.html)
+* 저자: Siarhei Matsiukevich
+* 번역자: Jhonghee Park
