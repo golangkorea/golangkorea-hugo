@@ -192,16 +192,15 @@ AS l(16)
 
 출력을 통해 볼 수 있듯이, 컴파일러는 우선 초기화 노드 리스트 (*AS-init*) 를 할당 노드에 첨가한다. *AS-init* 내에서는, *go.itab.\*””.T.””*.I 변수 값을 새로 만든 변수 *main.autotmp_0003* 에 할당한다. 그런 다음, 변수가 *nil* 인지를 검사한다. 만약에 *nil* 이면, 컴파일러는 *runtime.typ2Itab* 함수를 다음의 인수들을 사용해 호출한다:
 
- * *main.T* 타입 ,
- * a pointer to the *main.I* interface type,
- * and a pointer to the *go.itab.\*””.T.””.I* variable.
+ * *main.T* 타입의 포인터,
+ * *main.I* 인터페이스 타입의 포인터,
+ * *go.itab.\*””.T.””.I* 변수를 가리키는 포인터.
 
-From this code, it is quite evident that this variable is for caching the result of type conversion from *main.T* to *main.I*.
+코드에서 보면, 이 변수가 *main.T* 에서 *main.I* 로 타입변환된 결과를 저장하는데 사용되고 있음이 명백하다.
 
+# *getitab* 메서드의 내부
 
-# Inside the *getitab* method
-
-The next logical step is to find *runtime.typ2Itab*. Below is the listing of this function:
+논리적인 다음 단계는 *runtime.typ2Itab* 를 찾아보는 것이다. 아래에 이 함수를 나열해 놓았다.
 
 >```
 func typ2Itab(t *_type, inter *interfacetype, cache **itab) *itab {
@@ -211,7 +210,7 @@ func typ2Itab(t *_type, inter *interfacetype, cache **itab) *itab {
 }
 ```
 
-It is quite evident that the actual work is done inside the *getitab* method, because the second line simply stores the created tab variable in the cache. So, let’s look inside *getitab*. Since it is rather big, I only copied the most valuable part.
+확실해 보이는 것은 실제 작업은 *getitab* 메서드 내부에서 진행된다는 점인데, 두번째 줄에서 단순히 tab 변수를 cache 변수에 저장하는 점을 통해 알 수 있다. 그럼 *getitab* 내부를 들여다 보자. 꽤 긴 내용이라 가장 들여다 볼 가치가 있는 부분만 복사했다.
 
 >```
 m =
@@ -238,13 +237,13 @@ for k := 0; k < ni; k++ {
 }
 ```
 
-First, we allocate memory for the result:
+우선 결과를 저장할 메모리를 할당한다.
 
 >```
 (*itab)(persistentalloc(unsafe.Sizeof(itab{})+uintptr(len(inter.mhdr)-1)*ptrSize, 0, &memstats.other_sys))
 ```
 
-Why should we allocate memory in Go and why is this done in such a strange way? To answer this question, we need to look at the *itab* struct definition.
+Go 언어에서 왜 메모리를 할당하는지 그리고 왜 이렇게 이상한 방식으로 하는지 궁금해 진다. 이 질문에 답하기 위해 *itab* struct 정의를 들여다 보아야 할 필요가 있다.
 
 >```
 type itab struct {
@@ -257,11 +256,12 @@ type itab struct {
 }
 ```
 
-The last property, *fun*, is defined as an array of one element, but it is actually variable-sized. Later, we’ll see that this property contains an array of pointers to methods defined in a particular type. These methods correspond to the methods in the interface type. The authors of Go use dynamic memory allocation for this property (yes, such things are possible, when you use an unsafe package). The amount of memory to be allocated is calculated by adding the size of the struct itself to the number of methods in the interface multiplied by a pointer size.
+마지막 특성인 *fun* 은 요소가 하나인 배열로 정의되어 있다. 하지만 실제로 배열의 크기는 변할 수 있다고 코멘트되어 있다. 나중에 보겠지만 이 특성은 특정한 타입내 정의된 메서드들을 가리키는 포인터 배열를 가지고 있다. 이 메서드들은 인터페이스 타입의 메서드에 상응한다. Go 언어의 저자들은 이 특성을 위해 동적 메로리 할당을 사용한다. (그렇다, unsafe 패키지를 사용하면 이런 일들이 가능하다.) 메모리를 얼마나 할당해야 하는지는 struct 자체의 크기에 인터페이스내 메서드의 숫자에 포인터 크기를 곱한 값을 더해 계산할 수 있다.
 
 >```
 unsafe.Sizeof(itab{})+uintptr(len(inter.mhdr)-1)*ptrSize
 ```
+
 
 Next, you can see two nested loops. First, we iterate through all interface methods. For each method in the interface, we try to find a corresponding method in a particular type (the methods are stored in the *mhdr* collection). The process of checking whether two methods are equal is quite self-explanatory.
 
