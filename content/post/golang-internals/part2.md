@@ -11,9 +11,9 @@ authors = ["Jhonghee Park"]
 toc = true
 +++
 
-독자는 인터페이스 레퍼런스를 통해 변수를 사용할 경우 Go 런타임내에서 어떤 일이 있는지 정확하게 알고 있는가? 이 질문에 쉽게 답할 수 없는 이유는 어떤 인터페이스를 구현하는 타입이 이 인터페이스를 지목하는 어떤 레퍼런스도 갖고 있지 않기 때문이다. 여전히 시도는 해 볼 수 있는데 [이전 블로그 포스트](/post/golang-internals/part1/)에서 논했던 Go 컴파일러의 지식을 이용하는 것이다.
+독자는 인터페이스 레퍼런스를 통해 변수를 사용할 경우 Go 런타임내에서 어떤 일이 있는지 정확하게 알고 있는가? 이 질문에 쉽게 답할 수 없는 이유는 어떤 인터페이스를 구현하는 타입의 경우 그 인터페이스를 가리키는 어떤 레퍼런스도 갖고 있지 않기 때문이다. 하지만 여전히 시도는 해 볼 수 있는데 [이전 블로그 포스트](/post/golang-internals/part1/)에서 논했던 Go 컴파일러의 지식을 이용하는 것이다.
 
-그러면, Go 컴파일러속으로 잠수해 들어가자: 간단한 Go 프로그램을 제작하고 Go 타입캐스팅(typecasting)이 내부적으로 어떻게 동작하는 지 살펴보겠다. 이 것을 예로 들면서, 어떻게 노드 트리가 생성되고 사용되는지 설명하겠다. 그러므로 독자도 이 지식을 다른 Go 컴파일러 기능에 적용할 수 있다.
+그러면, Go 컴파일러속으로 잠수해 들어가자: 간단한 Go 프로그램을 제작하고 Go 타입캐스팅(typecasting)이 내부적으로 어떻게 동작하는 지 살펴보겠다. 이 것을 예로 들면서, 어떻게 노드 트리가 생성되고 사용되는지 설명하겠다. 이렇게 함으로써 독자도 이 지식을 다른 Go 컴파일러 기능에 적용할 수 있을 것이다.
 
 # 시작하기 전에
 
@@ -52,7 +52,7 @@ go tool 6g test.go
  18  }
 ```
 
-정말 간단하지 않은가? 불필요하게 생각되는 단 하나는 17째 줄인데, *i* 변수를 출력하는 부분이다. 그럼에도 불구하고 이 줄이 없다면, *i* 사용하지 않은 변수로 간주되어 프로그램은 컴파일 되지 않을 것이다. 다음 단계는 이 프로그램을 *-W* 를 사용해 컴파일 하는 것이다:
+정말 간단하지 않은가? 불필요하게 생각되는 단 하나는 17째 줄인데, *i* 변수를 출력하는 부분이다. 불필요하다고 판단됨에도 불구하고 이 줄이 없다면, *i* 는 사용하지 않은 변수로 간주되어 프로그램은 컴파일 되지 않을 것이다. 다음 단계는 이 프로그램을 *-W* 를 사용해 컴파일 하는 것이다:
 
 >```
 go tool 6g -W test.go
@@ -117,7 +117,7 @@ AS l(15)
 .   .   .   TYPE l(15) type=PTR64-*main.T PTR64-*main.T
 ```
 
-최상위 노드(root node)는 대입(assignment) 노드이다. 첫번째 자식노드는 이름 노드(name node)로 *main.t* 변수를 대표한다. 두번째 자식노드는 *main.t* 에 대입되는, 포인터 리터럴 노드이다: &를 생각하라. 이 노드는 struct 리터럴 노드를 자식으로 갖고 있고, 그 노드는 또 실제 타입인 (*main.T*)를 대표하는 타입 노드를 포인터로 가리킨다.
+최상위 노드(root node)는 할당(assignment) 노드이다. 첫번째 자식노드는 이름 노드(name node)로 *main.t* 변수를 대표한다. 두번째 자식노드는 *main.t* 에 할당되는, 포인터 리터럴 노드이다: &를 생각하라. 이 노드는 struct 리터럴 노드를 자식으로 갖고 있고, 그 노드는 또 실제 타입인 (*main.T*)를 대표하는 타입 노드를 포인터로 가리킨다.
 
 다음 노드는 또 다른 선언이다. 이번에는 *main.I* 타입에 속하는 *main.i* 변수의 선언이다.
 
@@ -126,7 +126,7 @@ DCL l(16)
 .   NAME-main.i l(16) main.I
 ```
 
-Then, the compiler creates another variable, *autotmp_0000*, and assigns the *main.t* variable to it.
+그런 다음, 컴파일러는 또 다른 변수, *autotmp_0000* 를 만들고, *main.t* 변수를 할당한다.
 
 >```
 AS l(16) tc(1)
@@ -134,7 +134,7 @@ AS l(16) tc(1)
 .   NAME-main.t l(15) PTR64-*main.T
 ```
 
-Finally, we came to the nodes that we are actually inetersted in.
+마침내, 흥미로운 노드들에 도착했다.
 
 >```
 AS l(16)
@@ -143,12 +143,11 @@ AS l(16)
 .   .   NAME-main.autotmp_0000 PTR64-*main.T
 ```
 
-Here, we can see that the compiler has assigned a special node called *CONVIFACE* to the main.i variable. But this does not give us much information about what’s happening under the hood. To find out what’s going on, we need to look into the node tree of the main method after all node tree modifications have been applied (you can find this information in the “after walk main” section of your output).
+여기를 보면, 컴파일러가 *CONVIFACE* 라고 불리는 특별한 노드를 *main.i* 에 할당하는 것을 볼 수 있다. 하지만 이것만으로는 실제로 내부에서 어떤 일이 일어나는지 알 수 없다. 한가지 방법은 모든 모드 트리 수정이 적용되고 난 후에 main 메서드의 노드 트리속을 들여다 보는 것인데, 출력된 내용 중 "after walk main" 라는 섹션내의 정보를 통해 알아보는 것이다.
 
+# 컴파일러는 어떻게 할당노드를 번역하는가
 
-# How the compiler translates the assignment node
-
-Below, you can see how the compiler translates our assignment node:
+아래를 보면 컴파일러가 어떻게 할당 노드(assignment node)를 번역하는 지 알 수 있다:
 
 >```
 AS-init
@@ -191,11 +190,11 @@ AS l(16)
 .   .   NAME-main.autotmp_0000 l(16) PTR64-*main.T
 ```
 
-As you can see from the output, the compiler first adds an initialization node list (*AS-init*) to the assignment node. Inside the *AS-init* node, it creates a new variable, *main.autotmp_0003*, and assigns the value of the *go.itab.*””.T.””*.I variable to it. After that, it checks whether this variable is nil. If the variable is nil, the compiler calls the *runtime.typ2Itab* function and passes the following to it:
+출력을 통해 볼 수 있듯이, 컴파일러는 우선 초기화 노드 리스트 (*AS-init*) 를 할당 노드에 첨가한다. *AS-init* 내에서는, *go.itab.\*””.T.””*.I 변수 값을 새로 만든 변수 *main.autotmp_0003* 에 할당한다. 그런 다음, 변수가 *nil* 인지를 검사한다. 만약에 *nil* 이면, 컴파일러는 *runtime.typ2Itab* 함수를 다음의 인수들을 사용해 호출한다:
 
-a pointer to the *main.T type* ,
-a pointer to the *main.I* interface type,
-and a pointer to the *go.itab.*””.T.””.I* variable.
+ * *main.T* 타입 ,
+ * a pointer to the *main.I* interface type,
+ * and a pointer to the *go.itab.\*””.T.””.I* variable.
 
 From this code, it is quite evident that this variable is for caching the result of type conversion from *main.T* to *main.I*.
 
