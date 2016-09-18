@@ -13,14 +13,13 @@ toc = true
 
 +++
 
-Today, I will speak about the Go linker, Go object files, and relocations.
+오늘은 Go 링커와 오브젝트 파일, 그리고 재배치(relocations)에 대해 얘기해 보자.
 
-Why should we care about these things? Well, if you want to learn the internals of any large project, the first thing you need to do is split it into components or modules. Second, you need to understand what interface these modules provide to each other. In Go, these high-level modules are the compiler, linker, and runtime. The interface that the compiler provides and the linker consumes is an object file and that’s where we will start our investigation today.
+이런 것들이 독자들과 무슨 상관이 있을까? 만약 독자가 어떤 대형 프로젝트의 내부에 대해 배우고자 한다면, 첫번째 할 일이 그 것을 콤포넌트나 모듈로 자를 필요가 있다. 둘째로 이 모듈들이 서로에게 어떤 인터페이스를 제공하는지 이해할 필요가 있다. Go 언어 프로젝트의 경우, 이런 상위 모듈들이 컴파일러, 링커, 그리고 런타임이다. 컴파일러가 제공하고 링커가 사용하는 것이 오프젝트 파일인데, 오늘은 그 것으로 조사를 시작해 보자.
 
+# Go 오브젝트 파일 생성하기
 
-# Generating a Go object file
-
-Let’s do a practical experiment—write a super simple program, compile it, and see what object file will be produced. In my case, the program was as follows:
+실용적인 실험을 하나 해 보자-아주 간단한 프로그램을 하나 만들고, 컴파일하고, 어떤 오브젝트 파일이 만들어 지는지 관찰하자. 저자의 경우, 프로그램은 다음과 같다:
 
 >```go
 package main
@@ -30,34 +29,33 @@ func main() {
 }
 ```
 
-Really straightforward, isn’t it? Now we need to compile it:
+너무 쉽지 않은가? 이제 컴파일을 한다:
 
 >```
 go tool 6g test.go
 ```
 
-This command produces the test.6 object file. To investigate its internal structure, we are going to use the [goobj](https://github.com/golang/go/tree/master/src/cmd/internal/goobj) library. It is employed internally in Go source code, mainly for implementing a set of unit tests that verifies whether object files are generated correctly in different situations. For this blog post, I wrote a very simple program that prints the output generated from the *googj* library to the console. You can take a look at the sources of this program [here](https://github.com/s-matyukevich/goobj_explorer).
+이 명령은 *test.6* 오브젝트 파일을 생산한다. 이 파일의 내부 구조를 조사하기 위해, [goobj](https://github.com/golang/go/tree/master/src/cmd/internal/goobj) 라이브러리를 사용하겠다. 이 라이브러리는 내부적으로 Go 소스 코드에 채택되어 주로 유닛 테스트를 구현하는데 쓰인다. 이 유닛 테스트는 여러 상황에서 오브젝트 파일이 정확히 생성되었는지를 테스트한다. 이 블로그 포스트를 위해 *goobj* 라이브러리를 통해 생성된 출력을 콘솔로 프린트하는 매우 간단한 프로그램을 만들었다. 이 프로그램의 소스코드는 [여기](https://github.com/s-matyukevich/goobj_explorer)에서 살펴볼 수 있다.
 
-First of all, you need to download and install my program:
+무엇보다도 우선, 저자의 프로그램을 다운받아 설치해야 한다:
 
 >```
 go get github.com/s-matyukevich/goobj_explorer
 ```
 
-Then execute the following command:
+그런 후에 다음의 명령을 실행하라:
 
 >```
 goobj_explorer -o test.6
 ```
 
-Now you should be able to see the *goob.Package* structure in your console.
+이제 *goob.Package* 구조를 콘솔안에서 살펴 볼 수 있을 것이다.
 
+# 오브젝트 파일 조사하기
 
-# Investigating the object file
+이 오브젝트 파일에서 가장 흥미로운 부분은 *Syms* 배열이다. 이것은 실제로 심볼 테이블이다. 프로그램안에 정의된 모든 것들, 함수, 전역 변수, 타입, 상수, 등이 이 테이블에 적혀있다. *main* 함수에 상응하는 엔트리에 대해 살펴보자. (Roloc 과 Func 필드는 출력에서 생략되었음을 주목하라. 이 필드들은 나중에 논하겠다.)
 
-The most interesting part of our object file is the *Syms* array. This is actually a symbol table. Everything that you define in your program—functions, global variables, types, constants, etc.—is written to this table. Let’s look at the entry that corresponds to the *main* function. (Note that I have cut the Reloc and Func fields from the output for now. We will discuss them later.)
-
->```
+>```go
 &goobj.Sym{
             SymID: goobj.SymID{Name:"main.main", Version:0},
             Kind:  1,
@@ -70,7 +68,7 @@ The most interesting part of our object file is the *Syms* array. This is actual
 }
 ```
 
-The names of the fields in the *goobj.Sum* structure are pretty self-explanatory:
+*goobj.Sum* 구조내 필드의 이름들은 따로 설명이 필요 없다:
 
 <style type="text/css"><!--
 .myTable { background-color:white;border-collapse:collapse; } .myTable th { background-color:#E0E0E0;color:black; } .myTable td, .myTable th { padding:5px;border:1px solid #989898; }
@@ -79,45 +77,45 @@ The names of the fields in the *goobj.Sum* structure are pretty self-explanatory
 <table class="myTable">
 <tbody>
 <tr>
-<th><center>Field</center></th>
-<th style="width: 530px;" width="70%"><center>Description</center></th>
+<th><center>필드</center></th>
+<th style="width: 530px;" width="70%"><center>설명</center></th>
 </tr>
 <tr>
 <td><strong>SumID</strong></td>
-<td>The unique symbol ID that consists of the symbol’s name and version. Versions help to differentiate symbols with identical names.</td>
+<td>독특한 심볼 아이디로 심볼의 이름과 버전으로 구성된다. 버전을 통해 동일한 이름에 차이를 부여한다.</td>
 </tr>
 <tr>
 <td><strong>Kind</strong></td>
-<td>Indicates to what kind the symbol belongs (more details later).</td>
+<td>어떤 종류의 심볼에 속하는지를 나타낸다 (상세한 내용은 나중에).</td>
 </tr>
 <tr>
 <td><strong>DupOK</strong></td>
-<td>This field indicates whether duplicates (symbols with the same name) are allowed.</td>
+<td>이 필드는 중복된 이름(같은 이름의 심볼들)이 허락되는지를 나타낸다.</td>
 </tr>
 <tr>
 <td><strong>Size</strong></td>
-<td>The size of symbol data.</td>
+<td>심볼 데이터의 크기.</td>
 </tr>
 <tr>
 <td><strong>Type</strong></td>
-<td>A reference to another symbol that represents a symbol type, if any.</td>
+<td>만약 있는 경우, 심볼 타입을 대표하는 또 다른 심볼에 대한 레퍼런스.</td>
 </tr>
 <tr>
 <td><strong>Data</strong></td>
-<td>Contains binary data. This field has different meanings for symbols of different kinds, e.g., assembly code for functions, raw string content for string symbols, etc.</td>
+<td>바이너리 데이터를 가진다. 다른 종류의 심볼에 따라 다른 의미를 갖고 있다. 예를 들어, 함수에는 어셈블리 코드를, 문자열 심볼에는 원자재 문자열 콘텐트, 기타 등등.</td>
 </tr>
 <tr>
 <td><strong>Reloc</strong></td>
-<td>The list of relocations (more details will be provided later)</td>
+<td>재배치 리스트 (더 상세한 내용은 나중에 제공될 것이다.)</td>
 </tr>
 <tr>
 <td><strong>Func</strong></td>
-<td>Contains special function metadata for function symbols (see more details below).</td>
+<td>함수 심볼에 대한 특별한 함수 메타 데이터를 갖고 있다. (자세한 내용은 아래를 보라).</td>
 </tr>
 </tbody>
 </table>
 
-Now, let’s look at different kinds of symbols. All possible kinds of symbols are defined as constants in the *goobj* package (you can find them [here](https://github.com/golang/go/blob/master/src/cmd/internal/goobj/read.go#L30)). Below, I copied the first part of these constants:
+이제, 다른 종류의 심볼들을 살펴보자. 모든 사용 가능한 종류의 심볼들이 상수로서 *goobj* 패키지 ([여기](https://github.com/golang/go/blob/master/src/cmd/internal/goobj/read.go#L30))에서 찾아 볼수 있)안에 정의되어 있다. 아래에, 이러한 상수들의 첫번째 부분을 복사해 놓았다:
 
 >```
 const (
@@ -141,7 +139,7 @@ const (
 	...
 ```
 
-As we can see, the main.main symbol belongs to kind 1 that corresponds to the *STEXT* constant. *STEXT* is a symbol that contains executable code. Now, let’s look at the *Reloc* array. It consists of the following structs:
+보다시피, main.main 심볼은 종류 1에 속하고 *STEXT* 상수에 상응한다. *STEXT* 는 실행 가능한 코드를 갖는 심볼이다. 이제, *Reloc* 배열을 살펴보자. 다음과 같은 struct들로 구성되어 있다:
 
 >```go
 type Reloc struct {
@@ -153,10 +151,10 @@ type Reloc struct {
 }
 ```
 
-Each relocation implies that the bytes situated at the *[Offset, Offset+Size]* interval should be replaced with a specified address. This address is calculated by summing up the location of the *Sym* symbol with the *Add* number of bytes.
+각 재배치는 *[Offset, Offset+Size]* 간격에 위치한 바이트들이 특정 주소로 교체되어야 함을 암시한다. 이 주소는 *Sym* 심볼의 위치에 *Add* 바이트 숫자를 더하여 계산된다.
 
+# 재배치 이해하기
 
-# Understanding relocations
 
 Now let’s use an example and see how relocations work. To do this, we need to compile our program using the *-S* switch that will print the generated assembly code:
 
