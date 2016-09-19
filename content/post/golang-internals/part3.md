@@ -155,14 +155,13 @@ type Reloc struct {
 
 # 재배치 이해하기
 
-
-Now let’s use an example and see how relocations work. To do this, we need to compile our program using the *-S* switch that will print the generated assembly code:
+이제 예를 통해 재배치가 어떻게 작동하는지를 알아보자. 그러기 위해서, *-S* 스위치를 이용해 프로그램을 컴파일 할 필요가 있다. *-s* 스위치는 생성된 어셈블리 코드를 출력할 것이다:
 
 >```
 go tool 6g -S test.go
 ```
 
-Let’s look through the assembler and try to find the main function.
+어셈블러를 들여다 보면서 main 함수를 찾아보자.
 
 >```
 "".main t=1 size=48 value=0 args=0x0 locals=0x8
@@ -182,61 +181,60 @@ Let’s look through the assembler and try to find the main function.
 	0x002b 00043 (test.go:5)	RET	,
 ```
 
-In later blog posts, we’ll have a closer look at this code and try to understand how the Go runtime works. For now, we are interested in the following line:
+나중에 올 블로그 포스트에서 이 코드에 대해 더 자세히 살펴보며 Go의 런타임이 어떻게 작동하는지를 이해하기 위한 시도들 할 것이다. 지금은 다음 한줄에 관심이 있다:
 
 >```
 0x0022 00034 (test.go:4)	CALL	,runtime.printint(SB)
 ```
 
-This command is located at an offset of 0x0022 (in hex) or 00034 (decimal) within the function data. This line is actually responsible for calling the *runtime.printint* function. The issue is that the compiler does not know the exact address of the *runtime.printint* function during compilation. This function is located in a different object file the compiler knows nothing about. In such cases, it uses relocations. Below is the exact relocation that corresponds to this method call (I copied it from the first output of the *goobj_explorer* utility):
+이 명령은 함수 데이터내 (16진수로는) 0x0022의 오프셋 이나 (10진수로는) 00034 오프셋에 위치한다. 이 줄은 실제로 *runtime.printint* 함수를 호출하는 책임을 진다. 문제는 컴파일러가 컴파일이 진행되는 동안 *runtime.printint* 함수의 정확한 주소를 모른다는 것이다. 이 함수는 컴파일러가 전혀 모르는 다른 오브젝트 파일내에 위치한다. 그런 경우, 컴파일러는 재배치를 사용한다. 아래는 이 메서드 호출에 상응하는 정확한 재배치이다. (저자가 *goobj_explorer* 유틸리티의 첫번째 출력에서 복사해 왔다.):
 
 >```
 {
-                    Offset: 35,
-                    Size:   4,
-                    Sym:    goobj.SymID{Name:"runtime.printint", Version:0},
-                    Add:    0,
-                    Type:   3,
-                },
+    Offset: 35,
+    Size:   4,
+    Sym:    goobj.SymID{Name:"runtime.printint", Version:0},
+    Add:    0,
+    Type:   3,
+},
 ```
 
-This relocation tells the linker that, starting from an offset of 35 bytes, it needs to replace 4 bytes of data with the address of the starting point of the *runtime.printint* symbol. But an offset of 35 bytes from the main function data is actually an argument of the call instruction that we have previously seen. (The instruction starts from an offset of 34 bytes. One byte corresponds to call instruction code and four bytes—to the address of this instruction.)
+이 재배치는 링커에게 35 바이트의 오프셋에서 시작하면서, 4 바이트의 데이터를 *runtime.printint* 심볼의 시작점 주소로 교체할 필요가 있다고 말한다. 하지만 메인 함수 데이터로 부터 35 바이트의 오프셋는 실제로 이전에 본적이 있는 호출 명령(call instruction)의 인수이다. (이 (호출) 명령은 34 바이트의 오프셋에서 시작한다. 1 바이트는 호출 명령 코드이고 4 바이트는 이 명령의 주소를 가리킨다.)
 
+# 링커는 어떻게 작동하는가
 
-# How the linker operates
+이제 위의 설명을 이해한다면, 링커가 어떻게 작동하는 지를 알아낼 수 있다. 다음의 개요는 매우 단순화 시킨 것이긴 하지만 주요한 아이디어를 반영한다:
 
-Now that we understand this, we can figure out how the linker works. The following schema is very simplified, but it reflects the main idea:
+ * 링커는 메인 패키지로 부터 참조된 모든 패키지의 심볼을 모아서 하나의 긴 바이트 배열(혹은 바이너리 이미지)에 실는다.
+ * 각 심볼에 대해서는, 링커가 이러한 이미지내의 주소를 계산한다.
+ * 그런다음, 모든 심볼에 대해 정의된 재배치를 적용한다. 링커가 그런 재배치에서 참조된 모든 다른 심볼들의 정확한 주소들들 알고 있기 때문에 매우 쉬운 일이다.
+ * 링커는 (리눅스의) Executable and Linkable (ELF) 포맷이나 (윈도우의) Portable Executable (PE) 포맷에 필요한 모든 헤더를 준비한다. 그런 다음, 그 결과물로 링커는 실행파일을 발생시킨다.
 
- * The linker gathers all the symbols from all the packages that are referenced from the main package and loads them into one big byte array (or a binary image).
- * For each symbol, the linker calculates an address in this image.
- * Then it applies the relocations defined for every symbol. It is easy now, since the linker knows the exact addresses of all other symbols referenced from those relocations.
- * The linker prepares all the headers necessary for the Executable and Linkable (ELF) format (on Linux) or the Portable Executable (PE) format (on Windows). Then, it generates an executable file with the results.
+# TLS 이해하기
 
-
-# Understanding TLS
-
-A careful reader will notice a strange relocation in the output of the goobj_explorer utility for the main method. It doesn’t correspond to any method call and even points to an empty symbol:
+조심성 있는 독자는 main 메서드에 대해 *goobj_explorer* 유틸리티 출력속에 이상한 재배치가 있음을 알아챌 것이다. 어떤 메서드 호출에도 상응하지 않고 심지어 빈 심볼을 가리키고 있다:
 
 >```
 {
-                    Offset: 5,
-                    Size:   4,
-                    Sym:    goobj.SymID{},
-                    Add:    0,
-                    Type:   9,
-                },
+    Offset: 5,
+    Size:   4,
+    Sym:    goobj.SymID{},
+    Add:    0,
+    Type:   9,
+},
 ```
 
-So, what does this relocation do? We can see that it has an offset of 5 bytes and its size is 4 bytes. At this offset, there is a command:
+과연, 이 재배치가 하는 것이 무엇일까? 5 바이트의 오프셋을 가지고 있고 크기가 4 바이트임을 알 수 있다. 이 오프셋에는 다음 명령이 있다:
 
 >```
 0x0000 00000 (test.go:3)	MOVQ	(TLS),CX
 ```
 
-It starts at an offset of 0 and occupies 9 bytes (since the next command starts at an offset of 9 bytes). We can guess that this relocation replaces the strange *(TLS)* statement with some address, but what is TLS and what address does it use?
+0 오프셋에서 시작하고 9 바이트을 차지한다 (다음 명령이 9 바이트 오프셋애서 시작하는 걸로 알 수 있다). 추측컨대, 이 재배치는 낯선 *(TLS)* 구문을 어떤 주소로 교체한다. 그러면 TLS는 무엇이며, 무슨 주소를 사용하는가?
 
-TLS is an abbreviation for Thread Local Storage. This technology is used in many programming languages (more details [here](https://en.wikipedia.org/wiki/Thread-local_storage)). In short, it enables us to have a variable that points to different memory locations when used by different threads.
+TLS는 쓰레드 지역 저장 공간(Thread Local Storage)의 축약형이다. 이 기술은 많은 프로그래밍 언어에 사용되었는데 상세한 내용은 [여기](https://en.wikipedia.org/wiki/Thread-local_storage)를 참조하라. 간단하게 설명하면, 다른 쓰레드에 의해 사용될 때, 다른 메모리 장소를 가리키는 변수의 사용을 가능하게 한다.
 
+Go 에서는, 
 In Go, TLS is used to store a pointer to the G structure that contains internal details of a particular Go routine (more details on this in later blog posts). So, there is a variable that—when accessed from different Go routines—always points to a structure with internal details of this Go routine. The location of this variable is known to the linker and this variable is exactly what was moved to the CX register in the previous command. TLS can be implemented differently for different architectures. For AMD64, TLS is implemented via the *FS* register, so our previous command is translated into *MOVQ FS, CX*.
 
 To end our discussion on relocations, I am going to show you the enumerated type (enum) that contains all the different types of relocations:
