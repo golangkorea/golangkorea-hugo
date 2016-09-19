@@ -5,7 +5,7 @@ draft = true
 date = "2016-09-17T16:20:29-04:00"
 
 tags = ["Golang", "Internals", "linker", "object file", "relocations"]
-categories = ["번역"]
+categories = ["번역", "핵킹"]
 series = ["Golang  Internals"]
 authors = ["Jhonghee Park"]
 
