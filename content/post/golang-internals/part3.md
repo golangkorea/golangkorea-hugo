@@ -22,11 +22,11 @@ toc = true
 실용적인 실험을 하나 해 보자-아주 간단한 프로그램을 하나 만들고, 컴파일하고, 어떤 오브젝트 파일이 만들어 지는지 관찰하자. 저자의 경우, 프로그램은 다음과 같다:
 
 >```go
-package main
-
-func main() {
-	print(1)
-}
+1: package main
+2:
+3: func main() {
+4: 	print(1)
+5: }
 ```
 
 너무 쉽지 않은가? 이제 컴파일을 한다:
@@ -234,10 +234,9 @@ go tool 6g -S test.go
 
 TLS는 쓰레드 지역 저장 공간(Thread Local Storage)의 축약형이다. 이 기술은 많은 프로그래밍 언어에 사용되었는데 상세한 내용은 [여기](https://en.wikipedia.org/wiki/Thread-local_storage)를 참조하라. 간단하게 설명하면, 다른 쓰레드에 의해 사용될 때, 다른 메모리 장소를 가리키는 변수의 사용을 가능하게 한다.
 
-Go 에서는, 
-In Go, TLS is used to store a pointer to the G structure that contains internal details of a particular Go routine (more details on this in later blog posts). So, there is a variable that—when accessed from different Go routines—always points to a structure with internal details of this Go routine. The location of this variable is known to the linker and this variable is exactly what was moved to the CX register in the previous command. TLS can be implemented differently for different architectures. For AMD64, TLS is implemented via the *FS* register, so our previous command is translated into *MOVQ FS, CX*.
+Go 언어에서 TLS는 *G 구조체* 를 가리키는 포인터를 저장하는 데 사용된다. *G 구조체* 는 특정한 Go 루틴 내부의 상세한 내용을 담고 있는데 나중에 올 블로그 포스트에서 더 자세히 다룰 것이다. 그러므로, 다른 Go 루틴들이 어떤 한 Go 루틴을 접근할 때, 이 Go 루틴 내부의 자세한 정보를 담고 있는 구조체를 가리키는 변수가 항상 존재한다는 얘기다. 이 변수의 위치는 링커에게 알려져 있어서 (우리가) 분석중인 명령안에서 이 변수가 CX 레지스터에 이동된다는 것을 알 수 있다. TLS는 아키텍쳐마다 다르게 구현될 수 있다. AMD64에서는, *FS* 레지스터를 통해 구현되어서, 이 명령은 *MOVQ FS, CX* 로 번역될 수 있다.
 
-To end our discussion on relocations, I am going to show you the enumerated type (enum) that contains all the different types of relocations:
+재배치에 대한 토론을 마감하기 위해, 모든 재배치 타입을 담고 있는 열거형 타입(enum) 을 소개하겠다:
 
 >```
 // Reloc.type
@@ -261,13 +260,11 @@ enum
 };
 ```
 
-As you can see from this enum, relocation type 3 is R_CALL and relocation type 9 is R_TLS. These enum names perfectly explain the behaviour that we discussed previously.
+이 enum에서 볼 수 있듯이, 재배치 타입 3는 R_CALL 이고 재배치 타입 9은 R_TLS이다. 이 enum 이름들은 방금 설명한 행동들을 완벽하게 설명한다.
 
+# Go 오브젝트 파일에 대한 부연 설명
 
-# More on Go object files
-
-In the next post, we’ll continue our discussion on object files. I will also provide more information necessary for you to move forward and understand how the Go runtime works. If you have any questions, feel free to ask them in the comments.
-
+다음 포스트에서 오브젝트 파일에 대한 설명을 계속해 나가겠다. 또한 Go 런타임이 어떻게 작동하는 지를 이해하는데 필요한 정보들을 더 제공하겠다. 질문이 있다면 코멘트란에 부담없이 해 주길 바란다.
 
  * [Golang Internals, Part 3: The Linker, Object Files, and Relocations](http://blog.altoros.com/golang-internals-part-3-the-linker-and-object-files.html)
  * 저자: Siarhei Matsiukevich
