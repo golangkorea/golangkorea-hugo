@@ -266,6 +266,6 @@ enum
 
 다음 포스트에서 오브젝트 파일에 대한 설명을 계속해 나가겠다. 또한 Go 런타임이 어떻게 작동하는 지를 이해하는데 필요한 정보들을 더 제공하겠다. 질문이 있다면 코멘트란에 부담없이 해 주길 바란다.
 
- * [Golang Internals, Part 3: The Linker, Object Files, and Relocations](http://blog.altoros.com/golang-internals-part-3-the-linker-and-object-files.html)
+ * 원문: [Golang Internals, Part 3: The Linker, Object Files, and Relocations](http://blog.altoros.com/golang-internals-part-3-the-linker-and-object-files.html)
  * 저자: Siarhei Matsiukevich
  * 번역자: Jhonghee Park

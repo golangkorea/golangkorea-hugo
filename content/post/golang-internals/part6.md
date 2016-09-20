@@ -234,6 +234,6 @@ A careful reader may notice that I have previously said *mcache* is attached to 
 
 In the next post, we will continue discussing the bootstrap process by looking at how the garbage collector is initialized and how the main goroutine is started. Meanwhile, don’t hesitate to share your thoughts and suggestions in the comments below.
 
-* [Golang Internals, Part 6: Bootstrapping and Memory Allocator Initialization](http://blog.altoros.com/golang-internals-part-6-bootstrapping-and-memory-allocator-initialization.html)
+* 원문: [Golang Internals, Part 6: Bootstrapping and Memory Allocator Initialization](http://blog.altoros.com/golang-internals-part-6-bootstrapping-and-memory-allocator-initialization.html)
 * 저자: Siarhei Matsiukevich
 * 번역자: Jhonghee Park

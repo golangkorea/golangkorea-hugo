@@ -121,6 +121,6 @@ Go 언어에서 이런 아이디어는 일반화 되어 있다. 라인 번호와
 
 앞으로 나올 포스트에서는 Go 언어의 부트 스트랩 과정을 얘기하겠다. 런타임이 어떻게 작동하는지를 이해하는데 중요한 단서이다. 일주일 뒤에 보자.
 
-* [Golang Internals, Part 4: Object Files and Function Metadata](http://blog.altoros.com/golang-part-4-object-files-and-function-metadata.html)
+* 원문: [Golang Internals, Part 4: Object Files and Function Metadata](http://blog.altoros.com/golang-part-4-object-files-and-function-metadata.html)
 * 저자: Siarhei Matsiukevich
 * 번역자: Jhonghee Park

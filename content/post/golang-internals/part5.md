@@ -295,6 +295,6 @@ The final part of the starting sequence initializes arguments and calls differen
 So, we have learned the inner mechanisms of the bootstrap process and found out how stacks are implemented. To move forward, we need to analyze the last part of the starting sequence. That will be the subject of my next post. If you want to get notified as soon as it comes out, hit the subscribe button below or follow [@altoros](http://www.twitter.com/altoros).
 
 
-* [Golang Internals, Part 5: the Runtime Bootstrap Process](http://blog.altoros.com/golang-internals-part-5-runtime-bootstrap-process.html)
+* 원문: [Golang Internals, Part 5: the Runtime Bootstrap Process](http://blog.altoros.com/golang-internals-part-5-runtime-bootstrap-process.html)
 * 저자: Siarhei Matsiukevich
 * 번역자: Jhonghee Park
