@@ -72,12 +72,11 @@ toc = true
 5   42f170:   ff e0                           jmpq   *%rax
 ```
 
-좋다! 찾았다! 저자의 OS와 아키텍쳐에 해당하는 시작점은 *_rt0_amd64_linux* 라는 함수이다.
+좋아! 찾았다! 저자의 OS와 아키텍쳐에 해당하는 시작점은 *_rt0_amd64_linux* 라는 함수이다.
 
+# 시작하는 차례
 
-# The starting sequence
-
-Now we need to find this function in Go runtime sources. It is located in the [rt0_linux_amd64.s](https://github.com/golang/go/blob/master/src/runtime/rt0_linux_amd64.s) file. If you look inside the Go runtime package, you can find many filenames with postfixes related to OS and architecture names. When a runtime package is built, only the files that correspond to the current OS and architecture are selected. The rest are skipped. Let’s take a closer look at [rt0_linux_amd64.s](https://github.com/golang/go/blob/master/src/runtime/rt0_linux_amd64.s):
+이제 이 함수를 Go 런타임 소스코드에서 찾을 필요가 있다. 위치한 곳은 [rt0_linux_amd64.s](https://github.com/golang/go/blob/master/src/runtime/rt0_linux_amd64.s) 파일이다. Go runtime 패키지속을 들여다 보면, 많은 파일의 이름들이 OS와 아키텍쳐 이름에 연관된 어미들(postfixes)로 되어 있음을 발견할 수 있다. runtime 패키지가 빌드될 때, 현재 OS와 아키텍쳐에 상응하는 파일들만 선택되고 나머지는 건너뛴다. [rt0_linux_amd64.s](https://github.com/golang/go/blob/master/src/runtime/rt0_linux_amd64.s)를 더 자세히 들여다 보자:
 
 >```
 1 TEXT _rt0_amd64_linux(SB),NOSPLIT,$-8
@@ -91,9 +90,9 @@ Now we need to find this function in Go runtime sources. It is located in the [r
 9     JMP AX
 ```
 
-The *_rt0_amd64_linux* function is very simple. It calls the main function and saves arguments (*argc* and *argv*) in registers (*DI* and *SI*). The arguments are located in the stack and can be accessed via the *SP* (stack pointer) register. The main function is also very simple. It calls *runtime.rt0_go*. The *runtime.rt0_go* function is longer and more complicated, so I will break it into small parts and describe each one separately.
+*_rt0_amd64_linux* 함수는 매우 단순하다. main 함수를 부르고 인수값 (*argc* and *argv*) 을 레지스터 (*DI* and *SI*)에 저장한다. 인수들은 스택에 위치하고 *SP* (스택 포인터) 레지스터를 통해 접근할 수 있다. main 함수 역시 매우 간단하다. *runtime.rt0_go* 를 호출한다. *runtime.rt0_go* 함수는 좀 길고 더 복잡하다. 그래서 작은 부분들로 분해한 다음 하나씩 따로 설명할 것이다.
 
-The first section goes like this:
+첫번째 섹션은 이러하다:
 
 >```
 1 MOVQ    DI, AX      // argc
