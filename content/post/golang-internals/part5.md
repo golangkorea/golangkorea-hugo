@@ -13,19 +13,18 @@ toc = true
 
 +++
 
-The bootstrapping process is the key to understanding how the Go runtime works. Learning it is essential, if you want to move forward with Go. So the fifth installment in our Golang Internals series is dedicated to the Go runtime and, specifically, the Go bootstrap process. This time you will learn about:
+부트스트래핑 과정은 Go의 런타임이 어떻게 작동하는지를 이해하는데 열쇠와 같은 구실을 한다. Go와 함께 앞으로 나아가고자 한다면 반드시 배워야한다. 그래서 Golang의 내부 시리즈의 다섯번째는 Go의 런타임, 특히 Go의 부트스트래핑 과정에 바치겠다. 이번에 독자가 배울 항목들은:
 
- * Go bootstrapping
- * resizable stacks implementation
- * internal TLS implementation
+ * Go 부트스트래핑
+ * 가변 스택 구현
+ * TLS 내부 구현
 
-Note that this post contains a lot of assembler code and you will need at least some basic knowledge of it to proceed (here is a quick [guide to Go’s assembler](https://golang.org/doc/asm)). So let’s get going!
+이 포스트에 어셈블러 코드가 많이 포함되어 있는 점을 주목하라. 진행하기 위해 적어도 어셈블러의 기본 지식은 필요할 것이다. (속성 [Go 어셈블러 가이드](https://golang.org/doc/asm)가 여기 있다.) 이제 시작해 보자!
 
 
+# 프로그램 시작점 찾기
 
-# Finding an entry point
-
-First, we need to find what function is executed immediately after we start a Go program. To do this, we will write a simple Go app:
+우선, Go 프로그램이 시작된 후 즉시 실행되는 함수가 무엇인지 찾아보자. 그러기 위해, 간단한 Go 앱을 제작할 것이다:
 
 >```go
 1 package main
@@ -35,20 +34,20 @@ First, we need to find what function is executed immediately after we start a Go
 5 }
 ```
 
-Then we need to compile and link it:
+그런 다음 컴파일하고 링크 할 필요가 있다:
 
 >```
 1 go tool 6g test.go
 2 go tool 6l test.6
 ```
 
-This will create an executable file called *6.out* in your current directory. The next step involves the [objdump](https://sourceware.org/binutils/docs/binutils/objdump.html) tool, which is specific to Linux. Windows and Mac users can find analogs or skip this step altogether. Now run the following command:
+이 과정을 통해 *6.out* 이라고 불리는 실행 파일이 현재 디렉토리에 만들어 진다. 다음 단계는 [objdump](https://sourceware.org/binutils/docs/binutils/objdump.html) 툴을 사용한다. 이 툴은 리눅스에만 해당되는 툴이어서 윈도우나 맥 사용자들은 유사한 툴을 찾던지 이 단계를 그냥 건너 뛰어야 한다. 이제 다음 명령을 실행하라:
 
 >```
 1 objdump -f 6.out
 ```
 
-You should get output that will contain the start address:
+이것을 통해 시작 주소를 담고 있는 출력을 얻을 것이다:
 
 >```
 1 6.out:     file format elf64-x86-64
@@ -57,13 +56,13 @@ You should get output that will contain the start address:
 4 start address 0x000000000042f160
 ```
 
-Next, we need to disassemble our executable and find what function is located at this address:
+다음은, 실행파일을 역어셈블하고 이 주소에 위치한 함수가 무엇인지 알아 낸다:
 
 >```
 1 objdump -d 6.out > disassemble.txt
 ```
 
-Then we need to open the *disassemble.txt* file and search for “*42f160*.” Here is what I got:
+그런 다음 *disassemble.txt* 파일을 열어서 “*42f160*.”를 검색하여 다음과 같은 결과를 얻는다:
 
 >```
 1 000000000042f160 <_rt0_amd64_linux>:
@@ -73,7 +72,7 @@ Then we need to open the *disassemble.txt* file and search for “*42f160*.” H
 5   42f170:   ff e0                           jmpq   *%rax
 ```
 
-Nice, we have found it! The entry point for my OS and architecture is a function called *_rt0_amd64_linux*.
+좋다! 찾았다! 저자의 OS와 아키텍쳐에 해당하는 시작점은 *_rt0_amd64_linux* 라는 함수이다.
 
 
 # The starting sequence
