@@ -103,7 +103,7 @@ toc = true
 6 MOVQ    BX, 24(SP)
 ```
 
-Here, we put some previously saved command line argument values inside the *AX* and *BX* decrease stack pointers. We also add space for two more four-byte variables and adjust it to be 16-bit aligned. Finally, we move the arguments back to the stack.
+이전에 저장해 두었던 코맨드라인 인수값을 *AX* 와 *BX* 에 두고 스택 포인터를 감소시킨다. 두개의 4 바이트 변수를 위한 공간을 추가하고 16 비트로 정렬되게 조정한다. 마지막으로 인수값은 다시 스택에 이동시킨다.
 
 >```
 1 // create istack out of the given (operating system) stack.
@@ -116,12 +116,11 @@ Here, we put some previously saved command line argument values inside the *AX* 
 8 MOVQ    SP, (g_stack+stack_hi)(DI)
 ```
 
-The second part is a bit more tricky. First, we load the address of the global *runtime.g0* variable into the DI register. This variable is defined in the [proc1.go](https://github.com/golang/go/blob/master/src/runtime/proc1.go) file and belongs to the *runtime,g* type. Variables of this type are created for each goroutine in the system. As you can guess, *runtime.g0* describes a root goroutine. Then we initialize the fields that describe the stack of the root goroutine. The meaning of *stack.lo* and *stack.hi* should be clear. These are pointers to the beginning and the end of the stack for the current goroutine, but what are the *stackguard0* and *stackguard1* fields? To understand this, we need to set aside the investigation of the *runtime.rt0_go* function and take a closer look at stack growth in Go.
+두번째 부분은 좀 더 까다롭다. 우선, 전역 변수 *runtime.g0* 의 주소를 DI 레지스터에 올린다. 이 변수는 [proc1.go](https://github.com/golang/go/blob/master/src/runtime/proc1.go) 파일에 정의되어 있고 *runtime,g* 타입에 속한다. 이 타입의 변수들은 시스템내 각 고루틴(goroutine)마다 만들어 진다. 독자가 추측할 수도 있듯이, *runtime.g0* 는 루트 고루틴(root goroutine)을 나타낸다. 그런 다음 이 루트 고루틴의 스택을 묘사하는 필드들을 초기화한다. *stack.lo* 와 *stack.hi* 가 뜻하는 바는 분명하다. 이것들은 현재 고루틴의 시작과 끝을 가리키는 포인터 들이다. 그런데 *stackguard0* 와 *stackguard1* 필드는 무엇일까? 이 것들을 이해하기 위해서는 *runtime.rt0_go* 함수를 분석하는 일을 잠시 접어 두고 Go 언어에서 스택 크기 변화에 대해 좀 더 자세히 알아 보아야 한다.
 
+# Go 언어에서 크기를 조정할 수 있는 스택의 구현
 
-# Resizable stack implementation in Go
-
-The Go language uses resizable stacks. Each goroutine starts with a small stack and its size changes each time a certain threshold is reached. Obviously, there is a way to check whether we have reached this threshold or not. In fact, the check is performed at the beginning of each function. To see how it works, let’s compile our sample program one more time with the *-S* flag (this will show the generated assembler code). The beginning of the main function looks like this:
+Go 언어는 크기를 조정할 수 있는 스택을 사용한다. 각 고루틴은 작은 스택으로 시작해서 한계치에 도달하면 크기를 바꾼다. 물론 이 한계치에 도달했는지를 알아보는 방법이 있다. 사실 각 함수는 시작할 때 스택이 한계에 도달했는지를 확인한다. 이것이 어떻게 작동하는지 알아보기 위해 샘플 프로그램을 *-S* 플래그를 이용해 다시 한번 컴파일 하자. 어셈블리 코드을 보게 될 것 이다. main 함수의 시작부분은 다음과 같다:
 
 >```
 1 "".main t=1 size=48 value=0 args=0x0 locals=0x8
@@ -133,6 +132,7 @@ The Go language uses resizable stacks. Each goroutine starts with a small stack 
 7     0x0014 00020 (test.go:3)    JMP ,0
 8     0x0016 00022 (test.go:3)    SUBQ    $8,SP
 ```
+
 
 First, we load a value from thread local storage (TLS) to the CX register (I have already explained what TLS is in one of my [previous posts](http://blog.altoros.com/golang-internals-part-3-the-linker-and-object-files.html)). This value always contains a pointer to the *runtime.g* structure that corresponds to the current goroutine. Then we compare the stack pointer to the value located at an offset of 16 bytes in the *runtime.g* structure. We can easily calculate that this corresponds to the *stackguard0* field.
 
