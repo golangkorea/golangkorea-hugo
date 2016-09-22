@@ -194,9 +194,9 @@ Go 언어는 크기를 조정할 수 있는 스택을 사용한다. 각 고루�
 18 JEQ ok
 ```
 
-This fragment is only executed when *cgo* is enabled. cgo is a topic for a separate discussion and we might talk about it in one of the upcoming posts. At this point, we only want to understand the basic bootstrap workflow, so we will skip it.
+이 코드 조각은 *cgo* 가 활성화되어 있을 때 만 실행된다. *cgo* 는 따로 다루어야 할 주제이고 앞으로 나올 포스트에서 다룰지도 모르겠다. 지금 이 시점에서는 기본적인 부트스트랩 작업의 흐름만을 이해하고 자 하기 때문에, 건너 뛸 것이다.
 
-The next code fragment is responsible for setting up TLS:
+다음 코드 조각은 TLS를 설정하는 장본인이다:
 
 >```
 01 needtls:
@@ -219,7 +219,7 @@ The next code fragment is responsible for setting up TLS:
 18     MOVL    AX, 0   // abort
 ```
 
-I have already mentioned TLS before. Now it is time to understand how it is implemented.
+이미 TLS를 언급한 적이 있으므로 이제 어떻게 구현되었는지를 이해할 시간이다.
 
 
 # Internal TLS implementation
