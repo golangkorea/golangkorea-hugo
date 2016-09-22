@@ -247,10 +247,9 @@ TLS에 대해서는 이미 언급한 바 있고, 이제는 어떻게 구현되�
 12     RET
 ```
 
+코멘트를 보면 이 함수가 *arch_prctl* 시스템 호출을 하며 *ARCH_SET_FS* 를 인수로 전달한다는 것을 알 수 있다. 또 이 시스템 호출이 *FS* 세그먼트 레지스터의 시작점(base)을 정하는 것을 볼 수 있다. 위의 경우, TLS는 *runtime.tls0* 변수를 가리킨다.
 
-From the comments, we can understand that this function makes an *arch_prctl* system call and passes *ARCH_SET_FS* as an argument. We can also see that this system call sets a base for the *FS* segment register. In our case, we set TLS to point to the *runtime·tls0* variable.
-
-Do you remember the instruction that we saw at the beginning of the assembler code for the main function?
+main 함수의 어셈블러 코드의 시작부분에서 본 명령을 기억하는가?
 
 >```
 1 0x0000 00000 (test.go:3)    MOVQ    (TLS),CX
