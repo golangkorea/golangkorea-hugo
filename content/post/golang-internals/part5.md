@@ -194,9 +194,9 @@ Go 언어는 크기를 조정할 수 있는 스택을 사용한다. 각 고루�
 18 JEQ ok
 ```
 
-This fragment is only executed when *cgo* is enabled. cgo is a topic for a separate discussion and we might talk about it in one of the upcoming posts. At this point, we only want to understand the basic bootstrap workflow, so we will skip it.
+이 코드 조각은 *cgo* 가 활성화 되어 있을 때만 실행된다. *cgo* 는 따로 다루어야 할 주제이고 앞으로 나올 포스트에서 논할 수도 있겠다. 이 시점에서는 기본적인 부트스트랩 웍플로우만을 이해하길 원하므로 *cgo* 에 대한 부분은 건너 뛰겠다.
 
-The next code fragment is responsible for setting up TLS:
+다음 코드 조각은 TLS를 셑업하는 책임을 진다:
 
 >```
 01 needtls:
@@ -219,19 +219,18 @@ The next code fragment is responsible for setting up TLS:
 18     MOVL    AX, 0   // abort
 ```
 
-I have already mentioned TLS before. Now it is time to understand how it is implemented.
+TLS에 대해서는 이미 언급한 바 있고, 이제는 어떻게 구현되었는지를 알아보자.
 
+# TLS 내부 구현
 
-# Internal TLS implementation
-
-If you look at the previous code fragment carefully, you can easily understand that the only lines that do actual work are:
+이전 코드 조각을 자세히 들여다 보면, 실제로 작업을 하는 부분은 한 줄에 불과하다는 것을 쉽게 이해할 수 있다:
 
 >```
 1 LEAQ    runtime·tls0(SB), DI
 2     CALL    runtime·settls(SB)
 ```
 
-All the other stuff is used to skip TLS setup when it is not supported on your OS and check that TLS works correctly. The two lines above store the address of the *runtime·tls0* variable in the DI register and call the *runtime·settls* function. The code of this function is shown below:
+다른 부분들은 TLS가 os에서 지원되지 않을 때 건너 뛰거나 TLS가 정확하게 작동하는지 확인하는데 사용된다. 위의 두 줄은 *runtime.tls0* 변수의 주소를 DI 레지스터에 저장하고 *runtime.settls* 함수를 호출한다. 아래에서 이 함수의 코드를 살펴 보자:
 
 >```
 01 // set tls base to DI
@@ -247,6 +246,7 @@ All the other stuff is used to skip TLS setup when it is not supported on your O
 11     MOVL    $0xf1, 0xf1  // crash
 12     RET
 ```
+
 
 From the comments, we can understand that this function makes an *arch_prctl* system call and passes *ARCH_SET_FS* as an argument. We can also see that this system call sets a base for the *FS* segment register. In our case, we set TLS to point to the *runtime·tls0* variable.
 
