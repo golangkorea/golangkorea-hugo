@@ -74,7 +74,7 @@ toc = true
 
 좋아! 찾았다! 저자의 OS와 아키텍쳐에 해당하는 시작점은 *_rt0_amd64_linux* 라는 함수이다.
 
-# 시작하는 차례
+# 시작하는 순서
 
 이제 이 함수를 Go 런타임 소스코드에서 찾을 필요가 있다. 위치한 곳은 [rt0_linux_amd64.s](https://github.com/golang/go/blob/master/src/runtime/rt0_linux_amd64.s) 파일이다. Go runtime 패키지속을 들여다 보면, 많은 파일의 이름들이 OS와 아키텍쳐 이름에 연관된 어미들(postfixes)로 되어 있음을 발견할 수 있다. runtime 패키지가 빌드될 때, 현재 OS와 아키텍쳐에 상응하는 파일들만 선택되고 나머지는 건너뛴다. [rt0_linux_amd64.s](https://github.com/golang/go/blob/master/src/runtime/rt0_linux_amd64.s)를 더 자세히 들여다 보자:
 
@@ -133,15 +133,14 @@ Go 언어는 크기를 조정할 수 있는 스택을 사용한다. 각 고루�
 8     0x0016 00022 (test.go:3)    SUBQ    $8,SP
 ```
 
+우선 쓰레드 로컬 스토리지 (TLS)에서 한 값을 CX 레지스터에 올린다(TLS가 무엇인지는 [이전 포스트](/post/golang-internals/part3/)에서 이미 설명한 바 있다). 이 값은 항상 현재 고루틴에 상응하는  *runtime.g* 구조에 대한 포인터를 담고 있다. 그런 다음 스택포인터를 *runtime.g* 구조내 16 바이트의 오프셋에 위치한 값과 비교한다. 계산해 보면 이 값이 *stackguard0* 필드에 상응한다는 것을 쉽게 알 수 있다.
 
-First, we load a value from thread local storage (TLS) to the CX register (I have already explained what TLS is in one of my [previous posts](http://blog.altoros.com/golang-internals-part-3-the-linker-and-object-files.html)). This value always contains a pointer to the *runtime.g* structure that corresponds to the current goroutine. Then we compare the stack pointer to the value located at an offset of 16 bytes in the *runtime.g* structure. We can easily calculate that this corresponds to the *stackguard0* field.
-
-So, this is how we check if we have reached the stack threshold. If we haven’t reached it yet, the check fails. In this case, we call the *runtime.morestack_noctxt* function repeatedly until enough memory has been allocated for the stack. The stackguard1 field works very similarly to *stackguard0*, but it is used inside the C stack growth prologue instead of Go. The inner workings of *runtime.morestack_noctxt* is also a very interesting topic, but we will discuss it later. For now, let’s return to the bootstrap process.
+바로 이것이 스택 한계치에 도달했는지를 확인하는 방식이다. 아직 도달하지 않았다면, 확인은 실패로 간주되어서 스택에 충분한 메모리가 할당될 때 까지 *runtime.morestack_noctxt* 함수를 반복적으로 호출한다. *stackguard1* 필드는 *stackguard0* 와 매우 유사하게 작동한다. 하지만 Go 대신 C 스택 성장 프롤로그 (C stack growth prologue)내에서 사용된다. *runtime.morestack_noctxt* 의 내부 작동 원리 또한 매우 흥미로운 주제이긴 하지만 나중에 논하기로 하겠다. 지금은 부트스트랩 과정으로 다시 돌아가기로 하자.
 
 
-# Continuing the investigation of Go bootstrapping
+# 계속되는 Go 부트스트래핑에 대한 조사
 
-We will proceed with the starting sequence by looking at the next portion of code inside the *runtime.rt0_go* function:
+시작하는 순서에 대해 더 나아가기 위해서 *runtime.rt0_go* 함수내 다음 부분에 있는 코드를 살펴보기로 하자:
 
 >```
 01     // find out information about the processor we're on
@@ -168,6 +167,7 @@ We will proceed with the starting sequence by looking at the next portion of cod
 22     MOVL    DX, runtime·cpuid_edx(SB)
 23 nocpuinfo:
 ```
+
 
 This part is not crucial for understanding major Go concepts, so we will look through it briefly. Here, we are trying to figure out what processor we are using. If it is Intel, we set the *runtime·lfenceBeforeRdtsc* variable. The *runtime·cputicks* method is the only place where this variable is used. This method utilizes a different assembler instruction to get cpu ticks depending on the value of *runtime·lfenceBeforeRdtsc*. Finally, we call the CPUID assembler instruction, execute it, and save the result in the *runtime·cpuid_ecx* and *runtime·cpuid_edx* variables. These are used in the [alg.go](https://github.com/golang/go/blob/master/src/runtime/alg.go) file to select a proper hashing algorithm that is natively supported by your computer’s architecture.
 
