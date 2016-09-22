@@ -168,10 +168,10 @@ Go 언어는 크기를 조정할 수 있는 스택을 사용한다. 각 고루�
 23 nocpuinfo:
 ```
 
+이 부분은 Go의 주요한 컨셉트들을 이해하는데 반드시 알아야 할 필요는 없다. 그래서 짧게 보고 넘어 가겠다. 여기에서는 지금 사용되고 있는 프로세서가 무엇인지 알아내려는 시도가 있다. 만약 인텔이면 *runtime·lfenceBeforeRdtsc* 변수에 값을 매긴다. *runtime·cputicks* 메서드에만 사용된 변수이다. 이 메서드는 *runtime·lfenceBeforeRdtsc* 값에 의존하여 cpu 마다 다른 어셈블러 명령을 통해 tick을 알아낸다. 마지막으로 CPUID 어셈블러 명령을 호출하고, 실행하고, 결과를 *runtime·cpuid_ecx* 와 *runtime·cpuid_edx* 변수에 저장한다. 이 변수들은 [alg.go](https://github.com/golang/go/blob/master/src/runtime/alg.go) 파일에서 컴퓨터의 아키텍쳐에 따라 기본적으로 지원되는 적합한 헤쉬잉 알고리즘을 선택하는데 사용된다.
 
-This part is not crucial for understanding major Go concepts, so we will look through it briefly. Here, we are trying to figure out what processor we are using. If it is Intel, we set the *runtime·lfenceBeforeRdtsc* variable. The *runtime·cputicks* method is the only place where this variable is used. This method utilizes a different assembler instruction to get cpu ticks depending on the value of *runtime·lfenceBeforeRdtsc*. Finally, we call the CPUID assembler instruction, execute it, and save the result in the *runtime·cpuid_ecx* and *runtime·cpuid_edx* variables. These are used in the [alg.go](https://github.com/golang/go/blob/master/src/runtime/alg.go) file to select a proper hashing algorithm that is natively supported by your computer’s architecture.
 
-Ok, let’s move on and examine another portion of code:
+자, 다음 코드로 이동하자.
 
 >```
 01 // if there is an _cgo_init, call it.
