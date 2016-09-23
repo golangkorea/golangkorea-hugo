@@ -170,7 +170,6 @@ Go 언어는 크기를 조정할 수 있는 스택을 사용한다. 각 고루�
 
 이 부분은 Go의 주요한 컨셉트들을 이해하는데 반드시 알아야 할 필요는 없다. 그래서 짧게 보고 넘어 가겠다. 여기에서는 지금 사용되고 있는 프로세서가 무엇인지 알아내려는 시도가 있다. 만약 인텔이면 *runtime·lfenceBeforeRdtsc* 변수에 값을 매긴다. *runtime·cputicks* 메서드에만 사용된 변수이다. 이 메서드는 *runtime·lfenceBeforeRdtsc* 값에 의존하여 cpu 마다 다른 어셈블러 명령을 통해 tick을 알아낸다. 마지막으로 CPUID 어셈블러 명령을 호출하고, 실행하고, 결과를 *runtime·cpuid_ecx* 와 *runtime·cpuid_edx* 변수에 저장한다. 이 변수들은 [alg.go](https://github.com/golang/go/blob/master/src/runtime/alg.go) 파일에서 컴퓨터의 아키텍쳐에 따라 기본적으로 지원되는 적합한 헤쉬잉 알고리즘을 선택하는데 사용된다.
 
-
 자, 다음 코드로 이동하자.
 
 >```
@@ -194,9 +193,9 @@ Go 언어는 크기를 조정할 수 있는 스택을 사용한다. 각 고루�
 18 JEQ ok
 ```
 
-이 코드 조각은 *cgo* 가 활성화 되어 있을 때만 실행된다. *cgo* 는 따로 다루어야 할 주제이고 앞으로 나올 포스트에서 논할 수도 있겠다. 이 시점에서는 기본적인 부트스트랩 웍플로우만을 이해하길 원하므로 *cgo* 에 대한 부분은 건너 뛰겠다.
+이 코드 조각은 *cgo* 가 활성화되어 있을 때 만 실행된다. *cgo* 는 따로 다루어야 할 주제이고 앞으로 나올 포스트에서 다룰지도 모르겠다. 지금 이 시점에서는 기본적인 부트스트랩 작업의 흐름만을 이해하고 자 하기 때문에, 건너 뛸 것이다.
 
-다음 코드 조각은 TLS를 셑업하는 책임을 진다:
+다음 코드 조각은 TLS를 설정하는 장본인이다:
 
 >```
 01 needtls:
@@ -255,18 +254,17 @@ main 함수의 어셈블러 코드의 시작부분에서 본 명령을 기억하
 1 0x0000 00000 (test.go:3)    MOVQ    (TLS),CX
 ```
 
-I have previously explained that it loads the address of the *runtime.g* structure instance into the CX register. This structure describes the current goroutine and is stored in thread local storage. Now we can find out and understand how this instruction is translated into machine assembler. If you open the previously created *disassembly.txt* file and look for the *main.main* function, the first instruction inside it should look like this:
+이전에 설명한 바 있듯이 이 명령은 *runtime.g* 구조체 인스턴스의 주소를 CX 레지스터에 올린다. 이 구조체는 현재 고루틴에 대한 서술이고 쓰레드 로컬 스토리지 (thread local storage)에 저장된다. 이제 이 명령이 어떻게 기계어로 번역되는지 밝혀내고 이해할 수 있다. 이전에 만든 *disassembly.txt* 파일을 열고 *main.main* 함수를 찾아보면, 첫번째 명령은 다음과 같이 생겼다:
 
 >```
 1 400c00:       64 48 8b 0c 25 f0 ff    mov    %fs:0xfffffffffffffff0,%rcx
 ```
 
-The colon in this instruction (*%fs:0xfffffffffffffff0*) stands for segmentation addressing (you can read more on it [here](http://thestarman.pcministry.com/asm/debug/Segments.html)).
+(*%fs:0xfffffffffffffff0*) 명령의 콜론이 의미하는 바는 세그멘테이션의 주소화이다 (자세한 내용은 [여기](http://thestarman.pcministry.com/asm/debug/Segments.html)를 참조하라).
 
+# 시작하는 순서로 다시 돌아가서
 
-# Returning to the starting sequence
-
-Finally, let’s look at the last two parts of the *runtime.rt0_go* function:
+마지막으로 *runtime.rt0_go* 함수의 마지막 두 부분을 살펴보자:
 
 >```
 01 ok:
@@ -282,14 +280,13 @@ Finally, let’s look at the last two parts of the *runtime.rt0_go* function:
 11     MOVQ    AX, g_m(CX)
 ```
 
-Here, we load the TLS address into the BX register and save the address of the *runtime·g0* variable in TLS. We also initialize the *runtime.m0* variable. If *runtime.g0* stands for root goroutine, then *runtime.m0* corresponds to the root operating system thread used to run this goroutine. We may take a closer look at *runtime.g0* and *runtime.m0* structures in upcoming blog posts.
+TLS 주소를 BX 레지스터에 올리고 *runtime·g0* 변수의 주소를 TLS에 저장한다. *runtime.m0* 변수를 초기화한다. 만약 *runtime.g0* 가 루트 고루틴을 뜻하면 *runtime.m0* 는 이 고루틴을 실행하는 루트 오퍼레이팅 시스템 쓰레드에 상응한다. *runtime.g0* 와 *runtime.m0* 구조를 앞으로 나올 포스트에서 자세히 살펴볼지도 모르겠다.
 
-The final part of the starting sequence initializes arguments and calls different functions, but this is a topic for a separate discussion.
+시작하는 순서의 마지막 부분은 인수를 초기화하고 여러 함수를 호출하는 것이다. 하지만 이 주제는 따로 다루어야 할 토론거리이다.
 
+# Golang 에 대한 더 알아보기
 
-# More on Golang
-
-So, we have learned the inner mechanisms of the bootstrap process and found out how stacks are implemented. To move forward, we need to analyze the last part of the starting sequence. That will be the subject of my next post. If you want to get notified as soon as it comes out, hit the subscribe button below or follow [@altoros](http://www.twitter.com/altoros).
+이제 부트스트랩 과정의 내부 메커니즘에 대해 배웠고 어떻게 스택이 구현되었는지 알아 보았다. 계속 나아가기 위해서는 시작하는 순서의 마지막 부분에 대한 분석이 필요하다. 이것이 저자의 다음 포스트의 주제가 될 것이다. 언제 나올지 연락받고 싶은 독자는 밑의 subscribe 버튼을 누르던지 [@altoros](http://www.twitter.com/altoros)를 팔로우하기 바란다.
 
 
 * 원문: [Golang Internals, Part 5: the Runtime Bootstrap Process](http://blog.altoros.com/golang-internals-part-5-runtime-bootstrap-process.html)
