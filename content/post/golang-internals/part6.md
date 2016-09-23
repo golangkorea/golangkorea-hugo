@@ -13,12 +13,11 @@ toc = true
 
 +++
 
-This post is the continuation of our Golang Internals series. It explores the bootstrapping process, which is key to understanding the Go runtime, in more detail. In this part, we will run through the second portion of the starting sequence, learn how arguments are initialized, what functions are called, etc.
+이 포스트는 Golang 내부 시리즈의 연속이다. Go 런타임을 자세히 이해하는데 열쇠와 같은 부트스트랩 과정을 살펴볼 것이다. 이번에는 시작하는 순서의 두번째 부분을 섭렵해서 어떻게 인수들이 초기화되고, 어떤 함수들이 호출되는지 등을 배우겠다.
 
+# 시작하는 순서
 
-# The starting sequence
-
-I will pick up our exploration from where we left off last time—the *runtime.rt0_go* function. There is still a part of it that we haven’t looked at:
+지난 번에 얘기하다가 만 *runtime.rt0_go* 함수를 다시 다루어야 겠다. 아직 이 함수에서 살펴보지 않은 부분이 여전히 있다.
 
 >```
 01 CLD                         // convention is D is always left cleared
@@ -32,6 +31,7 @@ I will pick up our exploration from where we left off last time—the *runtime.r
 09 CALL    runtime·osinit(SB)
 10 CALL    runtime·schedinit(SB)
 ```
+
 
 The first instruction (CLD) clears the [direction](https://en.wikipedia.org/wiki/Direction_flag) flag of the *FLAGS* register. This flag affects the direction of string processing.
 
