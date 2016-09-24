@@ -32,14 +32,12 @@ toc = true
 10 CALL    runtime·schedinit(SB)
 ```
 
+첫번째 명령 (CLD)는 *FLAGS* 레지스터의 [direction](https://en.wikipedia.org/wiki/Direction_flag) 프래그를 지운다. 이 플래그는 문자열 처리리 방향에 영향을 준다.
 
-The first instruction (CLD) clears the [direction](https://en.wikipedia.org/wiki/Direction_flag) flag of the *FLAGS* register. This flag affects the direction of string processing.
+다음 함수는 *runtime.check* 함수를 호출하는데, 그 또한 이 문서의 목적에 비추어 그리 중요하지는 않다. 런타임은 모든 내장 타입의 인스턴스들을 만들고, 타입의 크기와 파라미터들을 확인하는 정도의 일을 한다. 그리고 만약 작업중 문제가 생기면 *panic* 한다. [function](https://github.com/golang/go/blob/go1.5.1/src/runtime/runtime1.go#L136)를 통해 쉽게 알아볼 수 있다.
 
-The next function is a call to the *runtime.check* function, which is also not very valuable for our purposes. The runtime just tries to create instances of all built-in types, check their sizes and some other parameters, etc. and it *panics* if something goes wrong. You can easily explore this [function](https://github.com/golang/go/blob/go1.5.1/src/runtime/runtime1.go#L136) on your own.
+# 인수 분석하기
 
-
-
-# Analyzing arguments
 
 The next function, [runtime.Args](https://github.com/golang/go/blob/go1.5.1/src/runtime/runtime1.go#L48), is somewhat more interesting. Besides storing arguments (*argc* and *argv*) in static variables, on Linux systems, it is responsible for analyzing the ELF auxiliary vector and initializing *syscall* addresses.
 
