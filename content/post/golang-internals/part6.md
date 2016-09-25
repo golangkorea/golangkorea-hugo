@@ -32,18 +32,17 @@ toc = true
 10 CALL    runtime·schedinit(SB)
 ```
 
-첫번째 명령 (CLD)는 *FLAGS* 레지스터의 [direction](https://en.wikipedia.org/wiki/Direction_flag) 프래그를 지운다. 이 플래그는 문자열 처리리 방향에 영향을 준다.
+첫번째 명령 (CLD)는 *FLAGS* 레지스터의 [direction](https://en.wikipedia.org/wiki/Direction_flag) 프래그를 지운다. 이 플래그는 문자열 처리 방향에 영향을 준다.
 
 다음 함수는 *runtime.check* 함수를 호출하는데, 그 또한 이 문서의 목적에 비추어 그리 중요하지는 않다. 런타임은 모든 내장 타입의 인스턴스들을 만들고, 타입의 크기와 파라미터들을 확인하는 정도의 일을 한다. 그리고 만약 작업중 문제가 생기면 *panic* 한다. [function](https://github.com/golang/go/blob/go1.5.1/src/runtime/runtime1.go#L136)를 통해 쉽게 알아볼 수 있다.
 
 # 인수 분석하기
 
+그 다음 함수 [runtime.Args](https://github.com/golang/go/blob/go1.5.1/src/runtime/runtime1.go#L48) 는 좀 더 흥미롭다. The next function, 리눅스 시스템에서 (*argc* 와 *argv*) 인수를 정적 변수속에 저장하는 것말고도 이 함수는 ELF 보조 벡터를 분석하며 *syscall* 주소를 초기화한다.
 
-The next function, [runtime.Args](https://github.com/golang/go/blob/go1.5.1/src/runtime/runtime1.go#L48), is somewhat more interesting. Besides storing arguments (*argc* and *argv*) in static variables, on Linux systems, it is responsible for analyzing the ELF auxiliary vector and initializing *syscall* addresses.
+설명이 좀 더 필요하겠다. 운영체계가 프로그램을 메모리에 올릴때, 그 프로그램의 초기 스택을 미리 정해진 포맷의 어떤 데이타로 초기화한다. 스택의 꼭대기에는 환경 변수들의 포인터인 인수들이 깔린다. 스택의 바닥에는 "ELF 보조 벡터"를 볼 수 인데, 실제로 이 것은 어떤 유용한 정보를 담고 있는 기록의 배열들이다. 예를 들면, 프로그램 헤더의 수와 크기들이다. 여기 이 [문서](http://articles.manugarg.com/aboutelfauxiliaryvectors)를 통해 ELF 보조 벡터 포맷에 대해 좀 자세히 알아 보라.
 
-This requires some explanation. When the operating system loads a program into memory, it initializes the initial stack for this program with some data in a pre-defined format. At the top of the stack, lay the arguments—pointers to environment variables. At the bottom, we can find the “ELF auxiliary vector,” which is actually an array of records that contains some other useful information, for example, the number and size of program headers. See this [article](http://articles.manugarg.com/aboutelfauxiliaryvectors) for more on the ELF auxiliary vector format.
-
-The *runtime.Args* function is responsible for parsing this vector. Out of all the information that it contains, the runtime only uses *startupRandomData*, which mainly serves for initializing hashing functions and pointers to locations for some syscalls. The following variables are initialized here:
+*runtime.Args* 함수는 벡터를 파싱하는 책임이 있다. 런타임은 벡터에 담고 있는 모든 정보들 중에 단지 *startupRandomData* 만을 사용하는데, 주로 헤싱 함수(hashing functions)들과 어떤 syscall들의 위치를 가리키는 포인터들을 초기화하는데 주로 사용된다. 다음에 나오는 변수들을 초기화한다:
 
 >```
 1 __vdso_time_sym
@@ -51,7 +50,7 @@ The *runtime.Args* function is responsible for parsing this vector. Out of all t
 3 __vdso_clock_gettime_sym
 ```
 
-They are used for obtaining the current time in different functions. All these variables have default values. This allows Golang to use the *[vsyscall](http://www.ukuug.org/events/linux2001/papers/html/AArcangeli-vsyscalls.html)* mechanism to call the corresponding functions.
+이 것들은 여러 함수들내 현재 시간을 획득하는데 사용된다. 이 모든 변수들은 기본값을 가진다. 이렇게 함으로써 Golang에서 상응하는 함수들을 호출하기 위해 *[vsyscall](http://www.ukuug.org/events/linux2001/papers/html/AArcangeli-vsyscalls.html)* 메카니즘의 사용이 허용된다.
 
 
 # Inside the *runtime.osinit* function
