@@ -172,32 +172,27 @@ Go는 현재 이용되지 않은 스택들을 저장하기 위해 스택 풀을 
 *persistentalloc* 함수는 가비지 컬렉트되어서는 않되는 메모리를 할당하는 일을 한다. 이 함수의 웍플로우는 다음과 같다:
 
  1. 만약 할당된 블록이 64 KB보다 크면 OS 메모리로 부터 직접 할당된다.
- 2. 그렇기 않은 경우는, 우선 
+ 2. 그렇기 않은 경우는, 우선 지속성 할당자(persistent allocator)를 찾을 필요가 있다.
+    * 지속성 할당자는 각 프로세서에 부착되어 있다. 이유는 하나만 가지고 작업할 경우 locks을 사용해야 함을 피하기 위해서이다. 그래서 현재 프로세서에 부착된 지속성 할당자를 사용하고자 하는 것이다.
+    * 만약 현재 프로세서의 정보를 얻을 수 없는 경우는, 전역 할당자 (global allocator)가 사용된다.
+ 3. 만약 할당자가 캐쉬에 사용가능한 메모리가 충분치 않을 경우는 OS로 부터 메모리를 더 가지고 온다.
+ 4. 필요한 만큼의 메모리가 할당자의 캐쉬에서 반환된다.
 
+*persistentalloc* 과 *fixAlloc_Alloc* 함수는 비슷하게 작동한다. 이 함수들은 두가지 레벨의 캐쉬를 구현하고 있다고 말할 수 있겠다. *persistentalloc* 는 *fixAlloc_Alloc* 에만 사용되는 것이 아니라 지속성 메모리(persistent memory)를 할당할 필요가 있는 여러 군데에서 사용되고 있다는 것을 숙지하여야 한다.
 
- 1. If the allocated block is larger than 64 KB, it is allocated directly from OS memory
- 2. Otherwise, we first need to find a persistent allocator:
-    * A persistent allocator is attached to each processor. This is done to avoid using locks when working with a persistent allocator. So, we try to use a persistent allocator from the current processor.
-    * If we cannot obtain information about the current processor, a global system allocator is used.
- 3. If the allocator does not have enough free memory in its cache, we set aside more memory from the OS.
- 4. The required amount of memory is returned from the allocator’s cache
+*mHeap_Init* 함수로 다시 돌아가자. 답을 해야할 중요한 질문이 하나 더 있는데, 그것은 이 함수의 시작부분에서 할당자가 초기화되는 목적이었더 네개의 구조가 어떻게 사용되는지에 대한 것이다:
 
-The *persistentalloc* and *fixAlloc_Alloc* functions work in similar ways. It is possible to say that those functions implement two levels of caching. You should also be aware that *persistentalloc* is used not only in *fixAlloc_Alloc*, but also in many other places where we need to allocate persistent memory.
+ * *mspan* 는 가비지 컬렉트되어야 하는 메모리 블록을 감싸는 것이다. 사이즈 클래스들(size classes)을 논할 때 얘기했었다. 특정한 사이즈 클라스의 새로운 객체를 할당할 필요가 생겼을때 새로운 mspan이 만들어진다.
+ * *mcache* 는 각 프로세서에 부착된 구조체이다. 메모리 스팬을 캐취에 저장하는 일을 한다. 프로세스마다 따로 캐쉬를 갖는 이유는 locking을 피하기 위해서 이다.
+ * *specialfinalizeralloc* 는 *runtime.SetFinalizer* 함수가 호출될 때 할당되는 구조체이다. 객체가 제거되면서 정리정돈(cleanup)하는 코드를 실행시키길 원한다면 이 구조체를 만들어야 할 것이다. 좋은 예제로 새로운 파일마다 finalizer를 연계시키는 *os.NewFile* 함수이다. 이 finalizer가 OS 파일 설명자(file descriptor)를 닫아야 한다.
+ * *specialprofilealloc* 는 메모리 프로파일러에 사용되는 구조체이다.
 
-Let’s return to the *mHeap_Init* function. One more important question to answer here is how the four structures, for which allocators were initialized at the beginning of this function, are used:
+메모리 할당자들을 초기화하고 난 후, *mHeap_Init* 함수는 *[mSpanList_Init](https://github.com/golang/go/blob/go1.5.1/src/runtime/mheap.go#L863)* 을 호출함으로서 리스트들을 초기화 한다. 간단한 일로 linked 리스트를 위한 첫번째 입력을 초기화하는 것이다. *mheap* 구조체는 그러한 linked 리스트를 몇개 가지고 있다.
 
- * *mspan* is a wrapper for a memory block that should be garbage collected. We have talked about it when discussing size classes. A new mspan is created when we need to allocate a new object of a particular size class.
- * *mcache* is a struct attached to each processor. It is responsible for caching spans. The reason for having a separate cache for each processor is to avoid locking.
- * *specialfinalizeralloc* is a struct that is allocated when the *runtime.SetFinalizer* function is called. This can be done if we want the system to execute some cleanup code when an object is cleared. A good example is the *os.NewFile* function that associates a finalizer with each new file. This finalizer should close the OS file descriptor.
- * *specialprofilealloc* is a struct employed in the memory profiler.
+ * *mheap.free* 와 *mheap.busy* 는 *free* 와 *busy* 리스트를 담고 있는 배열들로 대형(32 KB보다 크고, 1 MB보다 작은) 객체들을 위한 메모리 스팬을 갖고 있다. 각 배열은 가능한 크기의 아이템을 가지고 있다. 여기서 크기들은 페이지로 측정된다. 한 페이지는 32 KB에 해당한다. 첫번째 아이템은 32 KB 스팬을 가지는 리스트를 담고 있고, 두번째는 64 KB 스팬을 가지는 리스트를 담고 있는 그런 식이다.
+ * *mheap.freelarge* 와 *mheap.busylarge* 는 1 MB이상의 객체들을 위한 free 와 busy 리스트들이다.
 
-After initializing memory allocators, the *mHeap_Init* function initializes lists by calling *[mSpanList_Init](https://github.com/golang/go/blob/go1.5.1/src/runtime/mheap.go#L863)*, which is very simple. All it does is initialize the first entry for the linked list. The *mheap* struct contains a few such linked lists.
-
- * *mheap.free* and *mheap.busy* are arrays that contain *free* and *busy* lists with spans for large objects (larger than 32 KB, but smaller than 1 MB). Each of these arrays contains one item per each possible size. Here, sizes are measured in pages. One page is equal to 32 KB. The first item contains a list with 32 KB spans, the second one contains a list with 64 KB spans, and so on.
- * *mheap.freelarge* and *mheap.busylarge* are free and busy lists for objects larger than 1 MB
-
-The next step is to initialize *mheap.central*, which stores spans for small objects (less than 32 KB). In *mheap.central*, lists are grouped accordingly to their size classes. Initialization is very similar to what we have seen previously. It is simply initialization of linked lists for each free list.
-
+다음 단계는 *mheap.central* 를 초기화하는 것인데, (32 KB 보다 작은) 소형 객체들을 위한 스팬들을 저장한다. *mheap.central* 안에서는 리스트가 사이즈 클래스에 맞게 그룹을 형성한다. 초기화는 이제까지 우리가 본 것들과 유사하다. 단순히 각 free 리스트에 대한 linked 리스트를 초기화 하는 것이다.
 
 
 # Initializing the cache
