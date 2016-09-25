@@ -86,7 +86,7 @@ Go는 현재 이용되지 않은 스택들을 저장하기 위해 스택 풀을 
 
 # 사이즈 클래스들(size classes)를 초기화하기
 
-여기에 처음 볼 수 있는 것은 *runtime.mallocinit* 가 또 다른 함수-*[initSizes](https://github.com/golang/go/blob/go1.5.1/src/runtime/msize.go#L66)* 를 호출하는 것이다. 이 함수는 사이즈 클래스들를 계산하는 일을 한다. 하지만 클래스의 크기를 어떻게 결정하는가? (32 KB 가 안되는) 작은 객체를 할당할 때, Go 런타임은 처음 미리 정해둔 클래스 크기로 객체의 크기를 반올림한다. 그래서 할당된 메모리 블럭은 실제 필요한 객체 크기보 보통 좀 더 큰, 미리 정해진 크기들중에 하나를 선택할 수 밖에 없다. 이로 인해 메모리가 조금 낭비되긴 하지만 이 방법을 통해서 다른 객체에 이미 할당된 메모리를 재사용하는 것이 용이해 진다.
+여기에 처음 볼 수 있는 것은 *runtime.mallocinit* 가 또 다른 함수-*[initSizes](https://github.com/golang/go/blob/go1.5.1/src/runtime/msize.go#L66)* 를 호출하는 것이다. 이 함수는 사이즈 클래스들를 계산하는 일을 한다. 하지만 클래스의 크기를 어떻게 결정하는가? (32 KB 가 안되는) 작은 객체를 할당할 때, Go 런타임은 처음 미리 정해둔 클래스 크기로 객체의 크기를 반올림한다. 그래서 할당된 메모리 블록은 실제 필요한 객체 크기보 보통 좀 더 큰, 미리 정해진 크기들중에 하나를 선택할 수 밖에 없다. 이로 인해 메모리가 조금 낭비되긴 하지만 이 방법을 통해서 다른 객체에 이미 할당된 메모리를 재사용하는 것이 용이해 진다.
 
 *initSizes* 함수는 이런 클래스를 계산하는 일을 한다. 함수 꼭대기에서 다음 코드를 볼 수 있다:
 
@@ -122,7 +122,7 @@ Go는 현재 이용되지 않은 스택들을 저장하기 위해 스택 풀을 
 
  * *arenaSize* 은 객체 할당의 예약에 사용될 수 있는 가상 메모리의 최대치이다. 64비트 아키텍쳐에서는 512 GB에 해당한다.
  * *bitmapSize* 는 가비지 컬렉션 (GC) 비트맵을 위해 예약될 수 있는 메모리의 양에 상응한다. GC 비트맵은 특별한 메모리 타입으로 메모리에서 포인터들이 정확히 어디에 위치하는지를 보여주는데 사용되고 이 포인터들이 가리키는 객체들이 GC에 의해 표시(mark)될 것인지의 여부를 결정하는데 사용된다.
- * *spansSize* 는 모든 메모리 스팬(memory span)들을 가리키는 포인터들의 배열을 저장하기 위해 얼마나 많은 메모리를 예약되었는지를 나타낸다. 메모리 스팬은 객체 할당을 위해 사용된 메모리 블럭를 둘러 싸는 구조이다.
+ * *spansSize* 는 모든 메모리 스팬(memory span)들을 가리키는 포인터들의 배열을 저장하기 위해 얼마나 많은 메모리를 예약되었는지를 나타낸다. 메모리 스팬은 객체 할당을 위해 사용된 메모리 블록를 둘러 싸는 구조이다.
 
 이 변수들이 모두 계산되면, 실제 예약이 끝나는 것이다:
 
@@ -146,10 +146,10 @@ Go는 현재 이용되지 않은 스택들을 저장하기 위해 스택 풀을 
 
 처음부터, *mheap_.arena_used* 가 *mheap_.arena_start* 와 동일한 주소를 가지고 초기화되었음을 주목하라. 이유는 아직 아무 것도 할당되지 않았기 때문이다.
 
+# 힢(Heap) 초기화
 
-# Initializing the heap
 
-Next, the *[mHeap_Init](https://github.com/golang/go/blob/go1.5.1/src/runtime/mheap.go#L273)* function is called. The first thing that is done here is allocator initialization.
+다음으로 *[mHeap_Init](https://github.com/golang/go/blob/go1.5.1/src/runtime/mheap.go#L273)* 함수가 호출된다. 할당자의 초기화가 제일 먼저 진행되었다.
 
 >```
 1 fixAlloc_Init(&h.spanalloc, unsafe.Sizeof(mspan{}), recordspan, unsafe.Pointer(h), &memstats.mspan_sys)
@@ -158,7 +158,7 @@ Next, the *[mHeap_Init](https://github.com/golang/go/blob/go1.5.1/src/runtime/mh
 4 fixAlloc_Init(&h.specialprofilealloc, unsafe.Sizeof(specialprofile{}), nil, nil, &memstats.other_sys)
 ```
 
-To better understand what an allocator is, let’s see how it is utilized. All allocators operate in the *[fixAlloc_Alloc](https://github.com/golang/go/blob/go1.5.1/src/runtime/mfixalloc.go#L54)* function, called each time we want to allocate new *[mspan](https://github.com/golang/go/blob/go1.5.1/src/runtime/mheap.go#L101)*, *[mcache](https://github.com/golang/go/blob/go1.5.1/src/runtime/mcache.go#L11)*, *[specialfinalizer](https://github.com/golang/go/blob/go1.5.1/src/runtime/mheap.go#L1009)*, and *[specialprofile](https://github.com/golang/go/blob/go1.5.1/src/runtime/mheap.go#L1050)* structs. The main part of this function is:
+할당자가 무엇인가를 더 잘 이해하기 위해서, 우선 어떻게 사용되는지 살펴보자. 모든 할당자는 *[fixAlloc_Alloc](https://github.com/golang/go/blob/go1.5.1/src/runtime/mfixalloc.go#L54)* 함수 내에서 운영된다. 이 함수는 다음과 같은 구조체의 새로운 할당이 필요할때 호출된다 - *[mspan](https://github.com/golang/go/blob/go1.5.1/src/runtime/mheap.go#L101)*, *[mcache](https://github.com/golang/go/blob/go1.5.1/src/runtime/mcache.go#L11)*, *[specialfinalizer](https://github.com/golang/go/blob/go1.5.1/src/runtime/mheap.go#L1009)*, 그리고 *[specialprofile](https://github.com/golang/go/blob/go1.5.1/src/runtime/mheap.go#L1050)*. 이 함수의 주요한 부분은:
 
 >```
 1 if uintptr(f.nchunk) < f.size {
@@ -167,9 +167,13 @@ To better understand what an allocator is, let’s see how it is utilized. All a
 4 }
 ```
 
-It allocates memory, but instead of allocating the actual size of the structure—*f.size* bytes—we set aside *[_FixAllocChunk](https://github.com/golang/go/blob/go1.5.1/src/runtime/malloc.go#L130)* bytes (currently equal to 16 KB). The rest of the available space is stored in the allocator. Next time we need to allocate a structure of the same type, it will not require calling [persistentalloc](https://github.com/golang/go/blob/go1.5.1/src/runtime/malloc.go#L828), which can be time consuming.
+이 부분은 메모리를 할당하지만 구조체의 실제 크기인 *f.size* 바이트를 할당하는 대신 (현재는 16 KB)인 *[_FixAllocChunk](https://github.com/golang/go/blob/go1.5.1/src/runtime/malloc.go#L130)* 바이트를 따로 떼어 놓은다. 나머지 사용가능한 공간은 할당자내 저장된다. 다음번에 같은 타입의 구조체를 할당할 필요가 있으면 시간을 많이 소비하는 [persistentalloc](https://github.com/golang/go/blob/go1.5.1/src/runtime/malloc.go#L828)를 호출할 필요가 없게 된다.
 
-The *persistentalloc* function is responsible for allocating memory that should not be garbage collected. Its workflow is as follows:
+*persistentalloc* 함수는 가비지 컬렉트되어서는 않되는 메모리를 할당하는 일을 한다. 이 함수의 웍플로우는 다음과 같다:
+
+ 1. 만약 할당된 블록이 64 KB보다 크면 OS 메모리로 부터 직접 할당된다.
+ 2. 그렇기 않은 경우는, 우선 
+
 
  1. If the allocated block is larger than 64 KB, it is allocated directly from OS memory
  2. Otherwise, we first need to find a persistent allocator:
