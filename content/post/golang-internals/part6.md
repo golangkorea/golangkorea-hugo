@@ -194,25 +194,22 @@ Go는 현재 이용되지 않은 스택들을 저장하기 위해 스택 풀을 
 
 다음 단계는 *mheap.central* 를 초기화하는 것인데, (32 KB 보다 작은) 소형 객체들을 위한 스팬들을 저장한다. *mheap.central* 안에서는 리스트가 사이즈 클래스에 맞게 그룹을 형성한다. 초기화는 이제까지 우리가 본 것들과 유사하다. 단순히 각 free 리스트에 대한 linked 리스트를 초기화 하는 것이다.
 
+# 캐쉬의 초기화
 
-# Initializing the cache
-
-Now, we are almost done with memory allocator initialization. The last thing that is left in the *mallocinit* function is mcache initialization:
+이제 메모리 할당자 초기화에 대한 얘기가 거의 끝나간다. *mallocinit* 함수내 마지막으로 남은 것은 mcache 초기화이다:
 
 >```
 1 _g_ := getg()
 2 _g_.m.mcache = allocmcache()
 ```
 
-Here, we first obtain the current coroutine. Each goroutine contains a link to the *m* struct. This struct is a wrapper around the operating system thread. Inside this struct, there is a field called *mcache* that is initialized in these lines. The *allocmcache* function calls *fixAlloc_Alloc* to initialize a new *mcache* struct. We have already discussed how allocation is done and the meaning of this struct (see above).
+여기를 보면, 우선 현재의 고루틴을 얻는다. 각 고루틴은 *m* 구조체로 연결된 링크를 담고 있다. 이 구조체는 시스템 쓰레드를 감싸는 구조이다. 이 구조체의 내부에는 *mcache* 라는 필드가 있는데 위에보면 초기화되고 있다. *allocmcache* 함수는 *fixAlloc_Alloc* 을 호출하여 새로운 *mcache* 구조체를 초기화한다. 이미 어떻게 할당이 되었는지 이 구조체의 의미는 무엇인지에 대해서 논한 바 있다 (상위의 내용을 살펴보라).
 
-A careful reader may notice that I have previously said *mcache* is attached to each processor, but now we see that it is attached to the *m* struct, which corresponds to an OS process, not a processor. And that is correct—mcache is initialized only for those threads that are currently executed and it is re-located to another thread whenever a process switch occurs.
+조심스런 독자는 저자가 *mcache* 가 프로세스마다 부착되어 있다고 얘기한 걸 기억할 것이다. 그런데 이제 보니 프로세서(processor)가 아닌 OS 프로세스(process)에 상응하는 *m* 구조체에 부착되어 있는 것이었다. 그게 맞는 말이다-mcache는 현재 실행중인 쓰레드에 대해서만 초기화되며 프로세스가 바뀔때(process switch) 마다 또 다른 쓰레드로 재배치된다.
 
+# 곧 추가될 Go 부트스트래핑에 대한 포스트
 
-
-# More about Go bootstrapping soon
-
-In the next post, we will continue discussing the bootstrap process by looking at how the garbage collector is initialized and how the main goroutine is started. Meanwhile, don’t hesitate to share your thoughts and suggestions in the comments below.
+다음 포스트에서는 어떻게 가비지 컬랙터가 초기화되는지 긔고 어떻게 main 고루틴이 시작되는지를 살펴보며 부트스트랩 과정을 더 논하겠다. 그때까지 아래 코멘트란에 독자의 생각이나 의견을 공유하는데 주저하지 말라.
 
 * 원문: [Golang Internals, Part 6: Bootstrapping and Memory Allocator Initialization](http://blog.altoros.com/golang-internals-part-6-bootstrapping-and-memory-allocator-initialization.html)
 * 저자: Siarhei Matsiukevich
