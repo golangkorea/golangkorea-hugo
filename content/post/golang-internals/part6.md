@@ -52,19 +52,15 @@ toc = true
 
 이 것들은 여러 함수들내 현재 시간을 획득하는데 사용된다. 이 모든 변수들은 기본값을 가진다. 이렇게 함으로써 Golang에서 상응하는 함수들을 호출하기 위해 *[vsyscall](http://www.ukuug.org/events/linux2001/papers/html/AArcangeli-vsyscalls.html)* 메카니즘의 사용이 허용된다.
 
+# *runtime.osinit* 함수의 내부
 
-# Inside the *runtime.osinit* function
+시작 순서에서 그 다음으로 호출되는 함수는 *[runtime.osinit](https://github.com/golang/go/blob/go1.5.1/src/runtime/os1_linux.go#L172)* 이다. 리눅스 시스템에서 단 한가지 하는 일이 있는데 그것은 시스템내 CPU 숫자를 가지고 있는 ncpu 변수를 한 syscall을 통해 초기화하는 것이다.
 
-The next function called during the startup sequence is *[runtime.osinit](https://github.com/golang/go/blob/go1.5.1/src/runtime/os1_linux.go#L172)*. On Linux systems, the only thing it does is initialize the ncpu variable that holds the number of CPUs in the system. This is done via a syscall.
+# *runtime.schedinit* 함수의 내부
 
+시작 순서에서 다음 함수인 *[runtime.schedinit](https://github.com/golang/go/blob/go1.5.1/src/runtime/proc1.go#L40)* 는 더 흥미롭다. 현재의 고루틴을 얻는 것으로 시작하는데, 사실 이 것은 *[g](https://github.com/golang/go/blob/go1.5.1/src/runtime/runtime2.go#L211)* 구조의 포인터이다. 이미 이 포인터가 어떻게 저장되는 지는 TLS 구현을 논할 때 얘기한 바있다. 다음은 *[runtime.raceinit](https://github.com/golang/go/blob/go1.5.1/src/runtime/race1.go#L110)* 를 호출한다. runtime.raceinit에 대한 토론은 넘어가겠다. 왜냐하면 이 함수는 race 조건이 활성화되지 않은 경우는 보통 호출되지 않기 때문이다. 그 다음에는 몇몇 다른 초기화 함수들이 호출된다.
 
-
-# Inside the *runtime.schedinit* function
-
-*[runtime.schedinit](https://github.com/golang/go/blob/go1.5.1/src/runtime/proc1.go#L40)*—the next function in the startup sequence—is more interesting. It begins by obtaining the current goroutine, which is, in fact, a pointer to the *[g](https://github.com/golang/go/blob/go1.5.1/src/runtime/runtime2.go#L211)* structure. We have talked about how this pointer is stored when discussing the TLS implementation. Next, it calls *[runtime.raceinit](https://github.com/golang/go/blob/go1.5.1/src/runtime/race1.go#L110)*. We will skip the discussion of runtime.raceinit, because this function is normally not called when checking for race conditions is not enabled. After that, some other initialization functions are called.
-
-Let’s explore them one at a time.
-
+하나씩 살펴보자.
 
 
 # Initializing traceback
