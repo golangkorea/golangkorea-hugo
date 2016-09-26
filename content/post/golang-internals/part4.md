@@ -1,7 +1,7 @@
 +++
 
 title = "Golang의 내부, 4부: 오브젝트 파일, 그리고 함수 메타데이터"
-draft = true
+draft = false
 date = "2016-09-18T16:20:29-04:00"
 
 tags = ["Golang", "Internals", "linker", "object file", "relocations", "metadata"]

@@ -1,6 +1,6 @@
 +++
 title = "Golang의 내부, 2부: Go 컴파일러 들여다 보기"
-draft = true
+draft = false
 date = "2016-09-15T05:53:48-04:00"
 
 tags = ["Golang", "Internals", "Compiler", "Structure"]
@@ -269,6 +269,7 @@ if t.mtyp == itype && t.name == iname && t.pkgpath == ipkgpath
 ```
 
 만약 매치를 찾으면, 결과값의 *fun* 에 메서드를 가리키는 포인터를 저장한다:
+
 >```
 *(*unsafe.Pointer)(add(unsafe.Pointer(&m.fun[0]), uintptr(k)*ptrSize)) = t.ifn
 ```
@@ -276,6 +277,7 @@ if t.mtyp == itype && t.name == iname && t.pkgpath == ipkgpath
 성능에 대해 짧게 언급하면: 인터페이스와 사전에 설정된 타입 정의에 대해 메서드는 알파벳 순서로 정렬되어 있어서, 이 중첩 루프는 *O(n * m)* 대신 *O(n + m)* 으로 반복한다. n 과 m 은 상응하는 메서드 숫자들
 
 마지막으로, 할당의 마지막 부분을 기억하는가?
+
 
 >```
 AS l(16)

@@ -1,6 +1,6 @@
 +++
 title = "Golang의 내부, 1부: 주요 컨셉트와 프로젝트 구조"
-draft = true
+draft = false
 date = "2016-09-13T13:18:28-04:00"
 
 tags = ["Golang", "Internals", "Compiler", "Structure"]

@@ -1,7 +1,7 @@
 +++
 
 title = "Golang의 내부, 5부: 런타임 부트스트랩"
-draft = true
+draft = false
 date = "2016-09-19T16:20:29-04:00"
 
 tags = ["Golang", "Internals", "runtime", "bootstrap"]

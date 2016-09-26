@@ -1,6 +1,6 @@
 +++
 title = "Golang의 내부, 0부: 부록"
-draft = true
+draft = false
 date = "2016-09-12T13:18:28-04:00"
 
 tags = ["Golang", "Internals", "Compiler", "Assembler", "linker"]
