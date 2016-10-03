@@ -1,7 +1,7 @@
 +++
 authors = ["Sangbae Yun"]
 date = "2016-10-02T00:51:06+09:00"
-draft = true 
+draft = false 
 categories = ["How-to"]
 tags = ["Object Oriented","struct"]
 series=["Go 시작하기"]
@@ -76,9 +76,9 @@ func main() {
 ```
 [코드 실행](https://play.golang.org/p/RY6m5sE2H-)
 
-StayTheSame은 Value 리시버이고 Mutate는 포인터 리시버다. 포인터 리시버의 경우 스트럭처의 값을 변경(Mutate)하는 반면 Value 리시버는 스트럭처의 값을 변경하지 않는다는 것을 알 수 있다. Mutate 하느냐 하지 않느냐가 Value 리시버와 포인터 리시버의 눈에 보이는 결정적인 차이다. 포인터라는게 데이터가 저장된 주소를 가리킨다는 것을 생각해보면, 포인터 리시버의 ***Mutate*** 한 성질을 유추해 낼 수 있을 것이다.
+StayTheSame은 Value 리시버이고 Mutate는 포인터 리시버다. 포인터 리시버의 경우 스트럭처의 값을 변경(Mutate)하는 반면 Value 리시버는 스트럭처의 값을 변경하지 않는다는 것을 알 수 있다. Mutate 하느냐 하지 않느냐가 Value 리시버와 포인터 리시버의 눈에 보이는 결정적인 차이다. 포인터라는게 데이터가 저장된 주소를 가리킨다는 것을 생각해보면, 포인터 리시버의 **Mutate** 한 성질을 유추해 낼 수 있을 것이다.
 
-Go는 생성자를 지원하지 않는다. 하지만 쉽게 생성자(처럼 작동하도록)를 구현 할 수 있다.
+Go는 생성자를 지원하지 않는다. 하지만 쉽게 생성자(처럼 작동하도록)를 구현 할 수 있다. 보통 두 가지 방법을 사용한다. 첫 번째 방법은 패키지에 객체를 반환하는 **New** 같은 함수를 만드는 것이다. 빌더 패턴(builder pattern)의 응용이다.
 ```go
 ```
 
