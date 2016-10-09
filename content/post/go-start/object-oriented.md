@@ -139,17 +139,17 @@ func (r Rectangle) SetHeight(height float64) {
 }
 ```
 
-## embedding를 이용한 상속의 구현 
-객체지향 언어에서의 상속은 아래 처럼 묘사 할 수 있다.
+## 상속(Inheritance)과 composition
+객체지향 디자인의 기본은 클래스 간의 관계를 구성하는 것이다. 클래스간의 관계는 **상속(Inheritance)**과 **컴포지션(composition)** 두 가지 방법으로 구성 할 수 있다. 
+
+상속은 아래 처럼 묘사 할 수 있다.
 ![OOP에서의 상속](https://docs.google.com/drawings/d/1AZ2UiAJt44aWogpg6th_v3u0C0CeOK7g2Pofi1iWBQ8/pub?w=631&h=420)
 이 (UML 스러운)그림이 내포하는 의미는 **원형 클래스의 특징을 물려 받은 하위 원형 클래스를 만들 겠다**라는 것이다. 상위 클래스를 부모 클래스, 하위 클래스를 자식 클래스라고 부른다. 이런 식의 분류법은 널리 사용한다. 생물학 시간에 배웠을 **종 > 속 > 과 > 목 > 강 > 문 > 계**가 이런 계층적인 형태를 생각하면 된다.
 
-시각을 바꿔보자. 상위 클래스로 부터 특징을 물려받는다 대신 **상위 클래스의 특징을 포함(embedding)하는**식으로 접근하면 어떨까 ? 접근 방식은 다르지만 상속과 마찬가지의 효과를 누릴 수 있다. 다중상속은 ? 두 개 이상의 클래스의 특징을 포함하면 된다. 
-
-계층적으로 이루어지는 상속 관계를 **IS - A Relationship**, 포함하는 식으로 이루어지는 관계를 **Has a Relationship**이라고 한다. Go 언어는 Has a Relationship으로 상속 관계를 나타낼 수 있다. 위의 Bicycle를 Has a Relationship으로 나타내보자. 
+컴포지션은 부모클래스를 호출해서 포함 즉 **embedding**하는 방식으로 클래스 관계를 구성한다. 다중 상속의 경우 composition 모델은 두 개 이상의 부모 클래스를 embedding 하면 된다. 상속은 **IS - A Relationship**, 컴포지션은 **Has a Relationship** 으로 그 관계를 묘사 할 수 있다. composition 모델은 아래 그림으로 묘사 할 수 있다.
 ![Has a relicationship](https://docs.google.com/drawings/d/1xorVqrumZRT-EqCbW5cdBiD0Lj0yyZkp8sPGh3JeVEw/pub?w=631&h=420)
 
-MountainBike, RoadBike, TandemBike가 Bicycle 스크럭처를 가지는 방식으로 상속을 구현하고 있다. 아래 코드를 보자.
+MountainBike, RoadBike, TandemBike가 Bicycle 스크럭처를 embedding 하는 방식으로 클래스 관계를 구성한 코드다. 
 ```go
 package main
 
@@ -195,10 +195,286 @@ func main() {
 
 MountainBike 구조체와 RoadBike 구조체에 Bicycle 구조체를 **embeded** 했다. Bicycle 구조체의 메서드들을 마치 자신의 메서드인 것처럼 사용 할 수 있으며, **오버라이딩**도 할 수 있다.
 
-## Interface
-인터페이스(interface)는 메서드만을 정의한다. 메서드들에 대한 구현은  
-  * interface를 이용한 다형성
-  * empty interface
+이제 Multiple embedding을 이용해서 다중 상속을 구현해 보자.
+```go
+package main
+
+import (
+    "fmt"
+)
+
+type Phone struct {
+    Model string
+}
+
+func (p Phone) Call(num string) {
+    fmt.Println("Ring Ring....", num)
+}
+
+type Camera struct {
+    Model string
+}
+
+func (p Camera) TakePicture() {
+    fmt.Println("Click ....")
+}
+
+type SmartPhone struct {
+    Phone
+    Camera
+}
+
+func main() {
+    myPhone := SmartPhone{}
+    myPhone.TakePicture()
+    myPhone.Call("101-1111-2222")
+    fmt.Println("=================")
+    yourPhone := SmartPhone{}
+    yourPhone.Call("201-2222-1111")
+
+}
+```
+Camera와 Phone의 기능을 가진(상속받은) SmartPhone 구조체를 만들었다. 그냥 embeded 한 것으로 상속의 주요 기능들을 구현했다. 이제 코드를 약간 수정해서 Phone과 Camera에 모델명을 설정해 보자. 
+```go
+func main() {
+    myPhone := SmartPhone{
+        Phone: Phone{Model: "ioph-0001"},
+        Camera: Camera{Model: "huca-0002"},
+    }
+    fmt.Println(myPhone.Model)
+}
+```
+실행하면 "ambiguous selector myPhone.Model"에러가 출력된다. 어느 구조체의 Model을 선택해야 할지 모호(ambiguous)해서 생기는 문제다. 셀렉터(selector)를 설정하면 된다. SmartPhone.Model 까지 추가한 완전한 예제다.
+```go
+package main
+
+import (
+    "fmt"
+)
+
+type Phone struct {
+    Model string
+}
+
+func (p Phone) Call(num string) {
+    fmt.Println("Ring Ring....", num)
+}
+
+type Camera struct {
+    Model string
+}
+
+func (p Camera) TakePicture() {
+    fmt.Println("Click ....")
+}
+
+type SmartPhone struct {
+    Model string
+    Phone
+    Camera
+}
+
+func main() {
+    myPhone := SmartPhone{
+        Model:  "Android-007",
+        Phone:  Phone{Model: "ioph-0001"},
+        Camera: Camera{Model: "huca-0002"},
+    }
+    fmt.Println(myPhone.Model)
+    fmt.Println(myPhone.Phone.Model)
+    fmt.Println(myPhone.Camera.Model)
+
+    yourPhone := SmartPhone{
+        Model:  "iphone-8",
+        Phone:  Phone{Model: "Lxg-0001"},
+        Camera: Camera{Model: "Apppll-0002"},
+    }
+    fmt.Println(yourPhone.Model)
+    fmt.Println(yourPhone.Phone.Model)
+    fmt.Println(yourPhone.Camera.Model)
+}
+```
+[코드 실행](https://play.golang.org/p/NJEhR5cFC5)
+
+## 다중 상속과 다이아몬드 문제
+다중 상속은 직관적이고 사용하기 편하지만 **죽음의 다이아몬드**라는 골치아픈 문제가 있기 때문에, 별로 권장하지 않는다. 아래 그림을 보자. 
+
+![죽음의 다이아몬드](https://docs.google.com/drawings/d/1p8IlZrB_xPgfdm-ilM_rU_Vn3CHp2MMspNTk-RE-5e4/pub?w=457&h=464)
+
+Animal로 부터 Tiger과 Lion 클래스가 파생됐다. 그리고 다중 상속을 이용해서 Tiger과 Lion으로 부터 파생된 Liger 클래스가 있다. Liger 객체에서 getWeight()를 호출 할 경우 어느 클래스의 getWeight()를 호출해야 할지 모호 하므로 컴파일 실패한다.
+
+Go언어는 selector를 이용해서 네임스페이스를 설정하는 것으로 문제를 피해갈 수 있다. 아래 예제를 보자.
+```go
+package main
+
+import (
+	"fmt"
+)
+
+type Animal struct {
+}
+
+func (a Animal) GetGene() {
+	fmt.Println("동물 유전자")
+}
+
+type Tiger struct {
+	Animal
+}
+
+func (t Tiger) GetGene() {
+	fmt.Println("호랑이 유전자")
+}
+
+type Lion struct {
+	Animal
+}
+
+func (l Lion) GetGene() {
+	fmt.Println("사자 유전자")
+}
+
+type Liger struct {
+	Tiger
+	Lion
+}
+
+func main() {
+	fmt.Println("유전자 정보")
+	myLiger := Liger{}
+	myLiger.Tiger.GetGene()
+	myLiger.Lion.GetGene()
+	myLiger.Lion.Animal.GetGene()
+}
+```
+[코드 실행](https://play.golang.org/p/tpXfrM8-cw)
+
+셀렉터를 이용 해서 모호함을 없애고 있다. 
+
+
+## Structs와 Interface
+Go의 구조체는 non-virtual 메서드만 가질 수 없다. 가상 메서드(virtual method)를 만들려면 **interface**를 이용해야 한다. Go에서 interface는 오로지  가상 메서드로만 구성 할 수 있다. Go interface의 특징이다.
+
+  * interface는 하나의 타입으로 변수(var)와 매개변수(parameter)로 쓸 수 있다.  
+  * interface의 구현은 concret class(struct)에서 이루어진다. concret class는 구상 클래스라고 번역한다.
+  * interface는 다른 interface에 상속(embed)할 수 있다.
+
+인터페이스 응용 예제 코드를 만들어 보자.
+
+![인터페이스 예제](https://docs.google.com/drawings/d/1jsBTAaIeUs9jxoa8jOdX0fL3CjIm_8ElmSLJ3eUU3nk/pub?w=378&h=281)
+
+나는 범용 위키애플리케이션을 만들려고 한다. 이 애플리케이션은 MediaWiki의 문법뿐만 아니라 마크다운(MarkDown) 문법도 처리를 할 수 있어야 한다. 필요 할 경우 모니위키(Moniwiki) 등 다른 위키 문법들까지 처리 할 수 있게 만들려고 한다. 플러그인 방식으로 확장을 하게 될테다. 
+
+나는 Wiki interface를 만들고, 위키문서를 HTML로 변환하기 위한 **Parser()**메서드를 등록했다. 개발자는 새로운 위키 파서가 필요할 경우 구조체를 만들고 **Parser()** 메서드만 만들면 된다. 
+```go
+package main
+
+import "fmt"
+
+// Interface를 만들었다.
+type Wiki interface {
+    Parser(string) string
+}
+
+// MediaWiki 엔진 구현을 위한 구조체
+type MediaWiki struct {
+    Type string
+}
+
+// MediaWiki 파서 실제 구현
+func (m MediaWiki) Parser(a string) string {
+    return "Moniwiki " + a
+}
+
+// 마크다운 엔진 구현을 위한 구조체
+type MarkDown struct {
+    Type string
+}
+
+// 마크다운 파서 실제 구현
+func (m MarkDown) Parser(a string) string {
+    return "Markdown " + a
+}
+
+func main() {
+    md := MarkDown{Type: "MarkDown"}
+    me := MediaWiki{Type: "MoniWiki"}
+
+    // 위키엔진 저장을 위한 map 자료구조를 만들었다.
+    WikiEngine := make(map[string]Wiki, 2)
+    WikiEngine["markdown"] = md
+    WikiEngine["mediawiki"] = me
+
+    // MarkDown과 MediaWiki는 서로다른 구조체다.
+    // 하지만 Wiki interface로 서로 연결이 됐다.
+    for _, value := range WikiEngine {
+        fmt.Println(value.Parser("Text Data"))
+    }
+}
+```
+실제 위키엔진 구현이라면 설정으로 위키 엔진 정보를 읽어온 다음, 맵에 저장할 것이다. 그 후 문서의 타입에 따라서 적당한 Parser()메서드를 호출할 것이다. 
+
+## empty interface
+Go의 interface는 가상 메서드만 가진다고 했다. 가상 메서드도 가지지 않으면 **빈 인터페이스(empty interface: "interface{}")**가 된다. 흔히 빈 인터페이스는 **어떠한 타입이라도 사용 할 수 있다**라고 생각하곤 하는데, 그렇지 않다. 빈 인터페이스에는 인터페이스 타입을 사용해야 한다. 아래 코드를 보자.
+```go
+func DoSomething(v interface{}) {
+    // ...
+}
+```
+DoSomething는 **빈 인터페이스 타입인 v**를 매개변수로 취하고 있다. 여기에 인터페이스 타입의 값을 넘기면, Go언어는 런타임에 형 변환(Type conversion - 언제나 가능한 건 아니다)을 한 후, 정적 타입의 값으로 변경해서 넘긴다. 아래 예제를 보자. 
+```go
+package main
+
+import (
+	"fmt"
+)
+
+func PrintAll(vals []interface{}) {
+	for _, val := range vals {
+		fmt.Println(val)
+	}
+}
+
+func main() {
+	names := []string{"stanley", "david", "oscar"}
+	PrintAll(names)
+}
+```
+[코드 실행](https://play.golang.org/p/4DuBoi2hJU)
+
+코드를 실행하려 하면 **main.go:15: cannot use names (type []string) as type []interface {} in argument to PrintAll** 에러가 떨어진다. 타입이 맞지 않기 때문이다. 아래와 같이 타입을 맞춰줘야 한다. 
+```go
+package main
+
+import (
+	"fmt"
+)
+
+func PrintAll(vals []interface{}) {
+	for _, val := range vals {
+		fmt.Println(val)
+	}
+}
+
+func main() {
+	names := []string{"stanley", "david", "oscar"}
+	vals := make([]interface{}, len(names))
+	for i, v := range names {
+		vals[i] = v
+	}
+	PrintAll(vals)
+
+    age := []int{38, 27, 42}
+    vals = make([]interface{}, len(age))
+    for i, v := range age {
+        vals[i] = v
+    }
+    PrintAll(vals)
+}
+```
+[코드 실행](https://play.golang.org/p/h7RA5hfMad)
+
 
 ## 참고
   * [golang oop](https://github.com/luciotato/golang-notes/blob/master/OOP.md)
+  * [How to use interfaces in go](http://jordanorelli.com/post/32665860244/how-to-use-interfaces-in-go)
