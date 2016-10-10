@@ -40,7 +40,7 @@ class Rectangle
    method Area() 
        return this.Width * this.Height
 ```
-Go는 구조체 내에 메서드를 포함 할 수 없다. 구조체 바깥에 만들어지며, **리시버(receiver)**를 이용해서 어느 구조체의 메서드인지를 정의 할 수 있다. 아래 그럼은 리시버를 이용해서 구조체와 함수가 연결되는 과정을 묘사하고 있다.
+Go는 구조체 내에 메서드를 포함 할 수 없다. 구조체 바깥에 만들어지며, **리시버(receiver)**를 이용해서 어느 구조체의 메서드인지를 정의 할 수 있다. 아래 그림은 리시버를 이용해서 구조체와 함수가 연결되는 과정을 묘사하고 있다.
 
 ![receiver](https://docs.google.com/drawings/d/1rBOgYujGOIy9EL6U040nCSCC61pwzFe-BhoWNkVoksU/pub?w=756&h=205)
 
