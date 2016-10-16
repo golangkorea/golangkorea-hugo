@@ -7,7 +7,7 @@ tags = [
   "번역",
 ]
 categories = [
-  "category",
+  "번역",
 ]
 authors = [
   "Timo Boll",
@@ -107,7 +107,6 @@ stdlib 패키지로 코드를 분석하고 생성하는 것은 훌륭하지만, 
 
 1. 빌드할 수 있는 그러한 종류의 도구들로부터 몇몇 영감을 얻을 것입니다.
 2. 그 도구들의 소스 코드로 부터 배울 수 있는 기회를 가질 것입니다.
-3. You can find some of these tools really useful by themselves.
 3. 이러한 도구들 중에 스스로 유용한 도구들이 무엇인지 찾아낼 수 있습니다.
 
 # 배우기 위한 프로젝트들
@@ -140,8 +139,6 @@ func (f *File) Close() error {
 [testify][testify]는 유닛테스팅을 실행할 때 쉽게 의존성을 mock할 수 있는 [mock][testify-mock] 패키지를 가지고 있습니다.
 
 인터페이스들이 암시적으로 만족하기 때문에, 의존성들을 인터페이스들을 이용하여 특정화 할 수 있으며, 유닛 테스팅 중에 외부 의존성보다는 mock을 사용할 수 있습니다.
-
-Here's a very simplified example about how to mock a theoretical downcaser interface:
 
 이론적인 downcaser 인터페이스를 mock 하는 방법에 대한 매우 간단한 예제:
 
@@ -232,7 +229,7 @@ ok      github.com/ernesto-jimenez/test 0.011s
 
 [`mockery`][mockery] 는 내가 [`testify/mock`][testify-mock]에 contribute를
 시작한 주된 이유이고 `testify`의 maintainer가 되었습니다.
-그러지만, `go/types` 가 1.5의 표준 라이브러리에 포함되기 이전에 개발되었기 때문에, 저 레벨 `go/ast`을 이용하여 구현되었고,
+그렇지만, `go/types` 가 1.5의 표준 라이브러리에 포함되기 이전에 개발되었기 때문에, 저 레벨 `go/ast`을 이용하여 구현되었고,
 코드를 보기 어렵게 만들었으며 [failing to generate mocks from interfaces using
 composition][mockery-issue] 같은 버그가 나타났습니다.
 
@@ -246,10 +243,6 @@ composition][mockery-issue] 같은 버그가 나타났습니다.
   따라서 composed 인터페이스들에 대해서 역시 동작합니다. 역시 표준 라이브러리로부터 인터페이스를 mock 하기에 용이합니다.
 * [gounmarshalmap][gounmarshalmap]: 구조체를 가져 map을 구조체로 디코딩하는 `UnmarshalMap(map[string]interface{})` 함수를 생성합니다.
   reflection 보다는 [`mapstructure`][mapstructure] 의 대안으로 코드 생성에 동작하도록 작성되었습니다.
-* [gospecific][gospecific]: is a tiny experiment to generate specific
-  packages from generic ones that rely on `interface{}`. It reads the
-  generic's package source code and generates a new package using a
-  specific type where the generic package used `interface{}`.
 * [gospecific][gospecific]: `interface{}` 에 의존하는 제네릭으로부터 특정한 패키지를 생성하는 작은 실험입니다.
   제네릭의 패키지 소스코드를 읽어서 `interface{}` 를 사용하는 제네릭 패키지에서 특정한 타입을 사용하는 새로운 패키지를 생성합니다.
   
