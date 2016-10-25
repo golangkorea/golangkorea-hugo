@@ -1,37 +1,37 @@
 +++
 authors = ["Sangbae Yun"]
 date = "2016-10-02T00:51:06+09:00"
-draft = true 
+draft = false
 categories = ["How-to"]
 tags = ["Object Oriented","struct"]
 series=["Go 시작하기"]
-title = "object oriented"
+title = "Go와 객체지향"
 toc = false
 +++
 
 ## 객체지향 프로그래밍
 Go는 클래스(Class)가 없다!! Struct가 Class의 역할을 수행 할 수 있기는 하지만 메서드도 구조체로부터 분리되는 구성을 가지고 있다. 단일 상속도 없고 당연히 다중 상속도 없다. 왠지 객체지향스럽지 않은 언어로 보일 수 있겠지만 **충분히 객체지향적**이다. 그냥 좀 다른 방법으로 객체를 지향하고 있을 따름이다. 
 
-  * 네임스페이스(namespacing)는 exports로 대신한다.  
-  * struct가 클래스를 대신한다. 다른 OOP에서의 클래스와는 달리 non-virtual 메서드로만 구성된다.
+  * struct가 클래스를 대신한다. 다른 OOP에서의 클래스와는 달리 non-virtual(real) 메서드로만 구성된다.
   * receiver로 구조체와 함수를 연결 해서 메서드를 구현한다. 
+  * 네임스페이스(namespacing)는 exports로 대신한다.  
   * 인터페이스(interfaces)로 다형성을 구현할 수 있다. 다른 OOP에서는 필드 없이, virtual 메서드로만 구성된 클래스 형태로 구현된다.
   * embedding으로 상속을 대신한다. 객체지향의 composition 모델과 비슷하다.
 Go 언어를 이용한 객체지향 프로그래밍 기술에 대해서 살펴보자.
 
-## struct와 메서드
-Go언어는 struct가 class 키워드를 대신한다. class와의 눈에 보이는 차이점은 real 타입(non-virtual)의 메서드만 올 수 있다는 점이다. Area 메서드를 가지는 **Rectangle** 스트럭처는 아래와 같이 만들 수 있다.
+## struct(구조체)와 메서드
+Go언어는 struct가 class 키워드를 대신한다. class와의 눈에 보이는 차이점은 real 타입(non-virtual)의 메서드만 올 수 있다는 점이다. Area 메서드를 가지는 **Rectangle** 구조체는 아래와 같이 만들 수 있다.
 ```go
 type Rectangle struct {
-	Name	string
-	Width, Height float64
+    Name    string
+    Width, Height float64
 }
 
 func (r Rectangle) Area() float64 {
     return r.Width * r.Height
 }
 ```
-class 키워드를 가지고 있는 객체지향 언어의 경우 아래와 같은 의사코드로 표현할 수 있을 것이다.
+class 키워드를 가지고 있는 객체지향 언어의 경우 아래와 같은 의사코드로 표현할 것이다.
 ```
 class Rectangle
    field Name: string
@@ -40,7 +40,7 @@ class Rectangle
    method Area() 
        return this.Width * this.Height
 ```
-그리고 struct 내에 메서드를 포함 할 수 없다. 스트럭처 바깥에 만들어지며, **리시버(receiver)**를 이용해서 어느 스트럭처의 메서드인지를 나타낸다. 아래 그럼처럼 묘사 할 수 있다.
+Go는 구조체 내에 메서드를 포함 할 수 없다. 구조체 바깥에 만들어지며, **리시버(receiver)**를 이용해서 어느 구조체의 메서드인지를 정의 할 수 있다. 아래 그림은 리시버를 이용해서 구조체와 함수가 연결되는 과정을 묘사하고 있다.
 
 ![receiver](https://docs.google.com/drawings/d/1rBOgYujGOIy9EL6U040nCSCC61pwzFe-BhoWNkVoksU/pub?w=756&h=205)
 
@@ -76,79 +76,78 @@ func main() {
 ```
 [코드 실행](https://play.golang.org/p/RY6m5sE2H-)
 
-StayTheSame은 Value 리시버이고 Mutate는 포인터 리시버다. 포인터 리시버의 경우 스트럭처의 값을 변경(Mutate)하는 반면 Value 리시버는 스트럭처의 값을 변경하지 않는다. Mutate 하느냐 하지 않느냐가 Value 리시버와 포인터 리시버의 눈에 보이는 차이다. 포인터라는게 데이터가 저장된 주소를 가리킨다는 것을 생각해보면, 포인터 리시버의 **Mutate** 한 성질을 유추 할 수 있을 것이다.
+**StayTheSame**은 Value 리시버이고 **Mutate**는 포인터 리시버다. 포인터 리시버의 경우 구조체의 필드 값을 변경(Mutate)하는 반면 Value 리시버는 스트럭처의 값을 변경하지 않는다. Mutate 하느냐 하지 않느냐가 Value 리시버와 포인터 리시버의 눈에 보이는 차이다. 포인터라는게 데이터가 저장된 주소를 가리킨다는 것을 생각해보면, 포인터 리시버의 **Mutate** 한 성질을 유추 할 수 있을 것이다.
 
-
-구조체로 부터 객체를 만들어 보자. 몇 가지 방법이 있는데, 첫 번째 방법은 패키지에 객체를 반환하는 **New** 같은 함수를 만드는 것이다. 빌더 패턴(builder pattern)의 응용이다.
+이제 구조체로 부터 객체를 만들어 보자. 몇 가지 방법이 있는데, 첫 번째 방법은 패키지에 객체를 반환하는 **New** 같은 함수를 만드는 것이다. **빌더 패턴(builder pattern)**의 응용이다.
 ```go
 package main
 
 import (
-	"fmt"
+    "fmt"
 )
 
 type Rectangle struct {
-	Name          string
-	Width, Height float64
+    Name          string
+    Width, Height float64
 }
 
 // Rectangle 를 반환하는 함수를 만들었다.
 func New(name string) *Rectangle {
-	return &Rectangle{Name: name}
+    return &Rectangle{Name: name}
 }
 
 func (r Rectangle) Area() float64 {
-	return r.Width * r.Height
+    return r.Width * r.Height
 }
 
 func (r *Rectangle) SetWidth(width float64) {
-	r.Width = width
+    r.Width = width
 }
 func (r *Rectangle) SetHeight(height float64) {
-	r.Height = height
+    r.Height = height
 }
 
 func main() {
-	myRectangle := New("Rect-A")
-	// 출력 : 0
-	fmt.Println(myRectangle.Area())
+    myRectangle := New("Rect-A")
+    // 출력 : 0
+    fmt.Println(myRectangle.Area())
 
-	myRectangle.SetWidth(52.2)
-	myRectangle.SetHeight(30.3)
+    myRectangle.SetWidth(52.2)
+    myRectangle.SetHeight(30.3)
 
-	// 출력 : 1581.66
-	fmt.Println(myRectangle.Area())
+    // 출력 : 1581.66
+    fmt.Println(myRectangle.Area())
 }
 ```
 [코드 실행](https://play.golang.org/p/xPeyGF7wIc)
 
 New() 함수를 실행해서 Rectangle 객체를 만들었다. 
 
-두 번째 방법으로 구조체로 부터 직접 객체를 만드는 방법이 있다.
+두 번째로 구조체의 초기화 문법을 이용해서 직접 객체를 만드는 방법이 있다.
 ```go
 func main() {
-	myRectangle := Rectangle{Name:"Rect-A", Width:12.5, Height:13.5}
-	yourRectangle := Rectangle{}
+    yourRectangle := Rectangle{}
+    myRectangle := Rectangle{Name:"Rect-A", Width:12.5, Height:13.5}
 }
 ```
-yourRectangle의 경우 모든 필드는 **기본 값(zero-value)**으로 초기화 된다. float64는 0, string은 "", 포인터는 nil로 초기화 된다. 따라서 myRectangle를 만든 후 호출한 Area()는 0을 반환한다.
+구조체 초기화 문법을 이용 하면, 필드의 값을 초기화 할 수 있다. 초기화 하지 않는 필드들은 **기본 값(zero-value)**으로 초기화 된다. float64는 0, string은 "", 포인터는 nil로 초기화 된다. 예를 들어서 위 코드의 yourRectangle의 경우 Height와 Width가 0으로 초기화 되기 때문에 yourRectangle.Area()는 0을 반환 할 것이다.  
 
 마지막으로 Go의 new()내장 함수를 이용하는 방법이 있다. 
 ```go
 func new(Type) *Type
 ```
-new를 호출하고 나면, 메모리를 할당하고 포인터를 반환한다. 필드의 값들은 기본 값으로 초기화 된다.
+new 함수를 호출하고 나면, 메모리를 할당하고 포인터를 반환한다. 필드의 값들은 기본 값으로 초기화 된다. c++의 new와 사용방법이 비슷하다. 
 ```go
 func main() {
-	myRectangle := new(Rectangle)
-	// 출력 : 0
-	fmt.Println(myRectangle.Area())
+    myRectangle := new(Rectangle)
+    // 출력 : 0
+    fmt.Println(myRectangle.Area())
 
-	myRectangle.SetWidth(52.2)
-	myRectangle.SetHeight(30.3)
+    myRectangle.SetWidth(52.2)
+    myRectangle.SetHeight(30.3)
 
-	// 출력 : 1581.66
-	fmt.Println(myRectangle.Area())
+    // 출력 : 1581.66
+    fmt.Println(myRectangle.Area())
 }
 ```
 
@@ -157,44 +156,65 @@ Go 언어는 생성자가 없다. 하지만 팩토리 패턴(factory pattern)을
 package main
 
 import (
-        "fmt"
+    "fmt"
 )
 
 type Rectangle struct {
-        Name          string
-        Width, Height float64
+    Name          string
+    Width, Height float64
 }
 
 // 팩토리 패턴을 이용 생성자를 구현했다.
 func New(name string, width float64, height float64) *Rectangle {
-        return &Rectangle{Name: name, Width: width, Height: height}
+    return &Rectangle{Name: name, Width: width, Height: height}
 }
 
 func (r Rectangle) Area() float64 {
-        return r.Width * r.Height
+    return r.Width * r.Height
 }
 
 func (r *Rectangle) SetWidth(width float64) {
-        r.Width = width
+    r.Width = width
 }
 func (r *Rectangle) SetHeight(height float64) {
-        r.Height = height
+    r.Height = height
 }
 
 func main() {
-        myRectangle := New("Rect-A", 12.3, 10.9)
+    myRectangle := New("Rect-A", 12.3, 10.9)
 
-        fmt.Println(myRectangle.Area())
+    fmt.Println(myRectangle.Area())
 
-        myRectangle.SetWidth(52.2)
-        myRectangle.SetHeight(30.3)
+    myRectangle.SetWidth(52.2)
+    myRectangle.SetHeight(30.3)
 
-        fmt.Println(myRectangle.Area())
+    fmt.Println(myRectangle.Area())
 }
 ```
 [코드 실행](https://play.golang.org/p/h1DrKbzEUE)
 
 혹은 **Rectangle{Width:11, Height:12}**와 같은 초기화 문법을 이용하면 된다.
+
+## Exports
+Go언어는 패키지로 네임스페이스를 구현하고 있다. 그리고 대문자로 시작하는지에 따라서 export 여부가 결정된다. 소문자로 시작할 경우 패키지 안에서만 사용 할 수 있고, 대문자로 사용 할 경우 패키지 바깥에서 사용 할 수 있다.
+```go
+type Part struct {
+    name        string
+    description string
+    needsSpare  bool
+}
+```
+이제 아래와 같이 export setter과 getter 메서드를 만들 수 있다.
+```go
+func (p Part)Name string {
+    return part.name
+}
+
+func (part *Part) SetName(name string) {
+    part.name = name
+}
+```
+이렇게 대/소문자만으로 public 메서드와 private(internal 필드 혹은 메서드)를 결정 할 수 있다. 
 
 ## 상속(Inheritance)과 composition
 객체지향 디자인은 클래스 간의 관계를 구성하는 것에서 시작한다. 클래스간의 관계는 **상속(Inheritance)**과 **컴포지션(composition)** 두 가지 방법으로 구성 할 수 있다. 
@@ -368,43 +388,43 @@ Go언어는 selector를 이용해서 네임스페이스를 설정하는 것으�
 package main
 
 import (
-	"fmt"
+    "fmt"
 )
 
 type Animal struct {
 }
 
 func (a Animal) GetGene() {
-	fmt.Println("동물 유전자")
+    fmt.Println("동물 유전자")
 }
 
 type Tiger struct {
-	Animal
+    Animal
 }
 
 func (t Tiger) GetGene() {
-	fmt.Println("호랑이 유전자")
+    fmt.Println("호랑이 유전자")
 }
 
 type Lion struct {
-	Animal
+    Animal
 }
 
 func (l Lion) GetGene() {
-	fmt.Println("사자 유전자")
+    fmt.Println("사자 유전자")
 }
 
 type Liger struct {
-	Tiger
-	Lion
+    Tiger
+    Lion
 }
 
 func main() {
-	fmt.Println("유전자 정보")
-	myLiger := Liger{}
-	myLiger.Tiger.GetGene()
-	myLiger.Lion.GetGene()
-	myLiger.Lion.Animal.GetGene()
+    fmt.Println("유전자 정보")
+    myLiger := Liger{}
+    myLiger.Tiger.GetGene()
+    myLiger.Lion.GetGene()
+    myLiger.Lion.Animal.GetGene()
 }
 ```
 [코드 실행](https://play.golang.org/p/tpXfrM8-cw)
@@ -486,18 +506,18 @@ DoSomething는 **빈 인터페이스 타입인 v**를 매개변수로 취하고 
 package main
 
 import (
-	"fmt"
+    "fmt"
 )
 
 func PrintAll(vals []interface{}) {
-	for _, val := range vals {
-		fmt.Println(val)
-	}
+    for _, val := range vals {
+        fmt.Println(val)
+    }
 }
 
 func main() {
-	names := []string{"stanley", "david", "oscar"}
-	PrintAll(names)
+    names := []string{"stanley", "david", "oscar"}
+    PrintAll(names)
 }
 ```
 [코드 실행](https://play.golang.org/p/4DuBoi2hJU)
@@ -507,22 +527,22 @@ func main() {
 package main
 
 import (
-	"fmt"
+    "fmt"
 )
 
 func PrintAll(vals []interface{}) {
-	for _, val := range vals {
-		fmt.Println(val)
-	}
+    for _, val := range vals {
+        fmt.Println(val)
+    }
 }
 
 func main() {
-	names := []string{"stanley", "david", "oscar"}
-	vals := make([]interface{}, len(names))
-	for i, v := range names {
-		vals[i] = v
-	}
-	PrintAll(vals)
+    names := []string{"stanley", "david", "oscar"}
+    vals := make([]interface{}, len(names))
+    for i, v := range names {
+        vals[i] = v
+    }
+    PrintAll(vals)
 
     age := []int{38, 27, 42}
     vals = make([]interface{}, len(age))
@@ -543,41 +563,41 @@ func Printf(format string, a ...interface{}) (n int, err error)
 package main
 
 import (
-	"fmt"
-	"strconv"
+    "fmt"
+    "strconv"
 )
 
 type Stringer interface {
-	String() string
+    String() string
 }
 
 func ToString(any interface{}) string {
-	if v, ok := any.(Stringer); ok {
-		return v.String()
-	}
+    if v, ok := any.(Stringer); ok {
+        return v.String()
+    }
 
-	switch v := any.(type) {
-	case int:
-		return strconv.Itoa(v)
-	case float64:
-		return strconv.FormatFloat(v, 'f', 4, 64)
-	}
-	return "???"
+    switch v := any.(type) {
+    case int:
+        return strconv.Itoa(v)
+    case float64:
+        return strconv.FormatFloat(v, 'f', 4, 64)
+    }
+    return "???"
 }
 
 type User struct {
-	Name string
+    Name string
 }
 
 func (u User) String() string {
-	return u.Name
+    return u.Name
 }
 
 func main() {
-	fmt.Println(ToString(1234))
-	fmt.Println(ToString(17.4))
-	fmt.Println(ToString("Hello World"))
-	fmt.Println(ToString(User{"yundream"}))
+    fmt.Println(ToString(1234))
+    fmt.Println(ToString(17.4))
+    fmt.Println(ToString("Hello World"))
+    fmt.Println(ToString(User{"yundream"}))
 }
 ```
 [코드 실행](https://play.golang.org/p/dlzNKsm00V)
