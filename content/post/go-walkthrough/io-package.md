@@ -1,6 +1,6 @@
 +++
 
-title = "Go 둘러보기 - io package"
+title = "Go 둘러보기 - io 패키지"
 draft = false
 date = "2016-10-26T02:30:33+09:00"
 
@@ -282,7 +282,7 @@ type Closer interface {
 ```
 > error : [error](https://golang.org/pkg/builtin/#error)
 
-Closer는 매우 간단해서 별로 말할게 없지만, 나는 Closer가 필요할 때 내가 만든 타입이 이를 구현할 수 있도록 내 Closer()로부터 항상 에러를 반환시키는게 유용하다는걸 발견했다. Closer는 항상 직접 사용되지는 않지만 가끔 [ReadCloser](https://golang.org/pkg/io/#ReadCloser), [WriteCloser](https://golang.org/pkg/io/#WriteCloser), 그리고 [ReadWriteCloser](https://golang.org/pkg/io/#ReadWriteCloser)와 같은 다른 인터페이스와 결합해서 사용될 수 있다.
+Closer는 매우 간단해서 별로 말할게 없지만, 나는 Closer가 필요할 때 내가 만든 타입이 이를 구현할 수 있도록 내 Close()로부터 항상 에러를 반환시키는게 유용하다는걸 발견했다. Closer는 항상 직접 사용되지는 않지만 가끔 [ReadCloser](https://golang.org/pkg/io/#ReadCloser), [WriteCloser](https://golang.org/pkg/io/#WriteCloser), 그리고 [ReadWriteCloser](https://golang.org/pkg/io/#ReadWriteCloser)와 같은 다른 인터페이스와 결합해서 사용될 수 있다.
 
 <br>
 
