@@ -50,7 +50,6 @@ Reader 인터페이스의 한 가지 문제점은 애매한 규칙들을 가지�
 
 ```go
 func ReadFull(r Reader, buf[] byte) (n int, err error)
-
 ```
 > Reader : [Reader](https://golang.org/pkg/io/#Reader), byte : [byte](https://golang.org/pkg/builtin/#byte), error : [error](https://golang.org/pkg/builtin/#error)
 
@@ -232,7 +231,7 @@ func CopyBuffer(dst Writer, src Reader, buf []byte) (written int64, err error)
 
 ### 복사 최적화
 
-중간 버퍼를 아예 사용하지 않기위해, 타입은 직접 읽기와 쓰기 인터페이스를 구현할 수 있다. 구현이 되면, Copy() 함수는 중간 버퍼를 사용하지 않을 것이며 직접 이들의 구현을 사용할 것이다.
+중간 버퍼를 아예 사용하지 않기위해, 타입은 직접 읽기와 쓰기 인터페이스를 구현할 수 있다. 구현된 경우, Copy() 함수는 중간 버퍼를 사용하지 않고 이러한 구현을 직접 사용한다.
 
 [WriterTo](https://golang.org/pkg/io/#WriterTo) 인터페이스는 직접 데이터를 쓰고자하는 타입에서 사용할 수 있다.
 
