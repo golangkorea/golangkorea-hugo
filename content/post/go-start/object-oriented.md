@@ -433,7 +433,7 @@ func main() {
 
 
 ## Structs와 Interface
-Go의 구조체는 non-virtual 메서드만 가질 수 없다. 가상 메서드(virtual method)를 만들려면 **interface**를 이용해야 한다. Go에서 interface는 오로지  가상 메서드로만 구성 할 수 있다. Go interface의 특징이다.
+Go의 구조체는 non-virtual 메서드만 가질 수 있다. 가상 메서드(virtual method)를 만들려면 **interface**를 이용해야 한다. Go에서 interface는 오로지  가상 메서드로만 구성 할 수 있다. 아래 Go interface의 특징을 정리했다.
 
   * interface는 하나의 타입으로 변수(var)와 매개변수(parameter)로 쓸 수 있다.  
   * interface의 구현은 concret class(struct)에서 이루어진다. concret class는 구상 클래스라고 번역한다.
